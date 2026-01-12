@@ -1,0 +1,31 @@
+
+composer require laravel/breeze --dev
+php artisan breeze:install blade
+
+
+tôi dang design 1 website về nails, toi làm cho bạn toi de website này đơn giản là làm chế độ book lịch, show mẫu nail lên,bảng giá. toi muôn thiet kế giao diện trẻ trung, đầu tiên thiết kế tôi header trước.
+ công nghệ dùng tailwin css màu chủ đạo là ff0052
+
+
+
+
+oke giờ thiết kế theo clean architectec, giờ làm controller gọi service trong service thiet ké theo repossitory, có inter face repo, repo và repocache
+app/
+├── Http/
+│   └── Controllers/
+│       └── Admin/
+│           └── BookingDateController.php
+│
+├── Services/
+│   └── Booking/
+│       └── BookingDateService.php
+│
+├── Repositories/
+│   └── BookingDate/
+│       ├── BookingDateRepositoryInterface.php
+│       ├── BookingDateRepository.php
+│       └── BookingDateRepositoryCache.php
+│
+├── Models/
+│   ├── BookingDate.php
+│   └── BookingTimeSlot.php
