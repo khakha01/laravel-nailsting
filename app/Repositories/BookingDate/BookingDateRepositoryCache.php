@@ -3,55 +3,64 @@
 namespace App\Repositories\BookingDate;
 
 use App\Models\BookingDate;
-use Illuminate\Cache\Repository;
+use Illuminate\Cache\Repository as CacheRepository;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
 class BookingDateRepositoryCache implements BookingDateRepositoryInterface
 {
-    protected Repository $cache;
+    protected CacheRepository $cache;
     protected array $keys;
 
-    public function __construct(
-        protected BookingDateRepositoryInterface $bookingDateRepository
-    ) {
+    public function __construct(protected BookingDateRepositoryInterface $bookingDateRepository)
+    {
         $this->cache = Cache::driver('redis');
         $this->keys = config('cache_keys.booking_dates');
     }
 
-
-    public function findByDate(string $date): ?BookingDate
+    protected function cacheKey(int $id): string
     {
-        $key = sprintf($this->keys['by_date'], $date);
+        return sprintf($this->keys['by_id'], $id);
+    }
+
+    public function findById(int $id): ?BookingDate
+    {
+        $key = $this->cacheKey($id);
 
         return $this->cache->remember(
             $key,
             now()->addMinutes(10),
-            fn() => $this->bookingDateRepository->findByDate($date)
+            fn() => $this->bookingDateRepository->findById($id)
         );
     }
 
-
-    public function save(array $data): BookingDate
+    public function findByIds(array $ids): Collection
     {
-        // clear cache liên quan
-        $this->cache->forget($this->keys['open']);
-        $this->cache->forget(
-            sprintf($this->keys['by_date'], $data['date'])
-        );
-
-        return $this->bookingDateRepository->save($data);
+        return $this->bookingDateRepository->findByIds($ids);
     }
 
-    /**
-     * Lấy danh sách ngày đang mở
-     */
-    public function getOpenDates(): Collection
+    public function save(BookingDate $bookingDate): BookingDate
+    {
+        $this->cache->forget($this->cacheKey($bookingDate->id));
+        $this->cache->forget($this->keys['open']);
+        return $this->bookingDateRepository->save($bookingDate);
+    }
+
+    public function delete(BookingDate $bookingDate): bool
+    {
+        $result = $this->bookingDateRepository->delete($bookingDate);
+        $this->cache->forget($this->cacheKey($bookingDate->id));
+        $this->cache->forget($this->keys['open']);
+
+        return $result;
+    }
+
+    public function getAll(): Collection
     {
         return $this->cache->remember(
             $this->keys['open'],
             now()->addMinutes(10),
-            fn() => $this->bookingDateRepository->getOpenDates()
+            fn() => $this->bookingDateRepository->getAll()
         );
     }
 }

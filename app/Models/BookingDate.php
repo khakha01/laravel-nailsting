@@ -28,4 +28,27 @@ class BookingDate extends Model
     {
         return $this->hasMany(BookingTimeSlot::class);
     }
+
+    /**
+     * Factory method để tạo BookingDate
+     */
+    public static function make(string $date, bool $isOpen = true, array $timeSlots = []): static
+    {
+        $model = new static([
+            'date'    => $date,
+            'is_open' => $isOpen,
+        ]);
+
+        if ($timeSlots !== []) {
+            $slots = collect($timeSlots)->map(fn(array $slot) => BookingTimeSlot::make(
+                $slot['start'],
+                $slot['end'],
+                $slot['is_open'] ?? true
+            ));
+
+            $model->setRelation('timeSlots', $slots);
+        }
+
+        return $model;
+    }
 }

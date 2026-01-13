@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\BookingDate;
+use App\Http\Requests\BookingDates\StoreBookingDateRequest;
+use App\Http\Requests\BookingDates\UpdateBookingDateRequest;
+use App\Queries\ListBookingDates\ListBookingDateHandler;
+use App\Queries\ListBookingDates\ListBookingDateQuery;
 use App\Services\BookingDate\BookingDateService;
 use Illuminate\Http\Request;
 
@@ -13,31 +16,85 @@ class BookingDateController extends Controller
         protected BookingDateService $bookingDateService
     ) {}
 
+    public function index(Request $request)
+    {
+        $isOpen = $request->filled('is_open') ? (bool) $request->get('is_open') : null;
+        $query = new ListBookingDateQuery(
+            page: (int) ($request->get('page', 1)),
+            perPage: (int) ($request->get('perPage', 10)),
+            date: $request->get('date'),
+            isOpen: $isOpen
+        );
+
+        $dates = app(ListBookingDateHandler::class)->execute($query);
+
+        return view('admin.booking-date-management.index', compact('dates'));
+    }
+
+
     public function create()
     {
         return view('admin.booking-date-management.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreBookingDateRequest $request)
     {
-        $validated = $request->validate([
-            'date' => 'required|date',
-            'is_open' => 'nullable|boolean',
-            'time_slots' => 'array',
-            'time_slots.*.start' => 'nullable|date_format:H:i',
-            'time_slots.*.end' => 'nullable|date_format:H:i',
-            'time_slots.*.is_open' => 'boolean',
-        ]);
+        try {
+            $date = $request->get('date');
+            $isOpen = (bool) $request->get('is_open');
+            $timeSlots = $request->get('time_slots');
 
-         $this->bookingDateService->create($validated);
+            $this->bookingDateService->create($date, $isOpen, $timeSlots);
+
+            return redirect()->route('booking-dates.index')->with('success', 'Tạo ngày & khung giờ thành công');
+        } catch (\Throwable $e) {
+            return redirect()->route('booking-dates.index')->with('error', $e->getMessage());
+        }
+    }
+
+    public function show(Request $request)
+    {
+        $id = (int) $request->route('id');
+        $bookingDate = $this->bookingDateService->findById($id);
+        return view('admin.booking-date-management.edit', compact('bookingDate'));
+    }
+
+    public function update(UpdateBookingDateRequest $request)
+    {
+        $bookingDateId = (int) $request->route('id');
+        $date = $request->get('date');
+        $isOpen = $request->get('is_open');
+        $timeSlots = $request->get('time_slots');
+        $this->bookingDateService->update($bookingDateId, $date, $isOpen, $timeSlots);
 
         return redirect()
             ->route('booking-dates.index')
-            ->with('success', 'Tạo ngày & khung giờ thành công');
+            ->with('success', 'Cập nhật ngày & khung giờ thành công');
     }
-    public function index()
+
+    public function destroy(Request $request)
     {
-$dates = $this->bookingDateService->list();
-        return view('admin.booking-date-management.index', compact('dates'));
+        $id = (int) $request->route('id');
+        $this->bookingDateService->delete($id);
+        return redirect()
+            ->route('booking-dates.index')
+            ->with('success', 'Hành động xóa thành công');
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        try {
+            $bookingDateIds = $request->input('booking_date_ids', []);
+
+            $this->bookingDateService->bulkDelete($bookingDateIds);
+
+            return redirect()
+                ->route('booking-dates.index')
+                ->with('success', 'Đã xóa thành công các ngày đã chọn.');
+        } catch (\Throwable $e) {
+            return redirect()
+                ->route('booking-dates.index')
+                ->with('error', $e->getMessage());
+        }
     }
 }

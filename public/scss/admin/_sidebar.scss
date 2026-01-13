@@ -1,0 +1,28 @@
+.submenu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+
+  &.open {
+    max-height: 500px;
+    transition: max-height 0.5s ease-in;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+
+  &-track {
+    background: #f1f1f1;
+  }
+
+  &-thumb {
+    background: #888;
+    border-radius: 3px;
+
+    &:hover {
+      background: #555;
+    }
+  }
+}

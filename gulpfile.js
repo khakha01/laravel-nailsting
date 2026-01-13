@@ -19,14 +19,14 @@ gulp.task("scss", function () {
 });
 
 // Task SCSS cho admin
-// gulp.task("scss-admin", function () {
-//     return gulp
-//         .src("public/scss/admin.scss")
-//         .pipe(compileSass().on("error", compileSass.logError))
-//         .pipe(cleanCSS())
-//         .pipe(rename({ basename: "admin", suffix: ".min" }))
-//         .pipe(gulp.dest("public/css"));
-// });
+gulp.task("scss-admin", function () {
+    return gulp
+        .src("public/scss/admin.scss")
+        .pipe(compileSass().on("error", compileSass.logError))
+        .pipe(cleanCSS())
+        .pipe(rename({ basename: "admin", suffix: ".min" }))
+        .pipe(gulp.dest("public/css"));
+});
 
 // Watch task
 gulp.task("watch", function () {
@@ -34,12 +34,11 @@ gulp.task("watch", function () {
         ["public/scss/**/*.scss", "!public/scss/admin/**/*.scss"],
         gulp.series("scss")
     );
-    // gulp.watch(
-    //     ["public/scss/admin.scss", "public/scss/admin/**/*.scss"],
-    //     gulp.series("scss-admin")
-    // );
+    gulp.watch(
+        ["public/scss/admin.scss", "public/scss/admin/**/*.scss"],
+        gulp.series("scss-admin")
+    );
 });
 
 // Default task
-//gulp.task("default", gulp.series("scss", "scss-admin", "watch"));
-gulp.task("default", gulp.series("scss",  "watch"));
+gulp.task("default", gulp.series("scss", "scss-admin", "watch"));

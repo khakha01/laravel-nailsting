@@ -29,4 +29,17 @@ class BookingTimeSlot extends Model
     {
         return $this->belongsTo(BookingDate::class);
     }
+
+
+    /**
+     * Factory method để tạo slot
+     */
+    public static function make(string $start, string $end, bool $isOpen = true): static
+    {
+        return new static([
+            'start_time' => $start,
+            'end_time' => $end,
+            'is_open' => $isOpen,
+        ]);
+    }
 }

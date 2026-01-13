@@ -1,10 +1,15 @@
 <?php
+
 namespace App\Services\BookingDate;
 
 use App\Models\BookingDate;
+use App\Models\BookingTimeSlot;
 use App\Repositories\BookingDate\BookingDateRepositoryInterface;
 use App\Repositories\BookingTimeSlot\BookingTimeSlotRepositoryInterface;
+use Exception;
 use Illuminate\Support\Facades\DB;
+use InvalidArgumentException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class BookingDateService
 {
@@ -13,38 +18,105 @@ class BookingDateService
         protected BookingTimeSlotRepositoryInterface $bookingTimeSlotRepository
     ) {}
 
-    public function list()
+    public function getAll()
     {
-        return $this->bookingDateRepository->getOpenDates();
+        return $this->bookingDateRepository->getAll();
     }
 
-    public function create(array $data): BookingDate
+    public function create(string $date, bool $isOpen, array $timeSlots): BookingDate
     {
-        return DB::transaction(function () use ($data) {
+        $dateExists = BookingDate::where('date', $date)->first();
+        if ($dateExists) {
+            throw new Exception('Lịch làm việc này đã tồn tại!');
+        }
 
-            $bookingDate = $this->bookingDateRepository->save([
-                'date' => $data['date'],
-                'is_open' => $data['is_open'] ?? true,
-            ]);
+        $bookingDate = BookingDate::make($date, $isOpen, $timeSlots);
+        return DB::transaction(function () use ($bookingDate, $timeSlots) {
 
-            $slots = collect($data['time_slots'] ?? [])
-                ->filter(
-                    fn($slot) =>
-                    !empty($slot['start']) && !empty($slot['end'])
-                )
-                ->values()
-                ->all();
+            $bookingDate = $this->bookingDateRepository->save($bookingDate);
 
-            if (!empty($slots)) {
-                $this->bookingTimeSlotRepository->save($bookingDate->id, $slots);
+            foreach ($timeSlots as $slotData) {
+                $slot = BookingTimeSlot::make($slotData['start'], $slotData['end'], $slotData['is_open'] ?? true);
+                $slot->booking_date_id = $bookingDate->id;
+                $this->bookingTimeSlotRepository->save($slot);
             }
 
             return $bookingDate;
         });
     }
 
-    public function getAvailableDates()
+    public function update(int $id, string $date, bool $isOpen, array $timeSlots): BookingDate
     {
-        return $this->bookingDateRepository->getOpenDates();
+        $bookingDate = $this->bookingDateRepository->findById($id);
+        if (!$bookingDate) {
+            throw new InvalidArgumentException("Booking date not found");
+        }
+
+        $bookingDate->date = $date;
+        $bookingDate->is_open = $isOpen;
+
+        return DB::transaction(function () use ($bookingDate, $id, $timeSlots) {
+            // Save the updated booking date
+            $bookingDate = $this->bookingDateRepository->save($bookingDate);
+
+            // Delete old time slots
+            $oldSlots = $this->bookingTimeSlotRepository->getByBookingDate($id);
+            foreach ($oldSlots as $slot) {
+                $this->bookingTimeSlotRepository->delete($slot);
+            }
+
+            // Save new time slots
+            foreach ($timeSlots as $slotData) {
+                $slot = BookingTimeSlot::make($slotData['start'], $slotData['end'], $slotData['is_open'] ?? true);
+                $slot->booking_date_id = $bookingDate->id;
+                $this->bookingTimeSlotRepository->save($slot);
+            }
+
+            return $bookingDate;
+        });
+    }
+
+    public function findById(int $id): BookingDate
+    {
+        $bookingDate = $this->bookingDateRepository->findById($id);
+        return $bookingDate;
+    }
+
+    public function delete(int $id)
+    {
+        $bookingDate = $this->bookingDateRepository->findById($id);
+        if (!$bookingDate) {
+            throw new NotFoundHttpException("Not exists");
+        }
+
+        DB::transaction(function () use ($bookingDate) {
+            foreach ($bookingDate->timeSlots as $slot) {
+                $this->bookingTimeSlotRepository->delete($slot);
+            }
+            $this->bookingDateRepository->delete($bookingDate);
+        });
+    }
+
+    public function bulkDelete(array $bookingDateIds): void
+    {
+        if (empty($bookingDateIds)) {
+            throw new InvalidArgumentException('Vui lòng chọn ít nhất một ngày để xóa.');
+        }
+        DB::transaction(function () use ($bookingDateIds) {
+
+            $bookingDates = $this->bookingDateRepository->findByIds($bookingDateIds);
+
+            if ($bookingDates->isEmpty()) {
+                throw new InvalidArgumentException('Không tìm thấy ngày booking hợp lệ.');
+            }
+
+            foreach ($bookingDates as $bookingDate) {
+                foreach ($bookingDate->timeSlots as $slot) {
+                    $this->bookingTimeSlotRepository->delete($slot);
+                }
+
+                $this->bookingDateRepository->delete($bookingDate);
+            }
+        });
     }
 }

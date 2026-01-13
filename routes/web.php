@@ -32,6 +32,10 @@ Route::prefix('admin')->group(function () {
         Route::get('/list', [BookingDateController::class, 'index'])->name('index');
         Route::get('/create', [BookingDateController::class, 'create'])->name('create');
         Route::post('/store', [BookingDateController::class, 'store'])->name('store');
+        Route::delete('/bulk-delete', [BookingDateController::class, 'bulkDelete'])->name('bulk-delete');
+        Route::get('/{id}', [BookingDateController::class, 'show'])->name('show');
+        Route::put('/update/{id}', [BookingDateController::class, 'update'])->name('update');
+        Route::delete('/{id}', [BookingDateController::class, 'destroy'])->name('delete');
     });
 });
 

@@ -7,9 +7,14 @@ use Illuminate\Support\Collection;
 
 interface BookingDateRepositoryInterface
 {
-    public function findByDate(string $date): ?BookingDate;
+    public function findById(int $id): ?BookingDate;
 
-    public function save(array $data): BookingDate;
+    public function save(BookingDate $bookingDate): BookingDate;
 
-    public function getOpenDates(): Collection;
+    public function getAll(): Collection;
+
+    public function delete(BookingDate $bookingDate): bool;
+
+    public function findByIds(array $bookingDateIds): Collection;
+
 }

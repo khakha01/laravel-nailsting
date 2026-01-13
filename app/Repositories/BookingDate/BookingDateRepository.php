@@ -7,20 +7,32 @@ use Illuminate\Support\Collection;
 
 class BookingDateRepository implements BookingDateRepositoryInterface
 {
-    public function findByDate(string $date): ?BookingDate
+    public function findById(int $id): ?BookingDate
     {
-        return BookingDate::whereDate('date', $date)->first();
+        return BookingDate::with('timeSlots')->find($id);
     }
 
-    public function save(array $data): BookingDate
+    public function save(BookingDate $bookingDate): BookingDate
     {
-        return BookingDate::create($data);
+        $bookingDate->save();
+        return $bookingDate;
     }
 
-    public function getOpenDates(): Collection
+    public function delete(BookingDate $bookingDate): bool
     {
-        return BookingDate::where('is_open', true)
-            ->orderBy('date')
+        return $bookingDate->delete();
+    }
+
+    public function getAll(): Collection
+    {
+        return BookingDate::query()->orderBy('date')
+            ->get();
+    }
+
+    public function findByIds(array $ids): Collection
+    {
+        return BookingDate::with('timeSlots')
+            ->whereIn('id', $ids)
             ->get();
     }
 }

@@ -5,21 +5,14 @@ use App\Models\BookingTimeSlot;
 
 class BookingTimeSlotRepository implements BookingTimeSlotRepositoryInterface
 {
-    public function save(int $bookingDateId, array $slots): void
+    public function save(BookingTimeSlot $bookingTimeSlot): void
     {
-        foreach ($slots as $slot) {
-            BookingTimeSlot::create([
-                'booking_date_id' => $bookingDateId,
-                'start_time' => $slot['start'],
-                'end_time' => $slot['end'],
-                'is_open' => $slot['is_open'] ?? true,
-            ]);
-        }
+        $bookingTimeSlot->save();
     }
 
-    public function deleteByBookingDate(int $bookingDateId): void
+    public function delete(BookingTimeSlot $bookingTimeSlot): bool
     {
-        BookingTimeSlot::where('booking_date_id', $bookingDateId)->delete();
+        return $bookingTimeSlot->delete();
     }
 
     public function getByBookingDate(int $bookingDateId)
