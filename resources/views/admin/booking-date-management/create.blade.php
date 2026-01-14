@@ -2,112 +2,165 @@
 @section('title', 'Create Booking Date')
 
 @section('content')
-<div class="max-w-4xl mx-left px-4 py-10 bg-gray-50 min-h-screen">
+    <div class="px-4 sm:px-6 lg:px-8 py-10 bg-gray-50 h-full min-h-screen">
 
-    {{-- Header --}}
-    <div class="mb-8">
-        <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
-            Thêm ngày làm việc mới
-        </h2>
-        <p class="mt-1 text-sm text-gray-500">Thiết lập ngày và các khung giờ hoạt động cho hệ thống đặt lịch.</p>
+        {{-- Header --}}
+        <div class="md:flex md:items-center md:justify-between mb-8">
+            <div class="min-w-0 flex-1">
+                <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
+                    Thêm ngày làm việc mới
+                </h2>
+                <p class="mt-1 text-sm text-gray-500">Thiết lập ngày và các khung giờ hoạt động cho hệ thống đặt lịch.</p>
+            </div>
+            <div class="mt-4 flex md:ml-4 md:mt-0">
+                <a href="{{ route('booking-dates.index') }}"
+                    class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400" viewBox="0 0 20 20"
+                        fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    Quay lại danh sách
+                </a>
+            </div>
+        </div>
+        <form method="POST" action="{{ route('booking-dates.store') }}" class="space-y-6">
+            @csrf
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 space-y-8">
+                    {{-- Card 1: Thông tin chung --}}
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+                            <h3 class="text-base font-semibold leading-6 text-gray-900">Thông tin chung</h3>
+                        </div>
+                        <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {{-- Date Input --}}
+                            <div>
+                                <label for="date" class="block text-sm font-medium leading-6 text-gray-900 mb-2">Ngày áp
+                                    dụng</label>
+                                <div class="relative">
+                                    <input type="date" name="date" id="date" min="{{ date('Y-m-d') }}" required
+                                        class="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6">
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    {{-- Card 2: Cấu hình Slot --}}
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                            <div>
+                                <h3 class="text-base font-semibold leading-6 text-gray-900">Cấu hình khung giờ</h3>
+                                <p class="mt-1 text-xs text-gray-500">Thêm các khoảng thời gian khách có thể đặt.</p>
+                            </div>
+                            <button type="button" id="addSlotBtn"
+                                class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-pink-600 shadow-sm ring-1 ring-inset ring-pink-300 hover:bg-pink-50 transition-all">
+                                <svg class="-ml-0.5 mr-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path
+                                        d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                                </svg>
+                                Thêm khung giờ
+                            </button>
+                        </div>
+
+                        <div class="p-6 bg-gray-50/50 min-h-[150px]">
+                            <div id="slotsContainer" class="space-y-3">
+                            </div>
+
+                            <div id="noSlotsMsg" class="text-center py-10 hidden">
+                                <div
+                                    class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-100 mb-3">
+                                    <svg class="w-6 h-6 text-gray-400" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                                <p class="text-sm text-gray-500">Chưa có khung giờ nào được tạo.</p>
+                                <p class="text-xs text-gray-400">Nhấn nút "Thêm khung giờ" ở góc trên để bắt đầu.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-1 space-y-6">
+                    {{-- Status Card --}}
+                    <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
+                        <div class="px-4 py-5 sm:p-6">
+                            <h3 class="text-base font-semibold leading-6 text-gray-900 mb-4">Cài đặt hiển thị</h3>
+
+                            {{-- Status Toggle --}}
+                            <div class="flex items-center h-full pt-6">
+                                <label class="relative inline-flex items-center cursor-pointer group">
+                                    <input type="checkbox" name="is_open" value="1" checked class="sr-only peer">
+                                    <div
+                                        class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-pink-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600">
+                                    </div>
+                                    <span
+                                        class="ml-3 text-sm font-medium text-gray-900 group-hover:text-green-700 transition-colors">Đang
+                                        mở (Cho phép đặt lịch)</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Actions Card --}}
+                    <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
+                        <div class="px-4 py-5 sm:p-6">
+                            <button type="submit"
+                                class="flex w-full justify-center rounded-md bg-[#0c8fe1] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-pink-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600 transition-all duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
+                                </svg>
+                                Lưu Sản Phẩm
+                            </button>
+
+                            <a href="{{ url()->previous() }}"
+                                class="mt-3 flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 transition-all">
+                                Hủy bỏ
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </form>
     </div>
 
-    <form method="POST" action="{{ route('booking-dates.store') }}" class="space-y-6">
-        @csrf
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('slotsContainer');
+            const noSlotsMsg = document.getElementById('noSlotsMsg');
+            const addBtn = document.getElementById('addSlotBtn');
 
-        {{-- Card 1: Thông tin chung --}}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
-                <h3 class="text-base font-semibold leading-6 text-gray-900">Thông tin chung</h3>
-            </div>
-            <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-                {{-- Date Input --}}
-                <div>
-                    <label for="date" class="block text-sm font-medium leading-6 text-gray-900 mb-2">Ngày áp dụng</label>
-                    <div class="relative">
-                        <input type="date" name="date" id="date" min="{{ date('Y-m-d') }}" required
-                               class="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6">
-                    </div>
-                </div>
+            let slotCounter = 0;
 
-                {{-- Status Toggle --}}
-                <div class="flex items-center h-full pt-6">
-                    <label class="relative inline-flex items-center cursor-pointer group">
-                        <input type="checkbox" name="is_open" value="1" checked class="sr-only peer">
-                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-pink-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
-                        <span class="ml-3 text-sm font-medium text-gray-900 group-hover:text-green-700 transition-colors">Đang mở (Cho phép đặt lịch)</span>
-                    </label>
-                </div>
-            </div>
-        </div>
+            function checkEmpty() {
+                if (container.children.length === 0) {
+                    noSlotsMsg.classList.remove('hidden');
+                } else {
+                    noSlotsMsg.classList.add('hidden');
+                }
+            }
 
-        {{-- Card 2: Cấu hình Slot --}}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
-                <div>
-                    <h3 class="text-base font-semibold leading-6 text-gray-900">Cấu hình khung giờ</h3>
-                    <p class="mt-1 text-xs text-gray-500">Thêm các khoảng thời gian khách có thể đặt.</p>
-                </div>
-                <button type="button" id="addSlotBtn"
-                        class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-pink-600 shadow-sm ring-1 ring-inset ring-pink-300 hover:bg-pink-50 transition-all">
-                    <svg class="-ml-0.5 mr-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                    </svg>
-                    Thêm khung giờ
-                </button>
-            </div>
+            // Hàm tạo slot mới với giao diện đẹp hơn
+            function addTimeSlot() {
+                const index = slotCounter++;
+                const slotDiv = document.createElement('div');
 
-            <div class="p-6 bg-gray-50/50 min-h-[150px]">
-                <div id="slotsContainer" class="space-y-3">
-                    </div>
+                // Style cho từng row slot: Flex box, background trắng, shadow nhẹ
+                slotDiv.className =
+                    'group relative bg-white p-4 rounded-lg border border-gray-200 shadow-sm transition-all hover:shadow-md hover:border-pink-200 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between animate-fade-in-down';
 
-                <div id="noSlotsMsg" class="text-center py-10 hidden">
-                    <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-100 mb-3">
-                        <svg class="w-6 h-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                    <p class="text-sm text-gray-500">Chưa có khung giờ nào được tạo.</p>
-                    <p class="text-xs text-gray-400">Nhấn nút "Thêm khung giờ" ở góc trên để bắt đầu.</p>
-                </div>
-            </div>
-        </div>
-
-        {{-- Action Buttons --}}
-        <div class="flex items-center justify-end gap-x-4 pt-4 border-t border-gray-200">
-            <a href="{{ url()->previous() }}" class="text-sm font-semibold leading-6 text-gray-900 hover:text-gray-700">Hủy bỏ</a>
-            <button type="submit" class="rounded-md bg-pink-600 px-8 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-pink-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600 transition-all">
-                Lưu cấu hình
-            </button>
-        </div>
-    </form>
-</div>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const container = document.getElementById('slotsContainer');
-    const noSlotsMsg = document.getElementById('noSlotsMsg');
-    const addBtn = document.getElementById('addSlotBtn');
-
-    let slotCounter = 0;
-
-    function checkEmpty() {
-        if (container.children.length === 0) {
-            noSlotsMsg.classList.remove('hidden');
-        } else {
-            noSlotsMsg.classList.add('hidden');
-        }
-    }
-
-    // Hàm tạo slot mới với giao diện đẹp hơn
-    function addTimeSlot() {
-        const index = slotCounter++;
-        const slotDiv = document.createElement('div');
-
-        // Style cho từng row slot: Flex box, background trắng, shadow nhẹ
-        slotDiv.className = 'group relative bg-white p-4 rounded-lg border border-gray-200 shadow-sm transition-all hover:shadow-md hover:border-pink-200 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between animate-fade-in-down';
-
-        slotDiv.innerHTML = `
+                slotDiv.innerHTML = `
             <div class="flex items-center gap-4 flex-1 w-full sm:w-auto">
                 {{-- Start Time --}}
                 <div class="flex-1">
@@ -150,23 +203,23 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
 
-        container.appendChild(slotDiv);
-        checkEmpty();
+                container.appendChild(slotDiv);
+                checkEmpty();
 
-        slotDiv.querySelector('.remove-btn').addEventListener('click', () => {
-            if (container.children.length <= 1) {
-                alert('Phải có ít nhất một khung giờ hoạt động!'); // Giữ nguyên logic alert
-                return;
+                slotDiv.querySelector('.remove-btn').addEventListener('click', () => {
+                    if (container.children.length <= 1) {
+                        alert('Phải có ít nhất một khung giờ hoạt động!'); // Giữ nguyên logic alert
+                        return;
+                    }
+                    slotDiv.remove();
+                    checkEmpty();
+                });
             }
-            slotDiv.remove();
-            checkEmpty();
-        });
-    }
 
-    addBtn.addEventListener('click', addTimeSlot);
-    addTimeSlot(); // Init 1 slot
-});
-</script>
+            addBtn.addEventListener('click', addTimeSlot);
+            addTimeSlot(); // Init 1 slot
+        });
+    </script>
 
 
 @endsection

@@ -184,9 +184,9 @@ class ProductService
         $price = ProductPrice::make(
             $productId,
             $priceData['price_type'] ?? 'fixed',
-            $priceData['price'] ?? null,
-            $priceData['price_min'] ?? null,
-            $priceData['price_max'] ?? null,
+            $this->sanitizeMoney($priceData['price'] ?? null),
+            $this->sanitizeMoney($priceData['price_min'] ?? null),
+            $this->sanitizeMoney($priceData['price_max'] ?? null),
             $priceData['note'] ?? null
         );
 
@@ -210,5 +210,14 @@ class ProductService
         if (Product::where('slug', $slug)->exists()) {
             throw new Exception("Slug sản phẩm đã tồn tại");
         }
+    }
+
+    private function sanitizeMoney(?string $value): ?int
+    {
+        if (!$value) {
+            return null;
+        }
+
+        return (int) preg_replace('/[^0-9]/', '', $value);
     }
 }

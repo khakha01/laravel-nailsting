@@ -199,7 +199,7 @@
                 </ul>
             </li>
 
-            <!-- Customer -->
+            <!-- Admin -->
             <li>
                 <a href="#"
                     class="flex items-center px-6 py-3 border-l-4 border-transparent
@@ -210,7 +210,7 @@
                                  zm0 0h6v-1a6 6 0 00-9-5.197
                                  M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                     </svg>
-                    Khách hàng
+                    Quản lý quản trị
                 </a>
             </li>
 

@@ -33,9 +33,9 @@ class UpdateProductRequest extends FormRequest
             'display_order' => ['required', 'integer', 'min:0', 'max:999'],
             'prices' => ['nullable', 'array'],
             'prices.*.price_type' => ['required', 'string', 'in:fixed,range,per_nail'],
-            'prices.*.price' => ['nullable', 'numeric', 'min:0'],
-            'prices.*.price_min' => ['nullable', 'numeric', 'min:0'],
-            'prices.*.price_max' => ['nullable', 'numeric', 'min:0'],
+            'prices.*.price' => ['nullable', 'string', 'regex:/^[0-9\.\,]+$/'],
+            'prices.*.price_min' => ['nullable', 'string', 'regex:/^[0-9\.\,]+$/'],
+            'prices.*.price_max' => ['nullable', 'string', 'regex:/^[0-9\.\,]+$/'],
             'prices.*.note' => ['nullable', 'string', 'max:500'],
         ];
     }

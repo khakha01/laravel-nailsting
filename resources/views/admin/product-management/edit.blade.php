@@ -123,9 +123,11 @@
                                         <select id="unit" name="unit" required
                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6">
                                             <option value="">-- Chọn đơn vị --</option>
-                                            @php $units = ['lần', 'móng', 'bộ', 'đôi', 'cặp', 'bộ 10 móng', 'bộ gel']; @endphp
-                                            @foreach($units as $u)
-                                                <option value="{{ $u }}" @selected(old('unit', $product->unit?->value) == $u)>{{ ucfirst($u) }}</option>
+
+                                             @foreach ($units as $value => $label)
+                                                <option value="{{ $value }}" @selected(old('unit', $product->unit?->value) == $value)>
+                                                    {{ $label }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -161,7 +163,7 @@
                                 {{-- Logic ưu tiên: Dữ liệu Old (khi lỗi) -> Dữ liệu DB -> Mặc định 1 dòng trống --}}
                                 @php
                                     $prices = old('prices', $product->prices->toArray());
-                                    if(empty($prices)) $prices = [['price_type' => 'fixed']]; // Fallback
+                                    if(empty($prices)) $prices = [['price_type' => 'fixed']];
                                 @endphp
 
                                 @foreach($prices as $index => $price)
@@ -198,7 +200,7 @@
                                                 {{-- Single Price --}}
                                                 <div class="js-single-price {{ $isRange ? 'hidden' : '' }}">
                                                     <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Giá tiền (VNĐ)</label>
-                                                    <input type="number" name="prices[{{ $index }}][price]" step="1000" value="{{ $price['price'] ?? '' }}"
+                                                    <input type="text" name="prices[{{ $index }}][price]" step="1000" oninput="formatCurrency(this)" value="{{ number_format($price['price'] ?? 0, 0, ',', '.') ?? '' }}"
                                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6">
                                                 </div>
 
@@ -206,12 +208,12 @@
                                                 <div class="js-range-price grid grid-cols-2 gap-2 {{ !$isRange ? 'hidden' : '' }}">
                                                     <div>
                                                         <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Thấp nhất</label>
-                                                        <input type="number" name="prices[{{ $index }}][price_min]" step="1000" value="{{ $price['price_min'] ?? '' }}"
+                                                        <input type="text" name="prices[{{ $index }}][price_min]" step="1000" oninput="formatCurrency(this)" value="{{ number_format($price['price_min'] ?? 0, 0, ',', '.') ?? '' }}"
                                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6">
                                                     </div>
                                                     <div>
                                                         <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Cao nhất</label>
-                                                        <input type="number" name="prices[{{ $index }}][price_max]" step="1000" value="{{ $price['price_max'] ?? '' }}"
+                                                        <input type="text" name="prices[{{ $index }}][price_max]" step="1000" oninput="formatCurrency(this)" value="{{ number_format($price['price_max'] ?? 0, 0, ',', '.') ?? '' }}"
                                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6">
                                                     </div>
                                                 </div>
@@ -241,6 +243,7 @@
                                     </label>
                                 </div>
                             </div>
+
                             <div class="mb-6">
                                 <label for="display_order" class="block text-sm font-medium leading-6 text-gray-900">Thứ tự hiển thị</label>
                                 <div class="mt-2">
@@ -285,6 +288,8 @@
 
 @push('scripts')
 <script src="{{ asset('js/slug.js') }}"></script>
+<script src="{{ asset('js/format-currency.js') }}"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Đếm số lượng item cũ/DB để tiếp tục index
@@ -319,19 +324,19 @@
                         <div class="price-input-wrapper">
                             <div class="js-single-price">
                                 <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Giá tiền (VNĐ)</label>
-                                <input type="number" name="prices[${priceIndex}][price]" step="1000"
+                                <input type="text" name="prices[${priceIndex}][price]" step="1000" oninput="formatCurrency(this)"
                                     class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6">
                             </div>
 
                             <div class="js-range-price grid grid-cols-2 gap-2 hidden">
                                 <div>
                                     <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Thấp nhất</label>
-                                    <input type="number" name="prices[${priceIndex}][price_min]" step="1000"
+                                    <input type="text" name="prices[${priceIndex}][price_min]" step="1000" oninput="formatCurrency(this)"
                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Cao nhất</label>
-                                    <input type="number" name="prices[${priceIndex}][price_max]" step="1000"
+                                    <input type="text" name="prices[${priceIndex}][price_max]" step="1000" oninput="formatCurrency(this)"
                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6">
                                 </div>
                             </div>
