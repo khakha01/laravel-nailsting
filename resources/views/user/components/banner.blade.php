@@ -19,7 +19,7 @@
             </p>
 
             <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                <button class="px-8 py-4 bg-[#ff0052] text-white rounded-full font-bold shadow-lg shadow-[#ff0052]/30 hover:-translate-y-1 transition transform">
+                <button class="px-8 py-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-full font-bold shadow-lg shadow-[#ff0052]/30 hover:-translate-y-1 transition transform">
                     Đặt lịch ngay
                 </button>
                 <button class="px-8 py-4 bg-white border border-slate-200 rounded-full font-bold hover:bg-slate-50 flex items-center justify-center gap-2 group text-slate-700">

@@ -44,7 +44,7 @@ class BookingDateController extends Controller
             $isOpen = (bool) $request->get('is_open');
             $timeSlots = $request->get('time_slots');
 
-            $this->bookingDateService->create($date, $isOpen, $timeSlots);
+            $this->bookingDateService->createService($date, $isOpen, $timeSlots);
 
             return redirect()->route('booking-dates.index')->with('success', 'Tạo ngày & khung giờ thành công');
         } catch (\Throwable $e) {
@@ -65,7 +65,7 @@ class BookingDateController extends Controller
         $date = $request->get('date');
         $isOpen = $request->get('is_open');
         $timeSlots = $request->get('time_slots');
-        $this->bookingDateService->update($bookingDateId, $date, $isOpen, $timeSlots);
+        $this->bookingDateService->updateService($bookingDateId, $date, $isOpen, $timeSlots);
 
         return redirect()
             ->route('booking-dates.index')
@@ -75,7 +75,7 @@ class BookingDateController extends Controller
     public function destroy(Request $request)
     {
         $id = (int) $request->route('id');
-        $this->bookingDateService->delete($id);
+        $this->bookingDateService->deleteService($id);
         return redirect()
             ->route('booking-dates.index')
             ->with('success', 'Hành động xóa thành công');
@@ -85,8 +85,7 @@ class BookingDateController extends Controller
     {
         try {
             $bookingDateIds = $request->input('booking_date_ids', []);
-
-            $this->bookingDateService->bulkDelete($bookingDateIds);
+            $this->bookingDateService->bulkDeleteService($bookingDateIds);
 
             return redirect()
                 ->route('booking-dates.index')

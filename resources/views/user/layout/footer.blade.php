@@ -32,7 +32,7 @@
                     </a>
                 </div>
                 <a href="#booking"
-                    class="inline-block rounded-full bg-[#ff0052]/90 text-white px-8 py-3 text-sm font-semibold
+                    class="inline-block rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white px-8 py-3 text-sm font-semibold
                   hover:bg-[#ff0052] transition shadow-sm">
                     Đặt lịch ngay →
                 </a>

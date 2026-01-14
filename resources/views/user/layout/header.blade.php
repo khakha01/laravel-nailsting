@@ -30,7 +30,7 @@
             <div class="flex items-center gap-3">
 
                 <a href="#"
-                   class="hidden sm:block bg-[#ff0052] text-white text-sm font-semibold
+                   class="hidden sm:block bg-gradient-to-r from-pink-500 to-rose-500 text-white text-sm font-semibold
                           px-5 py-2.5 rounded-full hover:bg-[#e1064d] transition">
                     Đặt lịch ngay
                 </a>

@@ -23,7 +23,7 @@ class BookingDateService
         return $this->bookingDateRepository->getAll();
     }
 
-    public function create(string $date, bool $isOpen, array $timeSlots): BookingDate
+    public function createService(string $date, bool $isOpen, array $timeSlots): BookingDate
     {
         $dateExists = BookingDate::where('date', $date)->first();
         if ($dateExists) {
@@ -45,7 +45,7 @@ class BookingDateService
         });
     }
 
-    public function update(int $id, string $date, bool $isOpen, array $timeSlots): BookingDate
+    public function updateService(int $id, string $date, bool $isOpen, array $timeSlots): BookingDate
     {
         $bookingDate = $this->bookingDateRepository->findById($id);
         if (!$bookingDate) {
@@ -82,7 +82,7 @@ class BookingDateService
         return $bookingDate;
     }
 
-    public function delete(int $id)
+    public function deleteService(int $id)
     {
         $bookingDate = $this->bookingDateRepository->findById($id);
         if (!$bookingDate) {
@@ -97,7 +97,7 @@ class BookingDateService
         });
     }
 
-    public function bulkDelete(array $bookingDateIds): void
+    public function bulkDeleteService(array $bookingDateIds): void
     {
         if (empty($bookingDateIds)) {
             throw new InvalidArgumentException('Vui lòng chọn ít nhất một ngày để xóa.');
