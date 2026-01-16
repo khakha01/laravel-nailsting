@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\BookingDateController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Permission\PermissionController;
 use App\Http\Controllers\User\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +31,32 @@ Route::middleware('auth')->group(function () {
  */
 Route::prefix('admin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+
+    // Admin Management
+    Route::group(['prefix' => 'admins', 'as' => 'admins.'], function () {
+        Route::get('/list', [AdminController::class, 'index'])->name('index');
+        Route::get('/create', [AdminController::class, 'create'])->name('create');
+        Route::post('/store', [AdminController::class, 'store'])->name('store');
+        Route::get('/{admin}', [AdminController::class, 'show'])->name('show');
+        Route::get('/{admin}/edit', [AdminController::class, 'edit'])->name('edit');
+        Route::put('/{admin}', [AdminController::class, 'update'])->name('update');
+        Route::delete('/{admin}', [AdminController::class, 'destroy'])->name('destroy');
+        Route::get('/{admin}/assign-permissions', [AdminController::class, 'assignPermissionsForm'])->name('assign-permissions');
+        Route::post('/{admin}/assign-permissions', [AdminController::class, 'assignPermissions'])->name('assign-permissions.store');
+    });
+
+    // Permission Management
+    Route::group(['prefix' => 'permissions', 'as' => 'permissions.'], function () {
+        Route::get('/list', [PermissionController::class, 'index'])->name('index');
+        Route::get('/create', [PermissionController::class, 'create'])->name('create');
+        Route::post('/store', [PermissionController::class, 'store'])->name('store');
+        Route::get('/{permission}', [PermissionController::class, 'show'])->name('show');
+        Route::get('/{permission}/edit', [PermissionController::class, 'edit'])->name('edit');
+        Route::put('/{permission}', [PermissionController::class, 'update'])->name('update');
+        Route::delete('/{permission}', [PermissionController::class, 'destroy'])->name('destroy');
+        Route::get('/{permission}/assign-admins', [PermissionController::class, 'assignAdminsForm'])->name('assign-admins');
+        Route::post('/{permission}/assign-admins', [PermissionController::class, 'assignAdmins'])->name('assign-admins.store');
+    });
 
     Route::group(['prefix' => 'booking-dates', 'as' => 'booking-dates.'], function () {
         Route::get('/list', [BookingDateController::class, 'index'])->name('index');

@@ -1,5 +1,17 @@
 <?php
 return [
+    'admins' => [
+        'prefix' => 'admins',
+        'all' => 'admins:all',
+        'by_id' => 'admins:id:%s',
+    ],
+
+    'permissions' => [
+        'prefix' => 'permissions',
+        'all' => 'permissions:all',
+        'grouped' => 'permissions:grouped',
+        'by_id' => 'permissions:id:%s',
+    ],
 
     'booking_dates' => [
         'prefix' => 'booking_dates',
