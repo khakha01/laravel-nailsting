@@ -42,4 +42,20 @@ return [
         'by_code' => 'products:code:%s',
         'by_category' => 'products:category:%s',
     ],
+
+    'nail_categories' => [
+        'prefix' => 'nail_categories',
+        'all' => 'nail_categories:all',
+        'root' => 'nail_categories:root',
+        'by_id' => 'nail_categories:id:%s',
+        'by_slug' => 'nail_categories:slug:%s',
+    ],
+
+    'nails' => [
+        'prefix' => 'nails',
+        'all' => 'nails:all',
+        'active' => 'nails:active',
+        'by_id' => 'nails:id:%s',
+        'by_slug' => 'nails:slug:%s',
+    ],
 ];

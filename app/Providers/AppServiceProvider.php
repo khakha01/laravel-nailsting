@@ -14,6 +14,12 @@ use App\Repositories\Category\CategoryRepositoryInterface;
 use App\Repositories\Permission\PermissionRepository;
 use App\Repositories\Permission\PermissionRepositoryCache;
 use App\Repositories\Permission\PermissionRepositoryInterface;
+use App\Repositories\Nail\NailRepository;
+use App\Repositories\Nail\NailRepositoryCache;
+use App\Repositories\Nail\NailRepositoryInterface;
+use App\Repositories\NailCategory\NailCategoryRepository;
+use App\Repositories\NailCategory\NailCategoryRepositoryCache;
+use App\Repositories\NailCategory\NailCategoryRepositoryInterface;
 use App\Repositories\Product\ProductRepository;
 use App\Repositories\Product\ProductRepositoryCache;
 use App\Repositories\Product\ProductRepositoryInterface;
@@ -41,6 +47,26 @@ class AppServiceProvider extends ServiceProvider
 
         # products
         $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
+
+        # nailCategories
+        $this->app->bind(
+            NailCategoryRepositoryInterface::class,
+            function ($app) {
+                return new NailCategoryRepositoryCache(
+                    new NailCategoryRepository()
+                );
+            }
+        );
+
+        # nails
+        $this->app->bind(
+            NailRepositoryInterface::class,
+            function ($app) {
+                return new NailRepositoryCache(
+                    new NailRepository()
+                );
+            }
+        );
     }
 
 

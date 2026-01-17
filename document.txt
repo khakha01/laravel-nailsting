@@ -6,7 +6,7 @@ php artisan breeze:install blade
 tôi dang design 1 website về nails, toi làm cho bạn toi de website này đơn giản là làm chế độ book lịch, show mẫu nail lên,bảng giá. toi muôn thiet kế giao diện trẻ trung, đầu tiên thiết kế tôi header trước.
  công nghệ dùng tailwin css màu chủ đạo là ff0052
 
-
+tôi có thêm 4 table nail mới (nails, nails_images, nail_prices, nails_categories)tiếp tục làm thêm 2 phần: dau tien là danh mục nail, 2 là phàn thêm nail( hình ảnh, giá, thong tin thêm...). thì làm tuân theo quy trinh controller, service, interface repo repo, repocache, ket hơp partren factory ben model. Và xem phần side bar để thêm các menu tương ứng vào. phần router xem ccacs route đặt soa đặt cho thống nhất 1 kiểu. Bạn có thể xem Categories để xem 1 quy trình luongf và làm thêm
 
 
 oke giờ thiết kế theo clean architectec, giờ làm controller gọi service trong service thiet ké theo repossitory, có inter face repo, repo và repocache

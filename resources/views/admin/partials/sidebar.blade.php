@@ -146,6 +146,104 @@
                 </ul>
             </li>
 
+            <!-- Nail Categories -->
+            <li>
+                <button onclick="toggleSubmenu('submenu-nail-categories', 'arrow-nail-categories')"
+                    class="w-full flex items-center justify-between px-6 py-3
+                           text-gray-700 hover:bg-gray-100 transition-colors focus:outline-none">
+                    <span class="flex items-center">
+                        <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0 4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0-5.571 3-5.571-3" />
+                        </svg>
+                        Quản lý danh mục nail
+                    </span>
+
+                    <svg id="arrow-nail-categories" class="w-4 h-4 transition-transform duration-300" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+
+                <!-- Submenu -->
+                <ul id="submenu-nail-categories" class="hidden bg-gray-50">
+                    <li>
+                        <a href="{{ route('nail-categories.index') }}"
+                            class="block pl-8 pr-4 py-2 text-sm
+                                  text-gray-600 hover:bg-gray-100 hover:text-blue-600 flex gap-2 items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                            </svg>
+                            Danh sách danh mục nail
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('nail-categories.create') }}"
+                            class="block pl-8 pr-4 py-2 text-sm
+                                  text-gray-600 hover:bg-gray-100 hover:text-blue-600 flex gap-2 items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
+                            Thêm danh mục nail
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- Nails -->
+            <li>
+                <button onclick="toggleSubmenu('submenu-nails', 'arrow-nails')"
+                    class="w-full flex items-center justify-between px-6 py-3
+                           text-gray-700 hover:bg-gray-100 transition-colors focus:outline-none">
+                    <span class="flex items-center">
+                        <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
+                        </svg>
+                        Quản lý nail
+                    </span>
+
+                    <svg id="arrow-nails" class="w-4 h-4 transition-transform duration-300" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+
+                <!-- Submenu -->
+                <ul id="submenu-nails" class="hidden bg-gray-50">
+                    <li>
+                        <a href="{{ route('nails.index') }}"
+                            class="block pl-8 pr-4 py-2 text-sm
+                                  text-gray-600 hover:bg-gray-100 hover:text-blue-600 flex gap-2 items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                            </svg>
+                            Danh sách nail
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('nails.create') }}"
+                            class="block pl-8 pr-4 py-2 text-sm
+                                  text-gray-600 hover:bg-gray-100 hover:text-blue-600 flex gap-2 items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
+                            Thêm nail
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
             <!-- Booking -->
             <li>
                 <button onclick="toggleSubmenu('submenu-booking', 'arrow-booking')"

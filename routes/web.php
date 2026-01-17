@@ -4,6 +4,8 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\BookingDateController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\NailCategoryController;
+use App\Http\Controllers\Admin\NailController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Permission\PermissionController;
 use App\Http\Controllers\User\ProfileController;
@@ -89,6 +91,26 @@ Route::prefix('admin')->group(function () {
         Route::get('/{product}/edit', [ProductController::class, 'edit'])->whereNumber('product')->name('edit');
         Route::put('/{product}', [ProductController::class, 'update'])->whereNumber('product')->name('update');
         Route::delete('/{product}', [ProductController::class, 'destroy'])->whereNumber('product')->name('destroy');
+    });
+
+    Route::group(['prefix' => 'nail-categories', 'as' => 'nail-categories.'], function () {
+        Route::get('/list', [NailCategoryController::class, 'index'])->name('index');
+        Route::get('/create', [NailCategoryController::class, 'create'])->name('create');
+        Route::post('/store', [NailCategoryController::class, 'store'])->name('store');
+        Route::delete('/bulk-delete', [NailCategoryController::class, 'bulkDelete'])->name('bulk-delete');
+        Route::get('/{id}', [NailCategoryController::class, 'show'])->whereNumber('id')->name('show');
+        Route::put('/update/{id}', [NailCategoryController::class, 'update'])->whereNumber('id')->name('update');
+        Route::delete('/{id}', [NailCategoryController::class, 'destroy'])->whereNumber('id')->name('delete');
+    });
+
+    Route::group(['prefix' => 'nails', 'as' => 'nails.'], function () {
+        Route::get('/list', [NailController::class, 'index'])->name('index');
+        Route::get('/create', [NailController::class, 'create'])->name('create');
+        Route::post('/store', [NailController::class, 'store'])->name('store');
+        Route::delete('/bulk-delete', [NailController::class, 'bulkDelete'])->name('bulk-delete');
+        Route::get('/{id}', [NailController::class, 'show'])->whereNumber('id')->name('show');
+        Route::put('/update/{id}', [NailController::class, 'update'])->whereNumber('id')->name('update');
+        Route::delete('/{id}', [NailController::class, 'destroy'])->whereNumber('id')->name('delete');
     });
 });
 
