@@ -145,86 +145,15 @@
                         </div>
                     </div>
 
-                    {{-- Card 2: Cấu hình giá (Dynamic) --}}
-                    <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
-                        <div class="px-4 py-6 sm:p-8">
-                            <div class="flex items-center justify-between mb-6 border-b pb-2">
-                                <h3 class="text-base font-semibold leading-6 text-gray-900">Cấu hình giá</h3>
-                                <button type="button" id="addPriceBtn"
-                                    class="inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.25a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z" clip-rule="evenodd" />
-                                    </svg>
-                                    Thêm giá
-                                </button>
-                            </div>
-
-                            <div id="pricesContainer" class="space-y-4">
-                                {{-- Logic ưu tiên: Dữ liệu Old (khi lỗi) -> Dữ liệu DB -> Mặc định 1 dòng trống --}}
-                                @php
-                                    $prices = old('prices', $product->prices->toArray());
-                                    if(empty($prices)) $prices = [['price_type' => 'fixed']];
-                                @endphp
-
-                                @foreach($prices as $index => $price)
-                                    @php
-                                        // Lưu ý: Nếu lấy từ DB (Model) thì là object, nếu từ Old là array.
-                                        // Ép kiểu về array để xử lý đồng nhất.
-                                        $price = (array) $price;
-                                        $type = $price['price_type'] ?? 'fixed';
-                                        $isRange = $type === 'range';
-                                    @endphp
-
-                                    <div class="price-item bg-gray-50 p-4 rounded-lg border border-gray-200 relative group animate-fade-in-down">
-                                        {{-- Nút xóa --}}
-                                        <button type="button" class="absolute top-2 right-2 text-gray-400 hover:text-red-500 remove-price transition-colors">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                            </svg>
-                                        </button>
-
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            {{-- Cột 1: Loại giá --}}
-                                            <div>
-                                                <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Loại giá</label>
-                                                <select name="prices[{{ $index }}][price_type]" class="js-price-type-select block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6">
-                                                    <option value="fixed" {{ $type == 'fixed' ? 'selected' : '' }}>Giá cố định</option>
-                                                    <option value="range" {{ $type == 'range' ? 'selected' : '' }}>Khoảng giá</option>
-                                                    <option value="per_nail" {{ $type == 'per_nail' ? 'selected' : '' }}>Từng móng</option>
-                                                </select>
-                                            </div>
-
-                                            {{-- Cột 2: Input giá (Ẩn hiện theo loại) --}}
-                                            <div class="price-input-wrapper">
-
-                                                {{-- Single Price --}}
-                                                <div class="js-single-price {{ $isRange ? 'hidden' : '' }}">
-                                                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Giá tiền (VNĐ)</label>
-                                                    <input type="text" name="prices[{{ $index }}][price]" step="1000" oninput="formatCurrency(this)" value="{{ number_format($price['price'] ?? 0, 0, ',', '.') ?? '' }}"
-                                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6">
-                                                </div>
-
-                                                {{-- Range Price --}}
-                                                <div class="js-range-price grid grid-cols-2 gap-2 {{ !$isRange ? 'hidden' : '' }}">
-                                                    <div>
-                                                        <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Thấp nhất</label>
-                                                        <input type="text" name="prices[{{ $index }}][price_min]" step="1000" oninput="formatCurrency(this)" value="{{ number_format($price['price_min'] ?? 0, 0, ',', '.') ?? '' }}"
-                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6">
-                                                    </div>
-                                                    <div>
-                                                        <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Cao nhất</label>
-                                                        <input type="text" name="prices[{{ $index }}][price_max]" step="1000" oninput="formatCurrency(this)" value="{{ number_format($price['price_max'] ?? 0, 0, ',', '.') ?? '' }}"
-                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6">
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
+                    {{-- Card 2: Cấu hình giá (Dynamic) - Reusable Component --}}
+                    @php
+                        $prices = old('prices', $product->prices->toArray());
+                    @endphp
+                    @include('admin.components.price-configuration', [
+                        'prices' => $prices,
+                        'inputName' => 'prices',
+                        'title' => 'Cấu hình giá Sản phẩm'
+                    ])
 
                 </div>
 
@@ -289,91 +218,6 @@
 @push('scripts')
 <script src="{{ asset('js/slug.js') }}"></script>
 <script src="{{ asset('js/format-currency.js') }}"></script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Đếm số lượng item cũ/DB để tiếp tục index
-        @php
-            $currentCount = count(old('prices', $product->prices->toArray()));
-            if($currentCount == 0) $currentCount = 1;
-        @endphp
-        let priceIndex = {{ $currentCount }};
-
-        const container = document.getElementById('pricesContainer');
-        const addBtn = document.getElementById('addPriceBtn');
-
-        // 1. Thêm dòng mới (Có đủ 2 loại input: Single & Range)
-        addBtn.addEventListener('click', function() {
-            const html = `
-                <div class="price-item bg-gray-50 p-4 rounded-lg border border-gray-200 relative group animate-fade-in-down mt-4">
-                    <button type="button" class="absolute top-2 right-2 text-gray-400 hover:text-red-500 remove-price transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                    </button>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Loại giá</label>
-                            <select name="prices[${priceIndex}][price_type]" class="js-price-type-select block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6">
-                                <option value="fixed">Giá cố định</option>
-                                <option value="range">Khoảng giá</option>
-                                <option value="per_nail">Từng móng</option>
-                            </select>
-                        </div>
-
-                        <div class="price-input-wrapper">
-                            <div class="js-single-price">
-                                <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Giá tiền (VNĐ)</label>
-                                <input type="text" name="prices[${priceIndex}][price]" step="1000" oninput="formatCurrency(this)"
-                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6">
-                            </div>
-
-                            <div class="js-range-price grid grid-cols-2 gap-2 hidden">
-                                <div>
-                                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Thấp nhất</label>
-                                    <input type="text" name="prices[${priceIndex}][price_min]" step="1000" oninput="formatCurrency(this)"
-                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Cao nhất</label>
-                                    <input type="text" name="prices[${priceIndex}][price_max]" step="1000" oninput="formatCurrency(this)"
-                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            container.insertAdjacentHTML('beforeend', html);
-            priceIndex++;
-        });
-
-        // 2. Xử lý sự kiện Xóa
-        container.addEventListener('click', function(e) {
-            if (e.target.closest('.remove-price')) {
-                e.target.closest('.price-item').remove();
-            }
-        });
-
-        // 3. Xử lý sự kiện thay đổi Loại giá (cho cả cũ và mới)
-        container.addEventListener('change', function(e) {
-            if (e.target.classList.contains('js-price-type-select')) {
-                const select = e.target;
-                const wrapper = select.closest('.grid').querySelector('.price-input-wrapper');
-                const singlePriceDiv = wrapper.querySelector('.js-single-price');
-                const rangePriceDiv = wrapper.querySelector('.js-range-price');
-
-                if (select.value === 'range') {
-                    singlePriceDiv.classList.add('hidden');
-                    rangePriceDiv.classList.remove('hidden');
-                } else {
-                    singlePriceDiv.classList.remove('hidden');
-                    rangePriceDiv.classList.add('hidden');
-                }
-            }
-        });
-    });
-</script>
 @endpush
 
 @endsection

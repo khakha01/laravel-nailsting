@@ -29,7 +29,7 @@ class NailRepository implements NailRepositoryInterface
     public function getAll(): Collection
     {
         return Nail::query()
-            ->with('images', 'prices')
+            ->with(['images.media', 'prices'])
             ->ordered()
             ->get();
     }

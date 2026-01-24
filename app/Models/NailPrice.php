@@ -11,14 +11,19 @@ class NailPrice extends Model
 
     protected $fillable = [
         'nail_id',
-        'title',
         'price',
+        'price_min',
+        'price_max',
+        'price_type',
+        'note',
         'is_default',
     ];
 
     protected $casts = [
         'nail_id' => 'integer',
         'price' => 'decimal:0',
+        'price_min' => 'decimal:0',
+        'price_max' => 'decimal:0',
         'is_default' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
@@ -40,13 +45,19 @@ class NailPrice extends Model
      * Factory method để tạo NailPrice
      */
     public static function make(
-        string $title,
-        float $price,
+        string $priceType = 'fixed',
+        ?float $price = null,
+        ?float $priceMin = null,
+        ?float $priceMax = null,
+        ?string $note = null,
         bool $isDefault = false
     ): static {
         return new static([
-            'title' => $title,
+            'price_type' => $priceType,
             'price' => $price,
+            'price_min' => $priceMin,
+            'price_max' => $priceMax,
+            'note' => $note,
             'is_default' => $isDefault,
         ]);
     }
@@ -69,4 +80,3 @@ class NailPrice extends Model
         return $query->orderBy('price');
     }
 }
-

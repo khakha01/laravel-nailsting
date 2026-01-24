@@ -112,9 +112,9 @@
                                     @php
                                         $primaryImage = $nail->getPrimaryImage();
                                     @endphp
-                                    @if($primaryImage)
+                                    @if($primaryImage && $primaryImage->media)
                                         <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
-                                            <img src="{{ asset('storage/' . $primaryImage->image_path) }}" alt="{{ $nail->name }}" class="w-full h-full object-cover">
+                                            <img src="{{ $primaryImage->media->url }}" alt="{{ $nail->name }}" class="w-full h-full object-cover">
                                         </div>
                                     @else
                                         <span class="text-sm text-gray-400">-</span>

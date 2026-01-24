@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\NailController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Permission\PermissionController;
 use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\Admin\MediaController;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -112,7 +113,17 @@ Route::prefix('admin')->group(function () {
         Route::put('/update/{id}', [NailController::class, 'update'])->whereNumber('id')->name('update');
         Route::delete('/{id}', [NailController::class, 'destroy'])->whereNumber('id')->name('delete');
     });
+    // Media Library (MinIO)
+    Route::group(['prefix' => 'media', 'as' => 'media.'], function () {
+        Route::get('/', [MediaController::class, 'index'])->name('index');
+        Route::post('/', [MediaController::class, 'store'])->name('store');
+        Route::post('/bulk-delete', [MediaController::class, 'bulkDestroy'])->name('bulk-delete');
+        Route::delete('/{id}', [MediaController::class, 'destroy'])->name('destroy');
+        Route::post('/folders', [MediaController::class, 'storeFolder'])->name('folders.store');
+        Route::delete('/folders/{id}', [MediaController::class, 'destroyFolder'])->name('folders.destroy');
+    });
 });
+
 
 
 require __DIR__ . '/auth.php';

@@ -11,13 +11,14 @@ class NailImage extends Model
 
     protected $fillable = [
         'nail_id',
-        'image_path',
+        'media_id',
         'is_primary',
         'sort_order',
     ];
 
     protected $casts = [
         'nail_id' => 'integer',
+        'media_id' => 'integer',
         'is_primary' => 'boolean',
         'sort_order' => 'integer',
         'created_at' => 'datetime',
@@ -34,21 +35,12 @@ class NailImage extends Model
         return $this->belongsTo(Nail::class);
     }
 
-    // ===== Factory Methods =====
-
     /**
-     * Factory method để tạo NailImage
+     * Image linked to Media
      */
-    public static function make(
-        string $imagePath,
-        bool $isPrimary = false,
-        int $sortOrder = 0
-    ): static {
-        return new static([
-            'image_path' => $imagePath,
-            'is_primary' => $isPrimary,
-            'sort_order' => $sortOrder,
-        ]);
+    public function media(): BelongsTo
+    {
+        return $this->belongsTo(Media::class);
     }
 
     // ===== Scopes =====

@@ -27,7 +27,25 @@
             </div>
         </div>
 
-        {{-- Error Alert --}}
+        {{-- Flash Error Message --}}
+        @if (session('error'))
+            <div class="mb-6 rounded-md bg-red-50 p-4 border-l-4 border-red-500">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm font-medium text-red-800">{{ session('error') }}</p>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        {{-- Validation Error Alert --}}
         @if ($errors->any())
             <div class="mb-6 rounded-md bg-red-50 p-4 border-l-4 border-red-500">
                 <div class="flex">
@@ -52,7 +70,7 @@
             </div>
         @endif
 
-        <form action="{{ route('nails.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('nails.store') }}" method="POST">
             @csrf
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -117,149 +135,88 @@
                         </div>
                     </div>
 
-                    {{-- Card 2: Hình ảnh (Dynamic) --}}
+                    {{-- Card 2: Hình ảnh (MinIO Integration) --}}
                     <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
                         <div class="px-4 py-6 sm:p-8">
                             <div class="flex items-center justify-between mb-6 border-b pb-2">
                                 <h3 class="text-base font-semibold leading-6 text-gray-900">Hình ảnh</h3>
-                                <button type="button" id="addImageBtn"
+                                <button type="button" onclick="openMediaModal()"
                                     class="inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400"
                                         viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd"
-                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.25a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z"
+                                            d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
                                             clip-rule="evenodd" />
                                     </svg>
-                                    Thêm hình ảnh
+                                    Chọn ảnh từ thư viện
                                 </button>
                             </div>
 
                             <div id="imagesContainer" class="space-y-4">
                                 @php
-                                    $oldImages = old('images', [['image_path' => '', 'is_primary' => false, 'sort_order' => 0]]);
+                                    $oldImages = old('images', []);
                                 @endphp
 
                                 @foreach ($oldImages as $index => $image)
-                                    <div
-                                        class="image-item bg-gray-50 p-4 rounded-lg border border-gray-200 relative group">
-                                        <button type="button"
-                                            class="absolute top-2 right-2 text-gray-400 hover:text-red-500 remove-image transition-colors"
-                                            title="Xóa dòng này">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                                                viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                            </svg>
-                                        </button>
+                                    @if(isset($image['media_id']))
+                                        <div class="image-item bg-gray-50 p-4 rounded-lg border border-gray-200 relative group">
+                                            <button type="button"
+                                                class="absolute top-2 right-2 text-gray-400 hover:text-red-500 remove-image transition-colors"
+                                                title="Xóa dòng này">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                            </button>
 
-                                        <div class="space-y-4">
-                                            {{-- File Upload Input --}}
-                                            <div>
-                                                <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Hình ảnh <span class="text-red-500">*</span></label>
-                                                <input type="file" name="images[{{ $index }}][image]" accept="image/*" required
-                                                    onchange="previewImage(this, 'preview-{{ $index }}')"
-                                                    class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100 cursor-pointer">
-                                                @error("images.$index.image")
-                                                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
-                                                @enderror
-                                                {{-- Preview --}}
-                                                <div id="preview-{{ $index }}" class="mt-2 hidden">
-                                                    <img src="" alt="Preview" class="w-32 h-32 object-cover rounded-lg border border-gray-200">
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div class="space-y-4">
                                                 <div>
-                                                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Thứ tự</label>
-                                                    <input type="number" name="images[{{ $index }}][sort_order]"
-                                                        value="{{ $image['sort_order'] ?? $index }}" min="0"
-                                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6">
+                                                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Hình ảnh</label>
+                                                    <div class="mt-2">
+                                                        {{-- Preview Image --}}
+                                                        <img src="{{ $image['preview_url'] ?? '#' }}" class="w-32 h-32 object-cover rounded-lg border border-gray-200">
+                                                        {{-- Hidden Input for media_id --}}
+                                                        <input type="hidden" name="images[{{ $index }}][media_id]" value="{{ $image['media_id'] }}">
+                                                        <!-- Optional: Keep preview_url for validation re-render if needed, but usually we just re-fetch or rely on user selecting again. 
+                                                             For old input rendering, we might need to pass the URL if validation fails. 
+                                                             But typically we just want to save the ID. If validation fails, we might lose the preview unless we store it in hidden field too?
+                                                             Let's store preview_url in hidden field for convenience if validation fails.
+                                                        -->
+                                                        <input type="hidden" name="images[{{ $index }}][preview_url]" value="{{ $image['preview_url'] ?? '' }}">
+                                                    </div>
                                                 </div>
-                                                <div class="flex items-end">
-                                                    <div class="flex items-center">
-                                                        <input type="checkbox" name="images[{{ $index }}][is_primary]" value="1"
-                                                            class="h-4 w-4 text-pink-600 border-gray-300 rounded focus:ring-pink-500"
-                                                            {{ ($image['is_primary'] ?? ($index === 0)) ? 'checked' : '' }}>
-                                                        <label class="ml-2 text-sm text-gray-700">Hình ảnh chính</label>
+
+                                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Thứ tự</label>
+                                                        <input type="number" name="images[{{ $index }}][sort_order]"
+                                                            value="{{ $image['sort_order'] ?? $index }}" min="0"
+                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6">
+                                                    </div>
+                                                    <div class="flex items-end">
+                                                        <div class="flex items-center">
+                                                            <input type="checkbox" name="images[{{ $index }}][is_primary]" value="1"
+                                                                class="h-4 w-4 text-pink-600 border-gray-300 rounded focus:ring-pink-500"
+                                                                {{ ($image['is_primary'] ?? false) ? 'checked' : '' }}>
+                                                            <label class="ml-2 text-sm text-gray-700">Hình ảnh chính</label>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    @endif
                                 @endforeach
                             </div>
                         </div>
                     </div>
 
-                    {{-- Card 3: Cấu hình giá (Dynamic) --}}
-                    <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
-                        <div class="px-4 py-6 sm:p-8">
-                            <div class="flex items-center justify-between mb-6 border-b pb-2">
-                                <h3 class="text-base font-semibold leading-6 text-gray-900">Cấu hình giá</h3>
-                                <button type="button" id="addPriceBtn"
-                                    class="inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400"
-                                        viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd"
-                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.25a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                    Thêm giá
-                                </button>
-                            </div>
-
-                            <div id="pricesContainer" class="space-y-4">
-                                @php
-                                    $oldPrices = old('prices', [['title' => '', 'price' => '', 'is_default' => false]]);
-                                @endphp
-
-                                @foreach ($oldPrices as $index => $price)
-                                    <div
-                                        class="price-item bg-gray-50 p-4 rounded-lg border border-gray-200 relative group">
-                                        <button type="button"
-                                            class="absolute top-2 right-2 text-gray-400 hover:text-red-500 remove-price transition-colors"
-                                            title="Xóa dòng này">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                                                viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                            </svg>
-                                        </button>
-
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <div>
-                                                <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Tiêu đề giá <span class="text-red-500">*</span></label>
-                                                <input type="text" name="prices[{{ $index }}][title]"
-                                                    value="{{ $price['title'] ?? '' }}" required
-                                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6"
-                                                    placeholder="VD: Giá cơ bản, Nail dài">
-                                                @error("prices.$index.title")
-                                                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
-                                                @enderror
-                                            </div>
-                                            <div>
-                                                <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Giá (VNĐ) <span class="text-red-500">*</span></label>
-                                                <input type="text" name="prices[{{ $index }}][price]"
-                                                    value="{{ $price['price'] ?? '' }}" required
-                                                    oninput="formatCurrency(this)"
-                                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6"
-                                                    placeholder="100000">
-                                                @error("prices.$index.price")
-                                                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="mt-3 flex items-center">
-                                            <input type="checkbox" name="prices[{{ $index }}][is_default]" value="1"
-                                                class="h-4 w-4 text-pink-600 border-gray-300 rounded focus:ring-pink-500"
-                                                {{ ($price['is_default'] ?? ($index === 0)) ? 'checked' : '' }}>
-                                            <label class="ml-2 text-sm text-gray-700">Giá mặc định</label>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
+                    {{-- Card 3: Cấu hình giá (Dynamic) - Reusable Component --}}
+                    @include('admin.components.price-configuration', [
+                        'prices' => old('prices', []),
+                        'inputName' => 'prices',
+                        'title' => 'Cấu hình giá Nail'
+                    ])
 
                 </div>
 
@@ -312,36 +269,60 @@
         </form>
     </div>
 
+    {{-- Media Manager Modal (Reusable Component) --}}
+    @include('admin.components.media-manager-modal')
+
     @push('scripts')
         <script src="{{ asset('js/slug.js') }}"></script>
         <script src="{{ asset('js/format-currency.js') }}"></script>
-
+        <script src="{{ asset('js/media-manager.js') }}"></script>
         <script>
-            // Preview image khi chọn file
-            function previewImage(input, previewId) {
-                const preview = document.getElementById(previewId);
-                if (input.files && input.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        preview.querySelector('img').src = e.target.result;
-                        preview.classList.remove('hidden');
-                    };
-                    reader.readAsDataURL(input.files[0]);
-                } else {
-                    preview.classList.add('hidden');
-                }
-            }
             document.addEventListener('DOMContentLoaded', function() {
-                let imageIndex = {{ count(old('images', [1])) }};
-                let priceIndex = {{ count(old('prices', [1])) }};
+                // 1. Initialize MinIO Media Manager
+                const mediaManager = new MediaManager({
+                    urls: {
+                        index: '{{ route('media.index') }}',
+                        store: '{{ route('media.store') }}',
+                        folderStore: '{{ route('media.folders.store') }}',
+                        folderDelete: '{{ route('media.folders.destroy', ['id' => '__ID__']) }}'.replace('__ID__', ''),
+                        mediaDelete: '{{ route('media.destroy', ['id' => '__ID__']) }}'.replace('__ID__', ''),
+                        mediaBulkDelete: '{{ route('media.bulk-delete') }}',
+                    },
+                    csrfToken: '{{ csrf_token() }}'
+                });
 
-                const imagesContainer = document.getElementById('imagesContainer');
-                const pricesContainer = document.getElementById('pricesContainer');
-                const addImageBtn = document.getElementById('addImageBtn');
-                const addPriceBtn = document.getElementById('addPriceBtn');
+                // 2. Override confirmSelection to add rows to our specific form
+                let imageIndex = {{ count(old('images', [])) }};
+                
+                // Recalculate index based on existing inputs in DOM to avoid collisions
+                const updateImageIndex = () => {
+                    const existingInputs = document.querySelectorAll('input[name^="images["][name$="][media_id]"]');
+                    if(existingInputs.length > 0) {
+                        imageIndex = Math.max(...Array.from(existingInputs).map(input => {
+                            const match = input.name.match(/images\[(\d+)\]/);
+                            return match ? parseInt(match[1]) : 0;
+                        })) + 1;
+                    }
+                };
+                updateImageIndex();
 
-                // Thêm hình ảnh
-                addImageBtn.addEventListener('click', function() {
+                mediaManager.confirmSelection = function() {
+                    const selected = this.state.selectedItemsMap;
+                    if (selected.size === 0) {
+                        this.closeMediaModal();
+                        return;
+                    }
+
+                    selected.forEach((item) => {
+                        addNailImageRow(item.id, item.url);
+                    });
+
+                    this.closeMediaModal();
+                    this.state.selectedItemsMap.clear();
+                    this.updateStatus();
+                }
+
+                function addNailImageRow(mediaId, previewUrl) {
                     const html = `
                         <div class="image-item bg-gray-50 p-4 rounded-lg border border-gray-200 relative group">
                             <button type="button" class="absolute top-2 right-2 text-gray-400 hover:text-red-500 remove-image transition-colors">
@@ -351,15 +332,13 @@
                             </button>
                             <div class="space-y-4">
                                 <div>
-                                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Hình ảnh <span class="text-red-500">*</span></label>
-                                    <input type="file" name="images[${imageIndex}][image]" accept="image/*" required
-                                        onchange="previewImage(this, 'preview-${imageIndex}')"
-                                        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100 cursor-pointer">
-                                    <div id="preview-${imageIndex}" class="mt-2 hidden">
-                                        <img src="" alt="Preview" class="w-32 h-32 object-cover rounded-lg border border-gray-200">
+                                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Hình ảnh</label>
+                                    <div class="mt-2">
+                                        <img src="${previewUrl}" class="w-32 h-32 object-cover rounded-lg border border-gray-200">
+                                        <input type="hidden" name="images[${imageIndex}][media_id]" value="${mediaId}">
+                                        <input type="hidden" name="images[${imageIndex}][preview_url]" value="${previewUrl}">
                                     </div>
                                 </div>
-                                
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
                                         <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Thứ tự</label>
@@ -377,56 +356,14 @@
                             </div>
                         </div>
                     `;
-                    imagesContainer.insertAdjacentHTML('beforeend', html);
+                    document.getElementById('imagesContainer').insertAdjacentHTML('beforeend', html);
                     imageIndex++;
-                });
-
-                // Thêm giá
-                addPriceBtn.addEventListener('click', function() {
-                    const html = `
-                        <div class="price-item bg-gray-50 p-4 rounded-lg border border-gray-200 relative group">
-                            <button type="button" class="absolute top-2 right-2 text-gray-400 hover:text-red-500 remove-price transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg>
-                            </button>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Tiêu đề giá <span class="text-red-500">*</span></label>
-                                    <input type="text" name="prices[${priceIndex}][title]" required
-                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6"
-                                        placeholder="VD: Giá cơ bản">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Giá (VNĐ) <span class="text-red-500">*</span></label>
-                                    <input type="text" name="prices[${priceIndex}][price]" required
-                                        oninput="formatCurrency(this)"
-                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6"
-                                        placeholder="100000">
-                                </div>
-                            </div>
-                            <div class="mt-3 flex items-center">
-                                <input type="checkbox" name="prices[${priceIndex}][is_default]" value="1"
-                                    class="h-4 w-4 text-pink-600 border-gray-300 rounded focus:ring-pink-500">
-                                <label class="ml-2 text-sm text-gray-700">Giá mặc định</label>
-                            </div>
-                        </div>
-                    `;
-                    pricesContainer.insertAdjacentHTML('beforeend', html);
-                    priceIndex++;
-                });
+                }
 
                 // Xóa hình ảnh
-                imagesContainer.addEventListener('click', function(e) {
+                document.getElementById('imagesContainer').addEventListener('click', function(e) {
                     if (e.target.closest('.remove-image')) {
                         e.target.closest('.image-item').remove();
-                    }
-                });
-
-                // Xóa giá
-                pricesContainer.addEventListener('click', function(e) {
-                    if (e.target.closest('.remove-price')) {
-                        e.target.closest('.price-item').remove();
                     }
                 });
             });
@@ -434,4 +371,3 @@
     @endpush
 
 @endsection
-

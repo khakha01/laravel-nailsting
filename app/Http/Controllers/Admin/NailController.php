@@ -36,7 +36,7 @@ class NailController extends Controller
             if ($request->has('images')) {
                 foreach ($request->input('images', []) as $index => $imageData) {
                     $images[] = [
-                        'image' => $request->file("images.{$index}.image"),
+                        'media_id' => $imageData['media_id'] ?? null,
                         'is_primary' => $imageData['is_primary'] ?? false,
                         'sort_order' => $imageData['sort_order'] ?? $index,
                     ];
@@ -57,8 +57,9 @@ class NailController extends Controller
                 ->with('success', 'Tạo nail thành công');
         } catch (\Throwable $e) {
             return redirect()
-                ->route('nails.index')
-                ->with('error', $e->getMessage());
+                ->back()
+                ->withInput()
+                ->with('error', 'Lỗi: ' . $e->getMessage());
         }
     }
 
@@ -80,10 +81,8 @@ class NailController extends Controller
             $images = [];
             if ($request->has('images')) {
                 foreach ($request->input('images', []) as $index => $imageData) {
-                    $file = $request->file("images.{$index}.image");
                     $images[] = [
-                        'image' => $file, // File mới upload (có thể null)
-                        'image_path' => $imageData['image_path'] ?? null, // Path cũ (nếu không upload mới)
+                        'media_id' => $imageData['media_id'] ?? null,
                         'is_primary' => $imageData['is_primary'] ?? false,
                         'sort_order' => $imageData['sort_order'] ?? $index,
                     ];

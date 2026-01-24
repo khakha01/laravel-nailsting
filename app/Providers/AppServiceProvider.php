@@ -49,24 +49,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
 
         # nailCategories
-        $this->app->bind(
-            NailCategoryRepositoryInterface::class,
-            function ($app) {
-                return new NailCategoryRepositoryCache(
-                    new NailCategoryRepository()
-                );
-            }
-        );
+        $this->app->bind(NailCategoryRepositoryInterface::class, NailCategoryRepository::class);
 
         # nails
-        $this->app->bind(
-            NailRepositoryInterface::class,
-            function ($app) {
-                return new NailRepositoryCache(
-                    new NailRepository()
-                );
-            }
-        );
+        $this->app->bind(NailRepositoryInterface::class, NailRepository::class);
     }
 
 

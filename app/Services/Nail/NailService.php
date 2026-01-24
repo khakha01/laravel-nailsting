@@ -51,43 +51,7 @@ class NailService
     }
 
     // ===== CREATE =====
-/*
-    public function createService(
-        string $name,
-        string $slug,
-        ?string $description = null,
-        string $status = 'active',
-        ?array $images = null,
-        ?array $prices = null
-    ): Nail {
-        // Validate
-        $this->validateSlugUnique($slug);
-
-        // Create with transaction
-        $nail = Nail::make($name, $slug, $description, $status);
-
-        return DB::transaction(function () use ($nail, $images, $prices) {
-            $nail = $this->nailRepository->save($nail);
-
-            // Add images
-            if ($images) {
-                foreach ($images as $index => $imageData) {
-                    $this->addImage($nail->id, $imageData, $index === 0);
-                }
-            }
-
-            // Add prices
-            if ($prices) {
-                foreach ($prices as $index => $priceData) {
-                    $this->addPrice($nail->id, $priceData, $index === 0);
-                }
-            }
-
-            return $nail;
-        });
-    }
-*/
-public function createService($name, $slug, $description, $status, $images, $prices): Nail
+    public function createService($name, $slug, $description, $status, $images, $prices): Nail
     {
         return DB::transaction(function () use ($name, $slug, $description, $status, $images, $prices) {
             $nail = Nail::create([
@@ -97,21 +61,21 @@ public function createService($name, $slug, $description, $status, $images, $pri
                 'status' => $status
             ]);
 
-            // Xử lý ảnh bằng Spatie
+            // Process Images (MinIO/MediaLibrary)
             if ($images) {
-                foreach ($images as $imageData) {
-                    if (isset($imageData['image']) && $imageData['image'] instanceof UploadedFile) {
-                        $nail->addMedia($imageData['image'])
-                             ->withCustomProperties([
-                                 'is_primary' => $imageData['is_primary'] ?? false,
-                                 'sort_order' => $imageData['sort_order'] ?? 0
-                             ])
-                             ->toMediaCollection('nail_images');
-                    }
+                foreach ($images as $index => $imageData) {
+                     if (!empty($imageData['media_id'])) {
+                         $this->addImage(
+                            $nail->id, 
+                            $imageData['media_id'], 
+                            $imageData['is_primary'] ?? ($index === 0), 
+                            $imageData['sort_order'] ?? $index
+                        );
+                     }
                 }
             }
 
-            // Xử lý giá (Giữ nguyên logic cũ của bạn)
+            // Process Prices
             if ($prices) {
                 foreach ($prices as $index => $priceData) {
                     $this->addPrice($nail->id, $priceData, $index === 0);
@@ -156,7 +120,9 @@ public function createService($name, $slug, $description, $status, $images, $pri
                 $nail->images()->delete();
 
                 foreach ($images as $index => $imageData) {
-                    $this->addImage($nail->id, $imageData, $index === 0, $index);
+                     if (!empty($imageData['media_id'])) {
+                        $this->addImage($nail->id, $imageData['media_id'], $imageData['is_primary'] ?? ($index === 0), $index);
+                     }
                 }
             }
 
@@ -165,7 +131,7 @@ public function createService($name, $slug, $description, $status, $images, $pri
                 $nail->prices()->delete();
 
                 foreach ($prices as $index => $priceData) {
-                    $this->addPrice($nail->id, $priceData, $index === 0);
+                    $this->addPrice($nail->id, $priceData, $priceData['is_default'] ?? false);
                 }
             }
 
@@ -204,50 +170,16 @@ public function createService($name, $slug, $description, $status, $images, $pri
 
     // ===== Image Management =====
 
-    public function addImage(int $nailId, array $imageData, bool $isPrimary = false, int $sortOrder = 0): NailImage
+    public function addImage(int $nailId, int $mediaId, bool $isPrimary = false, int $sortOrder = 0): NailImage
     {
-        $imagePath = $this->uploadImage($imageData);
-
-        $image = NailImage::make(
-            $imagePath,
-            $isPrimary,
-            $sortOrder
-        );
+        $image = new NailImage([
+            'media_id' => $mediaId,
+            'is_primary' => $isPrimary,
+            'sort_order' => $sortOrder
+        ]);
         $image->nail_id = $nailId;
 
         return $image->save() ? $image : throw new Exception('Không thể thêm hình ảnh');
-    }
-
-    /**
-     * Upload image file to storage
-     * @param array $imageData ['image' => UploadedFile|string, 'image_path' => string|null]
-     * @return string Image path relative to storage/public
-     */
-    protected function uploadImage(array $imageData): string
-    {
-        // Nếu có file mới upload
-        if (isset($imageData['image']) && $imageData['image'] instanceof UploadedFile) {
-            $file = $imageData['image'];
-            $folder = 'nails';
-
-            // Tạo folder nếu chưa tồn tại
-            if (!Storage::disk('public')->exists($folder)) {
-                Storage::disk('public')->makeDirectory($folder);
-            }
-
-            // Tạo tên file unique: timestamp_randomname.extension
-            $filename = time() . '_' . uniqid() . '_' . $file->getClientOriginalName();
-            $path = $file->storeAs($folder, $filename, 'public');
-
-            return $path; // Returns: nails/1234567890_abc123_filename.jpg
-        }
-
-        // Nếu có image_path cũ (khi edit không upload mới)
-        if (isset($imageData['image_path']) && !empty($imageData['image_path'])) {
-            return $imageData['image_path'];
-        }
-
-        throw new Exception('Hình ảnh là bắt buộc');
     }
 
     // ===== Price Management =====
@@ -255,8 +187,11 @@ public function createService($name, $slug, $description, $status, $images, $pri
     public function addPrice(int $nailId, array $priceData, bool $isDefault = false): NailPrice
     {
         $price = NailPrice::make(
-            $priceData['title'] ?? '',
-            $this->sanitizeMoney($priceData['price'] ?? 0),
+            $priceData['price_type'] ?? 'fixed',
+            $this->sanitizeMoney($priceData['price'] ?? null),
+            $this->sanitizeMoney($priceData['price_min'] ?? null),
+            $this->sanitizeMoney($priceData['price_max'] ?? null),
+            $priceData['note'] ?? null,
             $isDefault
         );
         $price->nail_id = $nailId;
@@ -273,17 +208,13 @@ public function createService($name, $slug, $description, $status, $images, $pri
         }
     }
 
-    private function sanitizeMoney($value): float
+    private function sanitizeMoney(?string $value): ?float
     {
-        if (is_numeric($value)) {
-            return (float) $value;
+        if (!$value) {
+            return null;
         }
 
-        if (is_string($value)) {
-            return (float) preg_replace('/[^0-9.]/', '', $value);
-        }
-
-        return 0.0;
+        return (float) preg_replace('/[^0-9]/', '', $value);
     }
 }
 
