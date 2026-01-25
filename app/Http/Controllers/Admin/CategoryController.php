@@ -20,24 +20,31 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         $isActive = $request->filled('is_active') ? (bool) $request->get('is_active') : null;
+        
+        // Parse category_id properly
+        $categoryId = $request->filled('category_id') ? (int) $request->get('category_id') : null;
 
         $query = new ListCategoryQuery(
             page: (int) ($request->get('page', 1)),
             perPage: (int) ($request->get('perPage', 15)),
             search: $request->get('search'),
             isActive: $isActive,
-            parentId: $request->get('parent_id'),
+            categoryId: $categoryId,
         );
 
         $categories = app(ListCategoryHandler::class)->execute($query);
+        
+        // Get all categories in hierarchical order for filter dropdown
+        $allCategories = $this->categoryService->getHierarchicalCategories();
 
-        return view('admin.category-management.index', compact('categories'));
+        return view('admin.category-management.index', compact('categories', 'allCategories'));
     }
 
     // ===== SHOW CREATE FORM =====
     public function create()
     {
-        $parentCategories = $this->categoryService->getActiveCategories();
+        // Use hierarchical categories to show proper indentation in dropdown
+        $parentCategories = $this->categoryService->getHierarchicalCategories();
         return view('admin.category-management.create', compact('parentCategories'));
     }
 
@@ -69,8 +76,14 @@ class CategoryController extends Controller
     {
         $id = (int) $request->route('id');
         $category = $this->categoryService->findById($id);
-        $parentCategories = $this->categoryService->getActiveCategories()
-            ->reject(fn($cat) => $cat->id === $id);
+        
+        // Use hierarchical categories but exclude current category and its children
+        // to prevent circular parent reference
+        $allChildren = $category->getAllChildren()->pluck('id')->toArray();
+        $excludeIds = array_merge([$id], $allChildren);
+        
+        $parentCategories = $this->categoryService->getHierarchicalCategories()
+            ->reject(fn($cat) => in_array($cat->id, $excludeIds));
 
         return view('admin.category-management.edit', compact('category', 'parentCategories'));
     }

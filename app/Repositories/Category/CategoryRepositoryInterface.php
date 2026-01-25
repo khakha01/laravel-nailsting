@@ -19,6 +19,8 @@ interface CategoryRepositoryInterface
 
     public function getActiveCategories(): Collection;
 
+    public function getActiveCategoriesWithProducts(): Collection;
+
     public function getCategoriesTree(): Collection;
 
     public function save(Category $category): Category;

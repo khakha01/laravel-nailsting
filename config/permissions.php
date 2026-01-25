@@ -36,12 +36,28 @@ return [
         'category-delete' => 'Xóa danh mục',
     ],
 
+    // Quản lý Nail Category
+    'nail-category' => [
+        'nail-category-view' => 'Xem danh sách danh mục nail',
+        'nail-category-create' => 'Tạo danh mục nail mới',
+        'nail-category-edit' => 'Chỉnh sửa danh mục nail',
+        'nail-category-delete' => 'Xóa danh mục nail',
+    ],
+
     // Quản lý Product
     'product' => [
         'product-view' => 'Xem danh sách sản phẩm',
         'product-create' => 'Tạo sản phẩm mới',
         'product-edit' => 'Chỉnh sửa sản phẩm',
         'product-delete' => 'Xóa sản phẩm',
+    ],
+
+    // Quản lý Nails
+    'nail' => [
+        'nail-view' => 'Xem danh sách nail',
+        'nail-create' => 'Tạo nail mới',
+        'nail-edit' => 'Chỉnh sửa nail',
+        'nail-delete' => 'Xóa nail',
     ],
 
     // Quản lý Booking
@@ -62,6 +78,13 @@ return [
     'report' => [
         'report-view' => 'Xem báo cáo',
         'report-export' => 'Xuất báo cáo',
+    ],
+
+    // Quản lý Media
+    'media' => [
+        'media-view' => 'Xem thư viện ảnh',
+        'media-upload' => 'Tải ảnh lên',
+        'media-delete' => 'Xóa ảnh',
     ],
 
     // Super Admin - Quyền tối cao

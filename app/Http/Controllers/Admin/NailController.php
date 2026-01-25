@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Nails\StoreNailRequest;
 use App\Http\Requests\Nails\UpdateNailRequest;
+use App\Queries\ListNails\ListNailHandler;
+use App\Queries\ListNails\ListNailQuery;
 use App\Services\Nail\NailService;
 use Illuminate\Http\Request;
 
@@ -17,8 +19,20 @@ class NailController extends Controller
     // ===== LIST & PAGINATION =====
     public function index(Request $request)
     {
-        $nails = $this->nailService->getAll();
-        return view('admin.nail-management.index', compact('nails'));
+        try {
+            $query = new ListNailQuery(
+                search: $request->get('search'),
+                status: $request->get('status'),
+                page: $request->get('page', 1),
+                perPage: (int) ($request->get('perPage', 15)),
+            );
+
+            $nails = app(ListNailHandler::class)->execute($query);
+
+            return view('admin.nail-management.index', compact('nails'));
+        } catch (\Exception $e) {
+            return back()->with('error', 'Không thể lấy danh sách nail: ' . $e->getMessage());
+        }
     }
 
     // ===== SHOW CREATE FORM =====

@@ -9,7 +9,7 @@ class ListCategoryQuery
         public int $perPage = 10,
         public ?string $search = null,
         public ?bool $isActive = null,
-        public ?int $parentId = null,
+        public ?int $categoryId = null,
     ) {
         $this->search = trim($this->search ?? '');
     }

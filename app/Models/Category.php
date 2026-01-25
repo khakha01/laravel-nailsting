@@ -50,6 +50,14 @@ class Category extends Model
         return $this->belongsTo(Category::class, 'parent_id');
     }
 
+    /**
+     * Category có thể có nhiều products
+     */
+    public function products(): HasMany
+    {
+        return $this->hasMany(\App\Models\Product::class);
+    }
+
     // ===== Factory Methods =====
 
     /**

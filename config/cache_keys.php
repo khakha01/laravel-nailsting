@@ -16,6 +16,7 @@ return [
     'booking_dates' => [
         'prefix' => 'booking_dates',
         'open' => 'booking_dates:open',
+        'available' => 'booking_dates:available',
         'by_id' => 'booking_dates:id:%s',
     ],
 
@@ -28,6 +29,7 @@ return [
         'all' => 'categories:all',
         'root' => 'categories:root',
         'active' => 'categories:active',
+        'with_products' => 'categories:with_products',
         'tree' => 'categories:tree',
         'by_id' => 'categories:id:%s',
         'by_slug' => 'categories:slug:%s',

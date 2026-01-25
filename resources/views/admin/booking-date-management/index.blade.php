@@ -211,7 +211,7 @@
                                         </a>
 
                                         {{-- Delete Button --}}
-                                        <form method="POST" action="{{ route('booking-dates.delete', $date->id) }}"
+                                        <form method="POST" action="{{ route('booking-dates.destroy', $date->id) }}"
                                             onsubmit="return confirm('Bạn có chắc chắn muốn xóa ngày làm việc này không? Hành động này không thể hoàn tác.')"
                                             class="inline-block">
                                             @csrf

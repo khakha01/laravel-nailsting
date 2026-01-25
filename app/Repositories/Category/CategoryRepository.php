@@ -38,7 +38,9 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         return Category::query()
             ->root()
-            ->with('children')
+            // Eager load children recursively to avoid N+1 queries
+            // This loads up to 5 levels deep - adjust if needed
+            ->with('children.children.children.children.children')
             ->ordered()
             ->get();
     }
@@ -48,6 +50,21 @@ class CategoryRepository implements CategoryRepositoryInterface
         return Category::query()
             ->active()
             ->with('children', 'parent')
+            ->ordered()
+            ->get();
+    }
+
+    public function getActiveCategoriesWithProducts(): Collection
+    {
+        return Category::query()
+            ->active()
+            // Only get categories that have products or (optional) load all
+            // Ideally we only want categories that have products for the booking page?
+            // User requirement: "show ra data ra theo form đó".
+            // We will load all active categories and their active products.
+            ->with(['products' => function ($query) {
+                $query->where('is_active', true)->with('prices');
+            }])
             ->ordered()
             ->get();
     }

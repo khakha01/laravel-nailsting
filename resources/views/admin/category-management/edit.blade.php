@@ -98,7 +98,7 @@
                                             <option value="">-- Không có danh mục cha (Danh mục gốc) --</option>
                                             @foreach($parentCategories as $parent)
                                                 <option value="{{ $parent->id }}" {{ old('parent_id', $category->parent_id) == $parent->id ? 'selected' : '' }}>
-                                                    {{ $parent->name }}
+                                                    {{ $parent->indent_name ?? $parent->name }}
                                                 </option>
                                             @endforeach
                                         </select>

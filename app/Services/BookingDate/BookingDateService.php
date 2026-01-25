@@ -23,6 +23,11 @@ class BookingDateService
         return $this->bookingDateRepository->getAll();
     }
 
+    public function getAvailableDates()
+    {
+        return $this->bookingDateRepository->getAvailable();
+    }
+
     public function createService(string $date, bool $isOpen, array $timeSlots): BookingDate
     {
         $dateExists = BookingDate::where('date', $date)->first();

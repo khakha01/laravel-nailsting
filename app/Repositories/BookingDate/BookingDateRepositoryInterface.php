@@ -13,6 +13,8 @@ interface BookingDateRepositoryInterface
 
     public function getAll(): Collection;
 
+    public function getAvailable(): Collection;
+
     public function delete(BookingDate $bookingDate): bool;
 
     public function findByIds(array $bookingDateIds): Collection;

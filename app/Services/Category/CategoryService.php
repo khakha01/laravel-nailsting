@@ -51,6 +51,11 @@ class CategoryService
         return $this->categoryRepository->getActiveCategories();
     }
 
+    public function getBookingServices(): Collection
+    {
+        return $this->categoryRepository->getActiveCategoriesWithProducts();
+    }
+
     public function getCategoriesTree(): Collection
     {
         return $this->categoryRepository->getCategoriesTree();
@@ -59,6 +64,42 @@ class CategoryService
     public function getCategoriesByParent(int $parentId): Collection
     {
         return $this->categoryRepository->findByParentId($parentId);
+    }
+
+    /**
+     * Get all categories in hierarchical order with indentation
+     * Returns collection with 'indent_name' property for display
+     */
+    public function getHierarchicalCategories(): Collection
+    {
+        $rootCategories = Category::whereNull('parent_id')
+            ->ordered()
+            ->get();
+
+        $result = collect();
+        
+        foreach ($rootCategories as $root) {
+            $this->addCategoryWithChildren($root, $result, 0);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Recursively add category and its children to result collection
+     */
+    private function addCategoryWithChildren(Category $category, Collection &$result, int $level): void
+    {
+        // Add indent prefix based on level
+        $indent = str_repeat('— ', $level);
+        $category->indent_name = $indent . $category->name;
+        $result->push($category);
+
+        // Add children
+        $children = $category->children()->ordered()->get();
+        foreach ($children as $child) {
+            $this->addCategoryWithChildren($child, $result, $level + 1);
+        }
     }
 
     // ===== CREATE =====

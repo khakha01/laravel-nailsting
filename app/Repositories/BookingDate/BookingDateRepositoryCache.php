@@ -43,6 +43,7 @@ class BookingDateRepositoryCache implements BookingDateRepositoryInterface
     {
         $this->cache->forget($this->cacheKey($bookingDate->id));
         $this->cache->forget($this->keys['open']);
+        $this->cache->forget($this->keys['available']);
         return $this->bookingDateRepository->save($bookingDate);
     }
 
@@ -51,6 +52,7 @@ class BookingDateRepositoryCache implements BookingDateRepositoryInterface
         $result = $this->bookingDateRepository->delete($bookingDate);
         $this->cache->forget($this->cacheKey($bookingDate->id));
         $this->cache->forget($this->keys['open']);
+        $this->cache->forget($this->keys['available']);
 
         return $result;
     }
@@ -61,6 +63,15 @@ class BookingDateRepositoryCache implements BookingDateRepositoryInterface
             $this->keys['open'],
             now()->addMinutes(10),
             fn() => $this->bookingDateRepository->getAll()
+        );
+    }
+
+    public function getAvailable(): Collection
+    {
+        return $this->cache->remember(
+            $this->keys['available'],
+            now()->addMinutes(10),
+            fn() => $this->bookingDateRepository->getAvailable()
         );
     }
 }

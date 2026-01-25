@@ -97,8 +97,9 @@
                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6">
                                             <option value="">-- Không có danh mục cha (Danh mục gốc) --</option>
                                             @foreach($parentCategories as $parent)
-                                                <option value="{{ $parent->id }}" {{ old('parent_id') == $parent->id ? 'selected' : '' }}>
-                                                    {{ $parent->name }}
+                                                <option value="{{ $parent->id }}" 
+                                                    {{ (old('parent_id', request('parent_id')) == $parent->id) ? 'selected' : '' }}>
+                                                    {{ $parent->indent_name ?? $parent->name }}
                                                 </option>
                                             @endforeach
                                         </select>

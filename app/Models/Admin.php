@@ -5,8 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
-class Admin extends Authenticatable
+class Admin extends Authenticatable implements JWTSubject
 {
     protected $table = 'admins';
 
@@ -56,11 +57,22 @@ class Admin extends Authenticatable
     }
 
     /**
+     * Kiểm tra admin có phải là superadmin không
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->permissions->contains('code', 'super-admin');
+    }
+
+    /**
      * Kiểm tra admin có quyền hay không
      */
     public function hasPermission(string $code): bool
     {
-        return $this->permissions()->where('code', $code)->exists();
+        if ($this->isSuperAdmin()) {
+            return true;
+        }
+        return $this->permissions->contains('code', $code);
     }
 
     /**
@@ -68,7 +80,10 @@ class Admin extends Authenticatable
      */
     public function hasAllPermissions(array $codes): bool
     {
-        return $this->permissions()
+        if ($this->isSuperAdmin()) {
+            return true;
+        }
+        return $this->permissions
             ->whereIn('code', $codes)
             ->count() === count($codes);
     }
@@ -78,8 +93,31 @@ class Admin extends Authenticatable
      */
     public function hasAnyPermission(array $codes): bool
     {
-        return $this->permissions()
+        if ($this->isSuperAdmin()) {
+            return true;
+        }
+        return $this->permissions
             ->whereIn('code', $codes)
-            ->exists();
+            ->isNotEmpty();
+    }
+
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 }

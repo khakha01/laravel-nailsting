@@ -13,24 +13,27 @@ class ListCategoryHandler
 
         // Filter by search
         if ($query->search) {
-            $builder->where('name', 'like', '%' . $query->search . '%')
-                ->orWhere('slug', 'like', '%' . $query->search . '%')
-                ->orWhere('description', 'like', '%' . $query->search . '%');
+            $builder->where(function($q) use ($query) {
+                $q->where('name', 'like', '%' . $query->search . '%')
+                  ->orWhere('slug', 'like', '%' . $query->search . '%')
+                  ;
+            });
         }
 
         // Filter by active status
         if ($query->isActive !== null) {
             $builder->where('is_active', $query->isActive);
         }
-
-        // Filter by parent
-        if ($query->parentId !== null) {
-            $builder->where('parent_id', $query->parentId);
+        
+        // Filter by category ID
+        if ($query->categoryId !== null) {
+            $builder->where('id', $query->categoryId);
         }
 
         // Order and paginate
         $builder->with('children', 'parent')
             ->ordered();
+
 
         return $builder->paginate( $query->perPage, ['*'], 'page', $query->page);
     }

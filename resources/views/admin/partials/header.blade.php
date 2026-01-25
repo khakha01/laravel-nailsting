@@ -20,9 +20,15 @@
 
             <div class="relative group">
                 <button class="flex items-center focus:outline-none">
-                    <img class="w-8 h-8 rounded-full object-cover border border-gray-300" src="https://ui-avatars.com/api/?name={{ Auth::user()->name ?? 'Admin' }}" alt="User avatar">
-                    <span class="ml-2 text-sm font-medium text-gray-600 group-hover:text-gray-800 hidden md:block">{{ Auth::user()->name ?? 'Administrator' }}</span>
+                    <img class="w-8 h-8 rounded-full object-cover border border-gray-300" src="https://ui-avatars.com/api/?name={{ Auth::guard('admin')->user()->name ?? 'Admin' }}" alt="User avatar">
+                    <span class="ml-2 text-sm font-medium text-gray-600 group-hover:text-gray-800 hidden md:block">{{ Auth::guard('admin')->user()->name ?? 'Administrator' }}</span>
                 </button>
+                <div class="absolute right-0 w-48 mt-2 py-1 bg-white rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none group-hover:pointer-events-auto border border-gray-100">
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">Hồ sơ</a>
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">Cài đặt</a>
+                    <hr class="my-1 border-gray-100">
+                    <button onclick="handleLogout()" class="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-red-50">Đăng xuất</button>
+                </div>
             </div>
         </div>
     </div>

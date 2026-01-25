@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NailCategories\StoreNailCategoryRequest;
 use App\Http\Requests\NailCategories\UpdateNailCategoryRequest;
+use App\Queries\ListNailCategories\ListNailCategoryHandler;
+use App\Queries\ListNailCategories\ListNailCategoryQuery;
 use App\Services\NailCategory\NailCategoryService;
 use Illuminate\Http\Request;
 
@@ -17,8 +19,26 @@ class NailCategoryController extends Controller
     // ===== LIST & PAGINATION =====
     public function index(Request $request)
     {
-        $nailCategories = $this->nailCategoryService->getAll();
-        return view('admin.nail-category-management.index', compact('nailCategories'));
+        try {
+            // Parse category_id properly
+            $categoryId = $request->filled('category_id') ? (int) $request->get('category_id') : null;
+            
+            $query = new ListNailCategoryQuery(
+                page: (int) ($request->get('page', 1)),
+                perPage: (int) ($request->get('perPage', 15)),
+                search: $request->get('search'),
+                categoryId: $categoryId,
+            );
+
+            $nailCategories = app(ListNailCategoryHandler::class)->execute($query);
+            
+            // Get all categories in hierarchical order for filter dropdown
+            $allCategories = $this->nailCategoryService->getHierarchicalCategories();
+
+            return view('admin.nail-category-management.index', compact('nailCategories', 'allCategories'));
+        } catch (\Exception $e) {
+            return back()->with('error', 'Không thể lấy danh sách danh mục nail: ' . $e->getMessage());
+        }
     }
 
     // ===== SHOW CREATE FORM =====

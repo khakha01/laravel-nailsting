@@ -51,6 +51,42 @@ class NailCategoryService
         return $this->nailCategoryRepository->findByParentId($parentId);
     }
 
+    /**
+     * Get all categories in hierarchical order with indentation
+     * Returns collection with 'indent_name' property for display
+     */
+    public function getHierarchicalCategories(): Collection
+    {
+        $rootCategories = NailCategory::whereNull('parent_id')
+            ->ordered()
+            ->get();
+
+        $result = collect();
+        
+        foreach ($rootCategories as $root) {
+            $this->addCategoryWithChildren($root, $result, 0);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Recursively add category and its children to result collection
+     */
+    private function addCategoryWithChildren(NailCategory $category, Collection &$result, int $level): void
+    {
+        // Add indent prefix based on level
+        $indent = str_repeat('— ', $level);
+        $category->indent_name = $indent . $category->name;
+        $result->push($category);
+
+        // Add children
+        $children = $category->children()->ordered()->get();
+        foreach ($children as $child) {
+            $this->addCategoryWithChildren($child, $result, $level + 1);
+        }
+    }
+
     // ===== CREATE =====
 
     public function createService(

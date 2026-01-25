@@ -82,6 +82,15 @@ class CategoryRepositoryCache implements CategoryRepositoryInterface
         );
     }
 
+    public function getActiveCategoriesWithProducts(): Collection
+    {
+        return $this->cache->remember(
+            $this->keys['with_products'],
+            now()->addMinutes(30),
+            fn() => $this->categoryRepository->getActiveCategoriesWithProducts()
+        );
+    }
+
     public function getCategoriesTree(): Collection
     {
         return $this->cache->remember(
@@ -125,6 +134,7 @@ class CategoryRepositoryCache implements CategoryRepositoryInterface
         $this->cache->forget($this->keys['all']);
         $this->cache->forget($this->keys['root']);
         $this->cache->forget($this->keys['active']);
+        $this->cache->forget($this->keys['with_products']);
         $this->cache->forget($this->keys['tree']);
     }
 }

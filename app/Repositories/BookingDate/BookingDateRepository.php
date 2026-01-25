@@ -29,6 +29,17 @@ class BookingDateRepository implements BookingDateRepositoryInterface
             ->get();
     }
 
+    public function getAvailable(): Collection
+    {
+        return BookingDate::where('is_open', true)
+            ->whereDate('date', '>=', now())
+            ->with(['timeSlots' => function ($query) {
+                $query->where('is_open', true)->orderBy('start_time');
+            }])
+            ->orderBy('date')
+            ->get();
+    }
+
     public function findByIds(array $ids): Collection
     {
         return BookingDate::with('timeSlots')

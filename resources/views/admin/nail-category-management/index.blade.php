@@ -74,6 +74,66 @@
             </div>
         @endif
 
+        {{-- Filter Section --}}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 mb-8">
+            <div class="mb-4 flex items-center gap-2 text-gray-800">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#0c8fe1]" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
+                </svg>
+                <h3 class="font-semibold text-sm uppercase tracking-wide">Bộ lọc tìm kiếm</h3>
+            </div>
+
+            <form method="GET" action="{{ route('nail-categories.index') }}">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                    {{-- Search --}}
+                    <div class="md:col-span-5">
+                        <label class="block text-xs font-medium text-gray-500 uppercase mb-1.5 ml-1">Tìm kiếm</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </div>
+                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Nhập tên danh mục..."
+                                class="w-full pl-10 rounded-lg border-gray-200 bg-gray-50 text-gray-700 focus:bg-white focus:border-pink-500 focus:ring-pink-500 sm:text-sm h-10 transition-colors">
+                        </div>
+                    </div>
+
+                    {{-- Category Filter --}}
+                    <div class="md:col-span-5">
+                        <label class="block text-xs font-medium text-gray-500 uppercase mb-1.5 ml-1">Lọc theo danh mục</label>
+                        <select name="category_id"
+                            class="w-full rounded-lg border-gray-200 bg-gray-50 text-gray-700 focus:bg-white focus:border-pink-500 focus:ring-pink-500 sm:text-sm h-10 transition-colors">
+                            <option value="">-- Tất cả danh mục --</option>
+                            @foreach($allCategories as $category)
+                                <option value="{{ $category->id }}" @selected(request('category_id') == $category->id)>
+                                    {{ $category->indent_name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- Buttons --}}
+                    <div class="md:col-span-2 flex items-center gap-2">
+                        <button type="submit"
+                            class="flex-1 inline-flex justify-center items-center gap-2 rounded-lg bg-[#000] px-3 h-10 text-sm font-medium text-white shadow-sm hover:bg-[#0c8fe1] focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 transition-all">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                            </svg>
+                            Lọc
+                        </button>
+                        <a href="{{ route('nail-categories.index') }}"
+                            class="inline-flex justify-center items-center rounded-lg border border-gray-200 bg-white px-3 h-10 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-pink-600 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
         {{-- Main Table --}}
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div class="overflow-x-auto">
@@ -135,7 +195,7 @@
                                         </a>
 
                                         {{-- Delete Button --}}
-                                        <form method="POST" action="{{ route('nail-categories.delete', $nailCategory->id) }}"
+                                        <form method="POST" action="{{ route('nail-categories.destroy', $nailCategory->id) }}"
                                             class="inline-block" onsubmit="return confirm('Xóa danh mục nail này?')">
                                             @csrf
                                             @method('DELETE')
@@ -173,6 +233,9 @@
                         @endforelse
                     </tbody>
                 </table>
+                <div class="border-t border-gray-200 bg-gray-50 px-4 py-3 sm:px-6">
+                    {{ $nailCategories->withQueryString()->links() }}
+                </div>
             </div>
         </div>
 
