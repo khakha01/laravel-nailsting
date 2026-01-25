@@ -38,7 +38,7 @@ class NailRepository implements NailRepositoryInterface
     {
         return Nail::query()
             ->active()
-            ->with('images', 'prices')
+            ->with(['images.media', 'prices'])
             ->ordered()
             ->get();
     }

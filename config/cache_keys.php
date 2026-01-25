@@ -60,4 +60,11 @@ return [
         'by_id' => 'nails:id:%s',
         'by_slug' => 'nails:slug:%s',
     ],
+
+    'banners' => [
+        'prefix' => 'banners',
+        'all' => 'banners:all',
+        'active' => 'banners:active',
+        'by_id' => 'banners:id:%s',
+    ],
 ];

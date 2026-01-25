@@ -5,6 +5,8 @@ namespace App\Providers;
 use App\Repositories\Admin\AdminRepository;
 use App\Repositories\Admin\AdminRepositoryCache;
 use App\Repositories\Admin\AdminRepositoryInterface;
+use App\Repositories\Banner\BannerRepository;
+use App\Repositories\Banner\BannerRepositoryInterface;
 use App\Repositories\BookingDate\BookingDateRepository;
 use App\Repositories\BookingDate\BookingDateRepositoryInterface;
 use App\Repositories\BookingTimeSlot\BookingTimeSlotRepository;
@@ -53,6 +55,9 @@ class AppServiceProvider extends ServiceProvider
 
         # nails
         $this->app->bind(NailRepositoryInterface::class, NailRepository::class);
+
+        # banners
+        $this->app->bind(BannerRepositoryInterface::class, BannerRepository::class);
     }
 
 

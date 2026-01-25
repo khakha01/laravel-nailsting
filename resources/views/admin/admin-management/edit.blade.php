@@ -1,135 +1,135 @@
 @extends('admin.layouts.layout')
 
-@section('title', 'Edit Admin')
+@section('title', 'Cập nhật Admin')
 
 @section('content')
 
-    <div class="px-4 sm:px-6 lg:px-8 py-10 bg-gray-50 h-full min-h-screen">
-        {{-- Header Section --}}
-        <div class="md:flex md:items-center md:justify-between mb-8">
-            <div class="min-w-0 flex-1">
-                <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
-                    Chỉnh Sửa Admin
-                </h2>
-                <p class="mt-1 text-sm text-gray-500">Cập nhật thông tin và quyền hạn cho admin.</p>
-            </div>
-            <div class="mt-4 flex md:ml-4 md:mt-0">
-                <a href="{{ route('admins.index') }}"
-                    class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 transition-all">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd" />
-                    </svg>
-                    Quay lại danh sách
-                </a>
-            </div>
-        </div>
-
-        {{-- Error Alert --}}
-        @if ($errors->any())
-            <div class="mb-6 rounded-md bg-red-50 p-4 border-l-4 border-red-500">
-                <div class="flex">
-                    <div class="flex-shrink-0">
-                        <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <div class="ml-3">
-                        <h3 class="text-sm font-medium text-red-800">Có lỗi xảy ra khi gửi form:</h3>
-                        <div class="mt-2 text-sm text-red-700">
-                            <ul role="list" class="list-disc space-y-1 pl-5">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
+    <div class="min-h-screen bg-[#f8fafc] pb-12">
+        {{-- Top Bar: Sticky --}}
+        <div class="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200 mb-8">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center gap-4">
+                        <a href="{{ route('admins.index') }}"
+                            class="p-2 rounded-full hover:bg-slate-100 text-slate-500 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                        </a>
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-900">Cập nhật Admin</h2>
+                            <p class="text-xs text-slate-500 font-medium uppercase tracking-wider">ID: #{{ $admin->id }} -
+                                Admin Management System</p>
                         </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button type="button" onclick="window.location='{{ route('admins.index') }}'"
+                            class="px-4 py-2 text-sm font-semibold text-slate-700 bg-white border border-gray-300 rounded-lg hover:bg-slate-50 shadow-sm transition-all">
+                            Hủy
+                        </button>
+                        <button type="submit" form="main-admin-form"
+                            class="px-6 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-md shadow-blue-200 transition-all">
+                            Cập nhật thay đổi
+                        </button>
                     </div>
                 </div>
             </div>
-        @endif
+        </div>
 
-        <form method="POST" action="{{ route('admins.update', $admin) }}">
-            @csrf
-            @method('PUT')
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {{-- Flash Error Message --}}
+            @if ($errors->any())
+                <div class="mb-6 flex items-center p-4 text-red-800 border-t-4 border-red-500 bg-red-50 rounded-lg shadow-sm"
+                    role="alert">
+                    <svg class="flex-shrink-0 w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium">Có lỗi xảy ra khi gửi form:</h3>
+                        <ul class="mt-2 text-sm list-disc pl-5">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            @endif
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <form id="main-admin-form" action="{{ route('admins.update', $admin) }}" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-                {{-- Left Column: Main Content --}}
-                <div class="lg:col-span-2 space-y-8">
-                    {{-- Thông Tin Cơ Bản --}}
-                    <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
-                        <div class="px-4 py-6 sm:p-8">
-                            <h3 class="text-lg font-semibold mb-6 text-gray-900">Thông Tin Cơ Bản</h3>
-                            <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                    {{-- Cột Trái: Content --}}
+                    <div class="lg:col-span-8 space-y-8">
+                        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                            <div class="border-b border-slate-100 bg-slate-50/50 px-6 py-4">
+                                <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                                    <span class="w-2 h-6 bg-blue-600 rounded-full"></span>
+                                    Thông tin cơ bản
+                                </h3>
+                            </div>
 
+                            <div class="p-6 space-y-6">
                                 {{-- Name --}}
-                                <div class="sm:col-span-6">
-                                    <label for="name" class="block text-sm font-medium leading-6 text-gray-900">
+                                <div>
+                                    <label class="block text-sm font-bold text-slate-800 mb-2">
                                         Tên Admin <span class="text-red-500">*</span>
                                     </label>
-                                    <div class="mt-2">
-                                        <input type="text" name="name" id="name" value="{{ old('name', $admin->name) }}" required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 @error('name') ring-red-300 focus:ring-red-500 @enderror"
-                                            placeholder="Ví dụ: Nguyễn Văn A">
-                                        @error('name')
-                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                        @enderror
-                                    </div>
+                                    <input type="text" name="name" id="name" value="{{ old('name', $admin->name) }}"
+                                        required placeholder="Ví dụ: Nguyễn Văn A"
+                                        class="w-full rounded-xl border border-gray-300 bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all px-4 py-3 text-slate-900 placeholder:text-slate-400">
+                                    @error('name')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 {{-- Email --}}
-                                <div class="sm:col-span-6">
-                                    <label for="email" class="block text-sm font-medium leading-6 text-gray-900">
+                                <div>
+                                    <label class="block text-sm font-bold text-slate-800 mb-2">
                                         Email <span class="text-red-500">*</span>
                                     </label>
-                                    <div class="mt-2">
-                                        <input type="email" name="email" id="email" value="{{ old('email', $admin->email) }}" required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 @error('email') ring-red-300 focus:ring-red-500 @enderror"
-                                            placeholder="admin@example.com">
-                                        @error('email')
-                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                        @enderror
-                                    </div>
+                                    <input type="email" name="email" id="email" value="{{ old('email', $admin->email) }}"
+                                        required placeholder="admin@example.com"
+                                        class="w-full rounded-xl border border-gray-300 bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all px-4 py-3 text-slate-900 placeholder:text-slate-400">
+                                    @error('email')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 {{-- Phone --}}
-                                <div class="sm:col-span-6">
-                                    <label for="phone" class="block text-sm font-medium leading-6 text-gray-900">
-                                        Số Điện Thoại
-                                    </label>
-                                    <div class="mt-2">
-                                        <input type="tel" name="phone" id="phone" value="{{ old('phone', $admin->phone) }}"
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
-                                            placeholder="+84 9xx xxx xxx">
-                                        @error('phone')
-                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                        @enderror
-                                    </div>
+                                <div>
+                                    <label class="block text-sm font-bold text-slate-800 mb-2">Số Điện Thoại</label>
+                                    <input type="tel" name="phone" id="phone" value="{{ old('phone', $admin->phone) }}"
+                                        placeholder="+84 9xx xxx xxx"
+                                        class="w-full rounded-xl border border-gray-300 bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all px-4 py-3 text-slate-900 placeholder:text-slate-400">
+                                    @error('phone')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
-                                {{-- Password --}}
-                                <div class="sm:col-span-3">
-                                    <label for="password" class="block text-sm font-medium leading-6 text-gray-900">
-                                        Mật Khẩu Mới <span class="text-gray-500 text-xs">(Để trống để giữ nguyên)</span>
-                                    </label>
-                                    <div class="mt-2">
-                                        <input type="password" name="password" id="password"
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 @error('password') ring-red-300 focus:ring-red-500 @enderror"
-                                            placeholder="Tối thiểu 8 ký tự">
+                                {{-- Password Fields --}}
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-sm font-bold text-slate-800 mb-2">
+                                            Mật Khẩu Mới <span class="text-slate-500 text-xs">(Để trống để giữ
+                                                nguyên)</span>
+                                        </label>
+                                        <input type="password" name="password" id="password" placeholder="Tối thiểu 8 ký tự"
+                                            class="w-full rounded-xl border border-gray-300 bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all px-4 py-3 text-slate-900">
                                         @error('password')
                                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                         @enderror
                                     </div>
-                                </div>
-
-                                {{-- Password Confirmation --}}
-                                <div class="sm:col-span-3">
-                                    <label for="password_confirmation" class="block text-sm font-medium leading-6 text-gray-900">
-                                        Xác Nhận Mật Khẩu
-                                    </label>
-                                    <div class="mt-2">
+                                    <div>
+                                        <label class="block text-sm font-bold text-slate-800 mb-2">Xác Nhận Mật Khẩu</label>
                                         <input type="password" name="password_confirmation" id="password_confirmation"
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 @error('password_confirmation') ring-red-300 focus:ring-red-500 @enderror"
-                                            placeholder="Nhập lại mật khẩu">
+                                            placeholder="Nhập lại mật khẩu"
+                                            class="w-full rounded-xl border border-gray-300 bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all px-4 py-3 text-slate-900">
                                         @error('password_confirmation')
                                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                         @enderror
@@ -139,110 +139,63 @@
                         </div>
                     </div>
 
-                    {{-- Phân Quyền --}}
-                    {{-- <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
-                        <div class="px-4 py-6 sm:p-8">
-                            <h3 class="text-lg font-semibold mb-6 text-gray-900">Phân Quyền</h3>
-                            <div class="space-y-6">
-                                @forelse($permissionsByGroup as $group => $permissions)
+                    {{-- Cột Phải: Sidebar --}}
+                    <div class="lg:col-span-4 space-y-6">
+                        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                            <h3 class="font-bold text-slate-800 mb-6 flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                                </svg>
+                                Thiết lập hiển thị
+                            </h3>
+
+                            <div class="space-y-4">
+                                <div
+                                    class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100">
                                     <div>
-                                        <h4 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3 pb-2 border-b">
-                                            {{ $group }}
-                                        </h4>
-                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                            @foreach($permissions as $permission)
-                                                <div class="flex items-start">
-                                                    <div class="flex h-6 items-center">
-                                                        <input id="permission-{{ $permission->id }}" name="permission_ids[]"
-                                                            type="checkbox" value="{{ $permission->id }}"
-                                                            class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600"
-                                                            {{ in_array($permission->id, $adminPermissions) ? 'checked' : '' }}>
-                                                    </div>
-                                                    <div class="ml-3 text-sm leading-6">
-                                                        <label for="permission-{{ $permission->id }}" class="font-medium text-gray-900 cursor-pointer">
-                                                            {{ $permission->name }}
-                                                        </label>
-                                                        @if($permission->description)
-                                                            <p class="text-gray-500 text-xs">{{ $permission->description }}</p>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                            @endforeach
-                                        </div>
+                                        <p class="text-sm font-bold text-slate-700">Trạng thái</p>
+                                        <p class="text-xs text-slate-500">Admin có thể đăng nhập</p>
                                     </div>
-                                @empty
-                                    <p class="text-gray-500 text-sm">Chưa có quyền nào. Vui lòng tạo quyền trước.</p>
-                                @endforelse
-                            </div>
-                            @error('permission_ids')
-                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div> --}}
-                </div>
-
-                {{-- Right Column: Settings & Actions --}}
-                <div class="lg:col-span-1 space-y-6">
-
-                    {{-- Status Card --}}
-                    <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
-                        <div class="px-4 py-5 sm:p-6">
-                            <h3 class="text-base font-semibold leading-6 text-gray-900 mb-4">Trạng thái</h3>
-
-                            <div class="flex items-start">
-                                <div class="flex h-6 items-center">
                                     <label class="relative inline-flex items-center cursor-pointer">
                                         <input type="checkbox" name="is_active" value="1" class="sr-only peer" {{ $admin->is_active ? 'checked' : '' }}>
-                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
-                                        <span class="ml-3 text-sm font-medium text-gray-900">Hoạt động</span>
+                                        <div
+                                            class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600">
+                                        </div>
                                     </label>
                                 </div>
-                            </div>
-                            <p class="mt-2 text-xs text-gray-500">
-                                Bật: Admin có thể đăng nhập và sử dụng hệ thống.<br>
-                                Tắt: Admin sẽ không thể đăng nhập.
-                            </p>
-                        </div>
-                    </div>
 
-                    {{-- Info Card --}}
-                    <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
-                        <div class="px-4 py-5 sm:p-6">
-                            <h3 class="text-base font-semibold leading-6 text-gray-900 mb-3">Thông tin</h3>
-                            <div class="space-y-2 text-sm text-gray-600">
-                                <p>
-                                    <span class="font-medium">Tạo:</span><br>
-                                    {{ $admin->created_at->format('d/m/Y H:i') }}
-                                </p>
-                                <p>
-                                    <span class="font-medium">Cập nhật:</span><br>
-                                    {{ $admin->updated_at->format('d/m/Y H:i') }}
-                                </p>
+                                <div class="p-4 rounded-xl border border-slate-100 bg-slate-50">
+                                    <h4 class="text-xs font-bold text-slate-700 uppercase mb-2">Thông tin</h4>
+                                    <div class="space-y-2 text-xs text-slate-600">
+                                        <p class="flex justify-between">
+                                            <span>Ngày tạo:</span>
+                                            <span class="font-medium">{{ $admin->created_at->format('d/m/Y H:i') }}</span>
+                                        </p>
+                                        <p class="flex justify-between">
+                                            <span>Cập nhật cuối:</span>
+                                            <span class="font-medium">{{ $admin->updated_at->format('d/m/Y H:i') }}</span>
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    {{-- Actions Card --}}
-                    <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
-                        <div class="px-4 py-5 sm:p-6">
-                            <button type="submit"
-                                class="flex w-full justify-center rounded-md bg-[#0c8fe1] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-all duration-200">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                </svg>
-                                Cập Nhật Admin
+                        <div
+                            class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl shadow-lg shadow-blue-200 p-6 text-white">
+                            <h3 class="font-bold mb-2">Cập nhật ngay?</h3>
+                            <p class="text-blue-100 text-sm mb-4">Các thay đổi sẽ được áp dụng ngay lập tức trên hệ thống
+                                website.</p>
+                            <button type="submit" form="main-admin-form"
+                                class="w-full py-3 bg-white text-blue-600 font-bold rounded-xl hover:bg-blue-50 transition-colors shadow-md">
+                                Lưu thay đổi Admin
                             </button>
-
-                            <a href="{{ route('admins.index') }}"
-                                class="mt-3 flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 transition-all">
-                                Hủy bỏ
-                            </a>
                         </div>
                     </div>
-
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 
 @endsection

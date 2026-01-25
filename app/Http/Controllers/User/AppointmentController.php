@@ -5,14 +5,12 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Services\BookingDate\BookingDateService;
 use App\Services\Category\CategoryService;
-use App\Services\Nail\NailService;
 
-class HomeController extends Controller
+class AppointmentController extends Controller
 {
     public function __construct(
         protected BookingDateService $bookingDateService,
         protected CategoryService $categoryService,
-        protected NailService $nailService
     ) {
     }
 
@@ -20,8 +18,7 @@ class HomeController extends Controller
     {
         $availableDates = $this->bookingDateService->getAvailableDates();
         $bookingServices = $this->categoryService->getBookingServices();
-        $nails = $this->nailService->getHomePageNails(6);
 
-        return view('home', compact('availableDates', 'bookingServices', 'nails'));
+        return view('user.appointment-page.appointment', compact('availableDates', 'bookingServices'));
     }
 }

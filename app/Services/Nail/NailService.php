@@ -18,7 +18,8 @@ class NailService
 {
     public function __construct(
         protected NailRepositoryInterface $nailRepository
-    ) {}
+    ) {
+    }
 
     // ===== READ =====
 
@@ -50,6 +51,16 @@ class NailService
         return $this->nailRepository->getActiveNails();
     }
 
+    /**
+     * Lấy danh sách nails cho homepage
+     * @param int $limit Số lượng nails cần lấy
+     * @return Collection
+     */
+    public function getHomePageNails(int $limit = 6): Collection
+    {
+        return $this->nailRepository->getActiveNails()->take($limit);
+    }
+
     // ===== CREATE =====
     public function createService($name, $slug, $description, $status, $images, $prices): Nail
     {
@@ -64,14 +75,14 @@ class NailService
             // Process Images (MinIO/MediaLibrary)
             if ($images) {
                 foreach ($images as $index => $imageData) {
-                     if (!empty($imageData['media_id'])) {
-                         $this->addImage(
-                            $nail->id, 
-                            $imageData['media_id'], 
-                            $imageData['is_primary'] ?? ($index === 0), 
+                    if (!empty($imageData['media_id'])) {
+                        $this->addImage(
+                            $nail->id,
+                            $imageData['media_id'],
+                            $imageData['is_primary'] ?? ($index === 0),
                             $imageData['sort_order'] ?? $index
                         );
-                     }
+                    }
                 }
             }
 
@@ -120,9 +131,9 @@ class NailService
                 $nail->images()->delete();
 
                 foreach ($images as $index => $imageData) {
-                     if (!empty($imageData['media_id'])) {
+                    if (!empty($imageData['media_id'])) {
                         $this->addImage($nail->id, $imageData['media_id'], $imageData['is_primary'] ?? ($index === 0), $index);
-                     }
+                    }
                 }
             }
 

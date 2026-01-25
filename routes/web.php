@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\NailCategoryController;
 use App\Http\Controllers\Admin\NailController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Permission\PermissionController;
+use App\Http\Controllers\User\AppointmentController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\Admin\MediaController;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +25,7 @@ use App\Http\Controllers\User\BookingController;
  * Router User
  */
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/appointment', [AppointmentController::class, 'index'])->name('appointment');
 Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
 
 
@@ -143,6 +145,16 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
         Route::delete('/{id}', [MediaController::class, 'destroy'])->name('destroy')->middleware('permission:media-delete');
         Route::post('/folders', [MediaController::class, 'storeFolder'])->name('folders.store')->middleware('permission:media-upload');
         Route::delete('/folders/{id}', [MediaController::class, 'destroyFolder'])->name('folders.destroy')->middleware('permission:media-delete');
+    });
+
+    Route::group(['prefix' => 'banners', 'as' => 'banners.'], function () {
+        Route::get('/list', [\App\Http\Controllers\Admin\BannerController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\Admin\BannerController::class, 'create'])->name('create');
+        Route::post('/store', [\App\Http\Controllers\Admin\BannerController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [\App\Http\Controllers\Admin\BannerController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}', [\App\Http\Controllers\Admin\BannerController::class, 'update'])->name('update');
+        Route::delete('/{id}', [\App\Http\Controllers\Admin\BannerController::class, 'destroy'])->name('destroy');
+        Route::delete('/bulk-delete', [\App\Http\Controllers\Admin\BannerController::class, 'bulkDelete'])->name('bulk-delete');
     });
 });
 
