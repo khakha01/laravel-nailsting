@@ -83,8 +83,13 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
 
     Route::group(['prefix' => 'bookings', 'as' => 'bookings.', 'middleware' => 'permission:booking-view'], function () {
         Route::get('/list', [\App\Http\Controllers\Admin\BookingController::class, 'index'])->name('index');
+        Route::get('/trash', [\App\Http\Controllers\Admin\BookingController::class, 'trash'])->name('trash'); // <-- New Route
+        Route::post('/{id}/restore', [\App\Http\Controllers\Admin\BookingController::class, 'restore'])->name('restore')->middleware('permission:booking-edit'); // <-- New Route
+        Route::delete('/{id}/force', [\App\Http\Controllers\Admin\BookingController::class, 'forceDelete'])->name('force-delete')->middleware('permission:booking-delete'); // <-- New Route
         Route::get('/{id}', [\App\Http\Controllers\Admin\BookingController::class, 'show'])->whereNumber('id')->name('show');
         Route::patch('/update-status/{id}', [\App\Http\Controllers\Admin\BookingController::class, 'updateStatus'])->name('update-status')->middleware('permission:booking-edit');
+        Route::delete('/bulk-delete', [\App\Http\Controllers\Admin\BookingController::class, 'bulkDelete'])->name('bulk-delete')->middleware('permission:booking-delete');
+        Route::delete('/{id}', [\App\Http\Controllers\Admin\BookingController::class, 'destroy'])->name('destroy')->middleware('permission:booking-delete');
     });
 
 

@@ -1,4 +1,4 @@
-<form id="booking-form" action="{{ route('booking.store') }}" method="POST">
+<form id="booking-form" action="{{ route('booking.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
     <main class="max-w-2xl mx-auto px-4 py-8 space-y-6 antialiased">
         <div class="bg-white rounded-2xl shadow-sm border border-pink-100 overflow-hidden">
@@ -220,13 +220,24 @@
                         <p class="text-sm font-bold text-pink-600">Số tiền: <span id="payment-amount">0đ</span></p>
                         <p class="text-xs text-gray-500">Nội dung: <span id="payment-content">...</span></p>
                     </div>
+
+                    <div class="mt-4 text-left">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">📸 Tải lên ảnh giao dịch
+                            (Bill)</label>
+                        <input type="file" id="payment_proof_upload" accept="image/*"
+                            class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100 transition-all border border-gray-200 rounded-lg p-1">
+                        <p class="text-xs text-gray-400 mt-1">*Vui lòng upload ảnh chụp màn hình chuyển khoản thành công
+                        </p>
+                    </div>
+
                 </div>
                 <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                     <button type="button" onclick="submitBooking()"
                         class="w-full inline-flex justify-center rounded-xl border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm transition-all">
-                        Tôi đã thanh toán
+                        Hoàn tất & Gửi bill
                     </button>
-                    <button type="button" onclick="hideConfirmationModal()" class="mt-3 w-full inline-flex justify-center rounded-xl border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition-all">
+                    <button type="button" onclick="hideConfirmationModal()"
+                        class="mt-3 w-full inline-flex justify-center rounded-xl border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition-all">
                         Hủy
                     </button>
                 </div>
@@ -316,15 +327,26 @@
         const TEMPLATE = 'compact';
 
         const phone = document.getElementById('customer_phone').value;
-        const amount = document.getElementById('total_price_input').value;
+        const totalAmount = parseFloat(document.getElementById('total_price_input').value);
+
+        // Calculate 50% Deposit
+        const depositAmount = totalAmount / 2;
 
         // **Generate QR Code CLIENT SIDE - No DB submit yet**
-        const content = `PAY ${phone}`; // Use Phone as identifier since we don't have Booking ID yet
+        const content = `COC ${phone}`; // Use Phone as identifier
 
-        document.getElementById('payment-amount').textContent = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount).replace('₫', 'đ');
-        document.getElementById('payment-content').textContent = content;
+        // Update Modal Text
+        document.getElementById('payment-amount').textContent = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(depositAmount).replace('₫', 'đ');
+        document.getElementById('payment-content').innerHTML = content + '<br><span class="text-xs text-gray-500 font-normal">(Cọc 50%)</span>';
 
-        const qrUrl = `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-${TEMPLATE}.png?amount=${amount}&addInfo=${encodeURIComponent(content)}&accountName=${encodeURIComponent(ACCOUNT_NAME)}`;
+        // Update instructional text
+        const step2Title = document.querySelector('#step-2-content h3');
+        if (step2Title) step2Title.textContent = "Thanh toán tiền cọc";
+
+        const step2Desc = document.querySelector('#step-2-content p.text-gray-600');
+        if (step2Desc) step2Desc.textContent = `Vui lòng chuyển khoản cọc 50% (${new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(depositAmount).replace('₫', 'đ')}) để giữ lịch.`;
+
+        const qrUrl = `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-${TEMPLATE}.png?amount=${depositAmount}&addInfo=${encodeURIComponent(content)}&accountName=${encodeURIComponent(ACCOUNT_NAME)}`;
         document.getElementById('vietqr-image').src = qrUrl;
 
         // Switch to Step 2
@@ -340,6 +362,16 @@
         // Logic: Validated via Payment Step -> Now submit to DB
         const form = document.getElementById('booking-form');
         const formData = new FormData(form);
+        
+        // Handle Payment Proof File
+        const fileInput = document.getElementById('payment_proof_upload');
+        if (fileInput.files.length > 0) {
+            formData.append('payment_proof', fileInput.files[0]);
+        } else {
+             // Optional: Alert user if they haven't uploaded? 
+             // For now, let's just warn or allow empty. 
+             // If allow empty, backend sees no file -> Pending Payment (No Proof).
+        }
 
         const submitBtn = event.target;
         submitBtn.disabled = true;
@@ -355,7 +387,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Đặt lịch thành công! Đơn của bạn đang chờ Admin xác nhận.');
+                    alert('Đặt lịch thành công! Số tiền cọc đã được ghi nhận. Admin sẽ xác nhận lịch sớm nhất.');
                     window.location.reload();
                 } else {
                     alert(data.message || 'Có lỗi xảy ra, vui lòng thử lại!');
