@@ -1,83 +1,133 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login | NailSting</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NAILSTING Admin • Đăng nhập</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
     <style>
         body {
-            font-family: 'Outfit', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            min-height: 100vh;
+            overflow: hidden;
         }
-        .glass {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow:
+                0 10px 30px -10px rgba(0, 0, 0, 0.08),
+                0 4px 12px -2px rgba(0, 0, 0, 0.05);
         }
-        .input-focus {
+
+        .input-field {
+            background: white;
+            border: 1.5px solid #e2e8f0;
+            transition: all 0.25s ease;
+        }
+
+        .input-field:focus {
+            border-color: #1777d5;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+            outline: none;
+        }
+
+        .btn-modern {
+            background: #1777d5;
             transition: all 0.3s ease;
         }
-        .input-focus:focus {
-            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.5);
-            border-color: #6366f1;
+
+        .btn-modern:hover {
+            background: #1777d5;
+            transform: translateY(-1.5px);
+            box-shadow: 0 12px 24px -8px rgba(99, 102, 241, 0.35);
         }
+
+        .btn-modern:active {
+            transform: translateY(0);
+        }
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        .animate-fadeIn {
+
+        .animate-fade {
             animation: fadeIn 0.8s ease-out forwards;
         }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
-    <div class="w-full max-w-md animate-fadeIn">
-        <div class="text-center mb-10">
-            <h1 class="text-4xl font-bold text-white mb-2">NailSting</h1>
-            <p class="text-gray-400">Hệ thống quản lý Admin chuyên nghiệp</p>
+
+<body class="flex items-center justify-center p-6">
+
+    <div class="w-full max-w-sm">
+        <div class="text-center mb-10 animate-fade">
+            <h1 class="text-3xl font-bold text-gray-800 tracking-tight">CMS Admin</h1>
+            <p class="mt-1.5 text-sm text-gray-500 font-medium">
+                Content Management System
+            </p>
         </div>
-
-        <div class="glass p-8 rounded-2xl shadow-2xl">
-            <h2 class="text-2xl font-semibold text-white mb-6 text-center">Đăng nhập hệ thống</h2>
-            
+        <div class="glass-card rounded-3xl p-10 animate-fade" style="animation-delay: 0.15s;">
             <form id="loginForm" class="space-y-6">
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
-                    <input type="email" id="email" required 
-                        class="w-full px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-xl text-white placeholder-gray-500 input-focus outline-none"
-                        placeholder="admin@example.com">
+                <!-- Email -->
+                <div class="space-y-2">
+                    <label class="text-xs font-semibold text-gray-600 uppercase tracking-wide ml-1">Email quản
+                        trị</label>
+                    <input type="email" id="email" required
+                        class="input-field w-full px-5 py-4 rounded-2xl text-gray-800 placeholder-gray-400 text-sm focus:outline-none"
+                        placeholder="admin@gmail.vn" />
                 </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Mật khẩu</label>
-                    <input type="password" id="password" required 
-                        class="w-full px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-xl text-white placeholder-gray-500 input-focus outline-none"
-                        placeholder="••••••••">
+                <!-- Password -->
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center">
+                        <label class="text-xs font-semibold text-gray-600 uppercase tracking-wide ml-1">Mật khẩu</label>
+                        <a href="#"
+                            class="text-xs text-indigo-600 hover:text-indigo-700 font-medium transition-colors">Quên mật
+                            khẩu?</a>
+                    </div>
+                    <input type="password" id="password" required
+                        class="input-field w-full px-5 py-4 rounded-2xl text-gray-800 placeholder-gray-400 text-sm focus:outline-none"
+                        placeholder="••••••••" />
                 </div>
 
-                <div class="flex items-center justify-between text-sm">
-                    <label class="flex items-center text-gray-400 cursor-pointer">
-                        <input type="checkbox" class="mr-2 rounded border-gray-700 bg-gray-900 text-indigo-600 focus:ring-indigo-500">
-                        Ghi nhớ đăng nhập
+                <!-- Checkbox & Button -->
+                <div class="space-y-6 pt-2">
+                    <label class="flex items-center text-sm text-gray-600 cursor-pointer group">
+                        <input type="checkbox"
+                            class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 mr-3">
+                        <span class="group-hover:text-gray-800 transition-colors">Giữ đăng nhập</span>
                     </label>
-                    <a href="#" class="text-indigo-400 hover:text-indigo-300 transition-colors">Quên mật khẩu?</a>
-                </div>
 
-                <button type="submit" id="submitBtn"
-                    class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-indigo-600/20">
-                    Đăng Nhập
-                </button>
+                    <button type="submit"
+                        class="btn-modern w-full py-4 text-white font-semibold text-base rounded-2xl shadow-md tracking-wide">
+                        Đăng nhập
+                    </button>
+                </div>
             </form>
 
-            <div id="errorMessage" class="mt-4 p-3 rounded-lg bg-red-500/10 border border-red-500/50 text-red-400 text-sm hidden text-center">
-            </div>
+            <p class="mt-8 text-center text-xs text-gray-500">
+                © 2026 ADMIN SYSTEM BY
+                <a href="https://www.facebook.com/huynhkha010" target="_blank"
+                    class="text-indigo-600 hover:text-indigo-700 font-medium transition-colors">
+                    @huynhkha
+                </a>
+            </p>
         </div>
-
-        <p class="mt-8 text-center text-gray-500 text-sm">
-            &copy; 2026 NailSting. Built with &hearts; for beauty professionals.
-        </p>
     </div>
 
     <script>
@@ -124,4 +174,5 @@
         });
     </script>
 </body>
+
 </html>
