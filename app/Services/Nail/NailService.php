@@ -7,6 +7,7 @@ use App\Models\NailImage;
 use App\Models\NailPrice;
 use App\Repositories\Nail\NailRepositoryInterface;
 use Exception;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -59,6 +60,16 @@ class NailService
     public function getHomePageNails(int $limit = 6): Collection
     {
         return $this->nailRepository->getActiveNails()->take($limit);
+    }
+
+    /**
+     * Lấy danh sách nails cho trang collection có phân trang
+     * @param int $perPage Số lượng nails mỗi trang
+     * @return LengthAwarePaginator
+     */
+    public function getCollectionNails(int $perPage = 8): LengthAwarePaginator
+    {
+        return $this->nailRepository->getActiveNailsPaginated($perPage);
     }
 
     // ===== CREATE =====

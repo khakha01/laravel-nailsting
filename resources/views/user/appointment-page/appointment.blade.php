@@ -1,4 +1,5 @@
 @extends('user.layout.layout')
+@section('title', 'Đặt Lịch Làm Nails')
 @section('content')
 
     <div class="pt-32 pb-16">

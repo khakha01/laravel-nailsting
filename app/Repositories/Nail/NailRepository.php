@@ -3,6 +3,7 @@
 namespace App\Repositories\Nail;
 
 use App\Models\Nail;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 class NailRepository implements NailRepositoryInterface
@@ -57,6 +58,15 @@ class NailRepository implements NailRepositoryInterface
     public function bulkDelete(array $nailIds): int
     {
         return Nail::destroy($nailIds);
+    }
+
+    public function getActiveNailsPaginated(int $perPage): LengthAwarePaginator
+    {
+        return Nail::query()
+            ->active()
+            ->with(['images.media', 'prices'])
+            ->ordered()
+            ->paginate($perPage);
     }
 }
 

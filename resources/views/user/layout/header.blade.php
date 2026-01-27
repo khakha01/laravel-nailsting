@@ -21,14 +21,17 @@
 
             <!-- Logo -->
             <div class="flex items-center gap-2">
-                <img src="{{asset('img/logo.png')}}" alt="Nails-tingggg" class="h-14">
+                <a href="/">
+                    <img src="{{asset('img/logo.png')}}" alt="Nails-tingggg" class="h-14">
+                </a>
             </div>
 
             <!-- Menu -->
             <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
                 <a href="/" class="hover:text-[#ff0052] transition">Trang chủ</a>
-                <a href="#" class="hover:text-[#ff0052] transition">Bộ sưu tập</a>
-                <a href="#" class="hover:text-[#ff0052] transition">Bảng giá</a>
+                <a href="{{ route('collection') }}" class="hover:text-[#ff0052] transition">Bộ sưu tập</a>
+                <a href="{{ route('pricing') }}" class="hover:text-[#ff0052] transition">Bảng giá</a>
+                <a href="{{ route('appointment') }}" class="hover:text-[#ff0052] transition">Đặt lịch</a>
                 <a href="#" class="hover:text-[#ff0052] transition">Tin tức</a>
             </nav>
 
@@ -67,9 +70,9 @@
 
         <!-- Menu -->
         <nav class="flex flex-col gap-6 text-lg font-medium">
-            <a href="#" class="hover:text-[#ff0052]">Trang chủ</a>
-            <a href="#" class="hover:text-[#ff0052]">Bộ sưu tập</a>
-            <a href="#" class="hover:text-[#ff0052]">Bảng giá</a>
+            <a href="{{ route('home') }}" class="hover:text-[#ff0052]">Trang chủ</a>
+            <a href="{{ route('collection') }}" class="hover:text-[#ff0052]">Bộ sưu tập</a>
+            <a href="{{ route('pricing') }}" class="hover:text-[#ff0052]">Bảng giá</a>
             <a href="#" class="hover:text-[#ff0052]">Tin tức</a>
         </nav>
 

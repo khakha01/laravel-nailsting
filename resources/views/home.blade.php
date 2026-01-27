@@ -5,7 +5,7 @@
 
     @include('user.home-page.home-nail')
 
-    @include('user.home-page.home-banner')
+    @include('user.home-page.home-appointment')
 
     @include('user.home-page.feedback-page')
 

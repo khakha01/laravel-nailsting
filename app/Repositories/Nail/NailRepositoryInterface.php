@@ -3,6 +3,7 @@
 namespace App\Repositories\Nail;
 
 use App\Models\Nail;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 interface NailRepositoryInterface
@@ -22,5 +23,7 @@ interface NailRepositoryInterface
     public function delete(Nail $nail): bool;
 
     public function bulkDelete(array $nailIds): int;
+
+    public function getActiveNailsPaginated(int $perPage): LengthAwarePaginator;
 }
 
