@@ -21,6 +21,17 @@ class Nail extends Model
         'updated_at' => 'datetime',
     ];
 
+    protected $appends = ['primary_image_url'];
+
+    public function getPrimaryImageUrlAttribute()
+    {
+        $primary = $this->images()->where('is_primary', true)->with('media')->first();
+        if (!$primary) {
+            $primary = $this->images()->with('media')->first();
+        }
+        return $primary && $primary->media ? $primary->media->url : null;
+    }
+
 
     // ===== Relations =====
 

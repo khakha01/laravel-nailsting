@@ -1,5 +1,7 @@
-<section class="py-16 bg-white">
-    <div class="max-w-7xl mx-auto px-4">
+<section id="nail-collection-section" class="py-16 bg-white relative overflow-hidden">
+    {{-- Decorative element --}}
+    <div class="absolute top-0 right-0 w-64 h-64 bg-pink-50/50 rounded-full blur-3xl -mr-32 -mt-32"></div>
+    <div class="max-w-7xl mx-auto">
         <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
             <div>
                 <span class="text-pink-500 font-bold tracking-[0.2em] text-xs uppercase mb-2 block">Trend 2026</span>
@@ -19,15 +21,18 @@
                 @foreach($nails as $nail)
                     @php
                         $primaryImage = $nail->getPrimaryImage();
-                        $imageUrl = $primaryImage && $primaryImage->media ? $primaryImage->media->url : 'https://images.unsplash.com/photo-1604654894610-df490c81726a?q=80&w=600&auto=format&fit=crop';
+                        $imageUrl = get_media_url($nail->primary_image_url);
                         $defaultPrice = $nail->getDefaultPrice() ?: ($nail->prices->count() > 0 ? $nail->prices->first() : null);
 
                         $priceDisplay = '0đ';
+                        $priceValue = 0;
                         if ($defaultPrice) {
                             if ($defaultPrice->price_type === 'fixed' && $defaultPrice->price) {
                                 $priceDisplay = number_format($defaultPrice->price, 0, ',', '.') . 'đ';
+                                $priceValue = $defaultPrice->price;
                             } elseif ($defaultPrice->price_type === 'range' && $defaultPrice->price_min && $defaultPrice->price_max) {
                                 $priceDisplay = number_format($defaultPrice->price_min, 0, ',', '.') . 'đ+';
+                                $priceValue = $defaultPrice->price_min;
                             }
                         }
                     @endphp
@@ -54,6 +59,7 @@
                             </h3>
 
                             <button
+                                onclick="openNailBookingModal({{ $nail->id }}, '{{ addslashes($nail->name) }}', '{{ $imageUrl }}', {{ $priceValue }}, '{{ $priceDisplay }}')"
                                 class="w-full py-4 bg-gradient-to-r from-pink-50 to-rose-50 hover:from-pink-500 hover:to-rose-400 text-pink-600 hover:text-white rounded-2xl font-bold text-sm transition-all duration-300 flex items-center justify-center gap-2 group/btn shadow-sm">
                                 <span>ĐẶT LỊCH NGAY</span>
                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -81,3 +87,6 @@
         @endif
     </div>
 </section>
+
+{{-- Nail Booking Modal --}}
+@include('user.components.nail-booking-modal')

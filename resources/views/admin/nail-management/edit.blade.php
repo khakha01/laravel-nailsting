@@ -156,7 +156,7 @@
                                         // Prepare old images or load from DB
                                         $oldImages = old('images', $nail->images->map(fn($img) => [
                                             'media_id' => $img->media_id,
-                                            'preview_url' => $img->media ? $img->media->url : '',
+                                            'preview_url' => get_media_url($img->media),
                                             'is_primary' => $img->is_primary,
                                             'sort_order' => $img->sort_order,
                                         ])->toArray());

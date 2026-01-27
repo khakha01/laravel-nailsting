@@ -5,6 +5,8 @@
 
     @include('user.home-page.home-nail')
 
-    @include('user.components.booking')
+    @include('user.home-page.home-banner')
+
+    @include('user.home-page.feedback-page')
 
 @endsection

@@ -166,16 +166,9 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    @php
-                                        $primaryImage = $nail->getPrimaryImage();
-                                    @endphp
-                                    @if($primaryImage && $primaryImage->media)
-                                        <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
-                                            <img src="{{ $primaryImage->media->url }}" alt="{{ $nail->name }}" class="w-full h-full object-cover">
-                                        </div>
-                                    @else
-                                        <span class="text-sm text-gray-400">-</span>
-                                    @endif
+                                    <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                                        <img src="{{ get_media_url($nail->primary_image_url) }}" alt="{{ $nail->name }}" class="w-full h-full object-cover">
+                                    </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @if($nail->status === 'active')

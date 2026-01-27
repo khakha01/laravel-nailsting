@@ -89,13 +89,9 @@
                                     <input type="checkbox" class="row-checkbox h-4 w-4 text-pink-600 border-gray-300 rounded focus:ring-pink-500" value="{{ $banner->id }}">
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    @if($banner->media)
-                                        <div class="w-16 h-10 rounded bg-gray-200 flex items-center justify-center overflow-hidden">
-                                            <img src="{{ $banner->media->url }}" alt="{{ $banner->title }}" class="w-full h-full object-cover">
-                                        </div>
-                                    @else
-                                        <span class="text-sm text-gray-400">-</span>
-                                    @endif
+                                    <div class="w-16 h-10 rounded bg-gray-200 flex items-center justify-center overflow-hidden">
+                                        <img src="{{ get_media_url($banner->media) }}" alt="{{ $banner->title }}" class="w-full h-full object-cover">
+                                    </div>
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="text-sm font-bold text-gray-900">{{ $banner->title ?? 'Chưa đặt tên' }}</div>

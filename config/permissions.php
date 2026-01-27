@@ -67,6 +67,13 @@ return [
         'booking-delete' => 'Xóa đặt lịch',
     ],
 
+    // Quản lý Nail Booking
+    'nail-booking' => [
+        'nail-booking-view' => 'Xem danh sách đặt lịch nail',
+        'nail-booking-edit' => 'Chỉnh sửa đặt lịch nail',
+        'nail-booking-delete' => 'Xóa đặt lịch nail',
+    ],
+
     // Quản lý User
     'user' => [
         'user-view' => 'Xem danh sách người dùng',

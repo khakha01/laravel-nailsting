@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Route;
  */
 use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\User\BookingController;
+use App\Http\Controllers\User\NailBookingController;
 
 
 /**
@@ -27,6 +28,7 @@ use App\Http\Controllers\User\BookingController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/appointment', [AppointmentController::class, 'index'])->name('appointment');
 Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
+Route::post('/nail-booking', [NailBookingController::class, 'store'])->name('nail-booking.store');
 
 
 Route::get('/dashboard', function () {
@@ -92,6 +94,17 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
         Route::patch('/update-status/{id}', [\App\Http\Controllers\Admin\BookingController::class, 'updateStatus'])->name('update-status')->middleware('permission:booking-edit');
         Route::delete('/bulk-delete', [\App\Http\Controllers\Admin\BookingController::class, 'bulkDelete'])->name('bulk-delete')->middleware('permission:booking-delete');
         Route::delete('/{id}', [\App\Http\Controllers\Admin\BookingController::class, 'destroy'])->name('destroy')->middleware('permission:booking-delete');
+    });
+
+    Route::group(['prefix' => 'nail-bookings', 'as' => 'nail-bookings.', 'middleware' => 'permission:nail-booking-view'], function () {
+        Route::get('/list', [\App\Http\Controllers\Admin\NailBookingController::class, 'index'])->name('index');
+        Route::get('/trash', [\App\Http\Controllers\Admin\NailBookingController::class, 'trash'])->name('trash');
+        Route::post('/{id}/restore', [\App\Http\Controllers\Admin\NailBookingController::class, 'restore'])->name('restore')->middleware('permission:nail-booking-edit');
+        Route::delete('/{id}/force', [\App\Http\Controllers\Admin\NailBookingController::class, 'forceDelete'])->name('force-delete')->middleware('permission:nail-booking-delete');
+        Route::get('/{id}', [\App\Http\Controllers\Admin\NailBookingController::class, 'show'])->whereNumber('id')->name('show');
+        Route::patch('/update-status/{id}', [\App\Http\Controllers\Admin\NailBookingController::class, 'updateStatus'])->name('update-status')->middleware('permission:nail-booking-edit');
+        Route::delete('/bulk-delete', [\App\Http\Controllers\Admin\NailBookingController::class, 'bulkDelete'])->name('bulk-delete')->middleware('permission:nail-booking-delete');
+        Route::delete('/{id}', [\App\Http\Controllers\Admin\NailBookingController::class, 'destroy'])->name('destroy')->middleware('permission:nail-booking-delete');
     });
 
 

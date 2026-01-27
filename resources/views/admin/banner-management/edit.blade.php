@@ -75,11 +75,7 @@
                                     class="flex flex-col md:flex-row items-start md:items-center gap-6 p-5 bg-slate-50/50 rounded-2xl border border-slate-200">
                                     <div id="parent-preview-container"
                                         class="relative group w-full md:w-72 h-40 bg-white rounded-xl border border-gray-300 flex items-center justify-center overflow-hidden shadow-sm">
-                                        @if($banner->media)
-                                            <img src="{{ $banner->media->url }}" class="w-full h-full object-cover">
-                                        @else
-                                            <span class="text-xs text-slate-400 font-medium">Chưa có ảnh preview</span>
-                                        @endif
+                                        <img src="{{ get_media_url($banner->media) }}" class="w-full h-full object-cover">
                                         <div
                                             class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors pointer-events-none">
                                         </div>
@@ -211,13 +207,8 @@
                                             <div class="lg:col-span-4 space-y-3">
                                                 <div
                                                     class="relative w-full aspect-video bg-slate-50 rounded-xl border border-gray-300 overflow-hidden flex items-center justify-center preview-container shadow-inner">
-                                                    @if($item->media)
-                                                        <img src="{{ $item->media->url }}" class="w-full h-full object-cover">
-                                                    @else
-                                                        <span
-                                                            class="text-[10px] text-slate-400 font-medium uppercase tracking-tight">Chưa
-                                                            chọn ảnh</span>
-                                                    @endif
+                                                    <img src="{{ get_media_url($item->media) }}"
+                                                        class="w-full h-full object-cover">
                                                 </div>
                                                 <input type="hidden" name="items[{{ $index }}][media_id]" class="item-media-id"
                                                     value="{{ $item->media_id }}">
