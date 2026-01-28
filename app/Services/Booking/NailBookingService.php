@@ -33,13 +33,7 @@ class NailBookingService
         });
     }
 
-    /**
-     * Get all nail bookings for admin
-     */
-    public function getAllBookings()
-    {
-        return NailBooking::with('nail')->orderBy('created_at', 'desc')->paginate(10);
-    }
+
 
     /**
      * Find booking by ID

@@ -58,6 +58,76 @@
             </div>
         @endif
 
+        {{-- Filter Section --}}
+        <div class="mb-6 space-y-4">
+            {{-- Quick Filter Buttons --}}
+            <div class="flex flex-wrap items-center gap-2">
+                <a href="{{ route('nail-bookings.index', array_merge(request()->except(['page', 'payment_status']), ['payment_status' => 'fully_paid'])) }}"
+                    class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium {{ request('payment_status') === 'fully_paid' ? 'bg-green-600 text-white shadow-sm' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50' }} transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    Đã thanh toán
+                </a>
+                <a href="{{ route('nail-bookings.index', array_merge(request()->except(['page', 'payment_status']), ['payment_status' => 'unpaid'])) }}"
+                    class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium {{ request('payment_status') === 'unpaid' ? 'bg-red-600 text-white shadow-sm' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50' }} transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    Chưa thanh toán
+                </a>
+                <a href="{{ route('nail-bookings.index', array_merge(request()->except(['page', 'today']), ['today' => 1])) }}"
+                    class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium {{ request('today') ? 'bg-pink-600 text-white shadow-sm' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50' }} transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    Lịch hẹn hôm nay
+                </a>
+                @if(request()->anyFilled(['payment_status', 'today', 'customer', 'start_date', 'end_date', 'status']))
+                    <a href="{{ route('nail-bookings.index') }}" class="text-xs text-red-500 hover:text-red-700 font-medium ml-2 underline">Xóa lọc</a>
+                @endif
+            </div>
+
+            {{-- Search Form --}}
+            <form action="{{ route('nail-bookings.index') }}" method="GET" class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label for="customer" class="block text-xs font-semibold text-gray-500 uppercase mb-1">Khách hàng</label>
+                        <input type="text" name="customer" id="customer" value="{{ request('customer') }}"
+                               placeholder="Tên hoặc số điện thoại..."
+                               class="block w-full rounded-lg border-gray-300 text-sm focus:ring-pink-500 focus:border-pink-500">
+                    </div>
+                    <div>
+                        <label for="start_date" class="block text-xs font-semibold text-gray-500 uppercase mb-1">Từ ngày</label>
+                        <input type="date" name="start_date" id="start_date" value="{{ request('start_date') }}"
+                               class="block w-full rounded-lg border-gray-300 text-sm focus:ring-pink-500 focus:border-pink-500">
+                    </div>
+                    <div>
+                        <label for="end_date" class="block text-xs font-semibold text-gray-500 uppercase mb-1">Đến ngày</label>
+                        <input type="date" name="end_date" id="end_date" value="{{ request('end_date') }}"
+                               class="block w-full rounded-lg border-gray-300 text-sm focus:ring-pink-500 focus:border-pink-500">
+                    </div>
+                    <div class="flex items-end gap-2">
+                        <div class="flex-1">
+                            <label for="status" class="block text-xs font-semibold text-gray-500 uppercase mb-1">Trạng thái</label>
+                            <select name="status" id="status" class="block w-full rounded-lg border-gray-300 text-sm focus:ring-pink-500 focus:border-pink-500">
+                                <option value="">Tất cả</option>
+                                <option value="pending" @selected(request('status') == 'pending')>Chờ xác nhận</option>
+                                <option value="confirmed" @selected(request('status') == 'confirmed')>Đã xác nhận</option>
+                                <option value="completed" @selected(request('status') == 'completed')>Hoàn thành</option>
+                                <option value="cancelled" @selected(request('status') == 'cancelled')>Đã hủy</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="bg-pink-600 text-white px-4 py-2 rounded-lg hover:bg-pink-700 transition-colors shadow-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
         {{-- Table --}}
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div class="overflow-x-auto">
@@ -80,7 +150,7 @@
                                 Mẫu Nail</th>
                             <th scope="col"
                                 class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                Thanh toán</th>
+                                Tổng tiền</th>
                             <th scope="col"
                                 class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                                 Trạng thái</th>
@@ -98,11 +168,19 @@
                                 <td class="px-6 py-4">
                                     <div class="text-sm font-bold text-gray-900">{{ $booking->customer_name }}</div>
                                     <div class="text-xs text-gray-500 mt-0.5">{{ $booking->customer_phone }}</div>
-                                    <div class="text-xs text-gray-400">{{ $booking->customer_email }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">{{ \Carbon\Carbon::parse($booking->booking_time)->format('H:i') }}</div>
-                                    <div class="text-xs text-gray-500">{{ \Carbon\Carbon::parse($booking->booking_date)->format('d/m/Y') }}</div>
+                                    <div class="flex items-center">
+                                        <div class="bg-pink-50 p-2 rounded-lg mr-3 border border-pink-100">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <div class="text-sm font-bold text-gray-900">{{ \Carbon\Carbon::parse($booking->booking_time)->format('H:i') }}</div>
+                                            <div class="text-[11px] font-medium text-pink-600">{{ \Carbon\Carbon::parse($booking->booking_date)->format('d/m/Y') }}</div>
+                                        </div>
+                                    </div>
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="flex items-center">
@@ -115,41 +193,54 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4">
-                                    <div class="flex flex-col space-y-1">
-                                        <div class="flex flex-col text-xs">
-                                            <span class="text-gray-500">Tổng: <span class="font-bold text-gray-900">{{ number_format($booking->total_amount, 0, ',', '.') }}đ</span></span>
-                                            <span class="text-pink-600 font-medium">Cọc: {{ number_format($booking->deposit_amount, 0, ',', '.') }}đ</span>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex flex-col space-y-2">
+                                        <div class="flex flex-col">
+                                            <span class="text-sm font-bold text-[#0c8fe1]">{{ number_format($booking->total_amount, 0, ',', '.') }}đ</span>
+                                            <span class="text-[10px] text-pink-600 font-medium italic">Cọc: {{ number_format($booking->deposit_amount, 0, ',', '.') }}đ</span>
                                         </div>
 
-                                        @if($booking->payment_proof)
-                                            <a href="{{ Storage::disk('minio')->url($booking->payment_proof) }}" target="_blank"
-                                                class="text-[10px] inline-flex items-center text-pink-500 hover:text-pink-700 font-medium"
-                                                title="Xem ảnh bill">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                    stroke-width="1.5" stroke="currentColor" class="w-3 h-3 mr-1">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                                                </svg>
-                                                Xem Bill Cọc
-                                            </a>
-                                        @endif
+                                        <div class="flex items-center space-x-2">
+                                            <!-- Payment Proof -->
+                                            @if($booking->payment_proof)
+                                                <a href="{{ Storage::disk('minio')->url($booking->payment_proof) }}" target="_blank"
+                                                    class="text-xs flex items-center text-pink-500 hover:text-pink-700 font-medium"
+                                                    title="Xem ảnh bill">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                        stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-1">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                                                    </svg>
+                                                    Xem Bill
+                                                </a>
+                                            @endif
+                                        </div>
 
-                                        <form action="{{ route('nail-bookings.update-status', $booking->id) }}" method="POST"
-                                            id="payment-form-{{ $booking->id }}">
-                                            @csrf
-                                            @method('PATCH')
-                                            <select name="payment_status"
-                                                onchange="document.getElementById('payment-form-{{ $booking->id }}').submit()"
-                                                class="text-[10px] font-semibold rounded-md px-2 py-0.5 border-none focus:ring-0
-                                                @if($booking->payment_status == 'unpaid') bg-red-50 text-red-700 @endif
-                                                @if($booking->payment_status == 'deposit_paid') bg-blue-50 text-blue-700 @endif
-                                                @if($booking->payment_status == 'fully_paid') bg-green-50 text-green-700 @endif">
-                                                <option value="unpaid" @selected($booking->payment_status == 'unpaid')>Chưa thanh toán</option>
-                                                <option value="deposit_paid" @selected($booking->payment_status == 'deposit_paid')>Đã cọc</option>
-                                                <option value="fully_paid" @selected($booking->payment_status == 'fully_paid')>Đã xong</option>
-                                            </select>
-                                        </form>
+                                        <!-- Payment Toggle -->
+                                        <label class="inline-flex items-center cursor-pointer">
+                                            <form action="{{ route('nail-bookings.update-status', $booking->id) }}" method="POST"
+                                                id="payment-form-{{ $booking->id }}">
+                                                @csrf
+                                                @method('PATCH')
+                                                <input type="hidden" name="payment_status" value="unpaid">
+                                                <input type="checkbox" name="payment_status" value="fully_paid"
+                                                    onchange="document.getElementById('payment-form-{{ $booking->id }}').submit()"
+                                                    class="sr-only peer" {{ $booking->payment_status == 'fully_paid' ? 'checked' : '' }}>
+                                                <div
+                                                    class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-pink-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-pink-500">
+                                                </div>
+                                                <span
+                                                    class="ms-2 text-xs font-medium text-gray-900">
+                                                    @if($booking->payment_status == 'fully_paid')
+                                                        Đã TT
+                                                    @elseif($booking->payment_status == 'deposit_paid')
+                                                        Đã Cọc
+                                                    @else
+                                                        Chưa TT
+                                                    @endif
+                                                </span>
+                                            </form>
+                                        </label>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">

@@ -25,5 +25,7 @@ interface NailRepositoryInterface
     public function bulkDelete(array $nailIds): int;
 
     public function getActiveNailsPaginated(int $perPage): LengthAwarePaginator;
+
+    public function countAll(): int;
 }
 

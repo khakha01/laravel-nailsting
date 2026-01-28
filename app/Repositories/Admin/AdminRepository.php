@@ -12,6 +12,11 @@ class AdminRepository implements AdminRepositoryInterface
         return Admin::find($id);
     }
 
+    public function findByIds(array $ids): Collection
+    {
+        return Admin::whereIn('id', $ids)->get();
+    }
+
     public function findByEmail(string $email): ?Admin
     {
         return Admin::where('email', $email)->first();
@@ -31,5 +36,15 @@ class AdminRepository implements AdminRepositoryInterface
     public function delete(Admin $admin): bool
     {
         return $admin->delete();
+    }
+
+    public function deleteMany(array $ids): int
+    {
+        return Admin::destroy($ids);
+    }
+
+    public function countAll(): int
+    {
+        return Admin::count();
     }
 }

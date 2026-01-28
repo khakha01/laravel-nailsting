@@ -93,6 +93,16 @@ class NailRepositoryCache implements NailRepositoryInterface
         return $this->nailRepository->bulkDelete($nailIds);
     }
 
+    public function getActiveNailsPaginated(int $perPage): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    {
+        return $this->nailRepository->getActiveNailsPaginated($perPage);
+    }
+
+    public function countAll(): int
+    {
+        return $this->nailRepository->countAll();
+    }
+
     /**
      * Invalidate all related cache keys
      */

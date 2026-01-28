@@ -67,4 +67,19 @@ return [
         'active' => 'banners:active',
         'by_id' => 'banners:id:%s',
     ],
+    'bookings' => [
+        'prefix' => 'bookings',
+        'all' => 'bookings:all',
+        'by_id' => 'bookings:id:%s',
+    ],
+    'nail_bookings' => [
+        'prefix' => 'nail_bookings',
+        'all' => 'nail_bookings:all',
+        'by_id' => 'nail_bookings:id:%s',
+    ],
+    'dashboard' => [
+        'stats' => 'dashboard:stats',
+        'recent' => 'dashboard:recent',
+        'status_dist' => 'dashboard:status_distribution',
+    ],
 ];

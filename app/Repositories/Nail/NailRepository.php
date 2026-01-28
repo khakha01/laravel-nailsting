@@ -68,5 +68,10 @@ class NailRepository implements NailRepositoryInterface
             ->ordered()
             ->paginate($perPage);
     }
+
+    public function countAll(): int
+    {
+        return Nail::count();
+    }
 }
 

@@ -16,6 +16,11 @@ class AdminRepositoryCache implements AdminRepositoryInterface
         $this->keys = config('cache_keys.admins');
     }
 
+    public function findByEmail(string $email): ?Admin
+    {
+        return $this->repository->findByEmail($email);
+    }
+
     /**
      * Tạo cache key cho admin theo ID
      */
@@ -94,5 +99,10 @@ class AdminRepositoryCache implements AdminRepositoryInterface
         }
 
         return $this->repository->deleteMany($ids);
+    }
+
+    public function countAll(): int
+    {
+        return $this->repository->countAll();
     }
 }
