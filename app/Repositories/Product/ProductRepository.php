@@ -67,4 +67,9 @@ class ProductRepository implements ProductRepositoryInterface
     {
         return Product::destroy($productIds);
     }
+
+    public function countAll(): int
+    {
+        return Product::count();
+    }
 }

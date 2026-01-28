@@ -33,13 +33,7 @@ class BookingService
         });
     }
 
-    /**
-     * Get all bookings for admin
-     */
-    public function getAllBookings()
-    {
-        return Booking::with('products')->orderBy('created_at', 'desc')->paginate(10);
-    }
+
 
     /**
      * Update booking status

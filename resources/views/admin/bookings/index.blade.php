@@ -58,6 +58,90 @@
             </div>
         @endif
 
+        {{-- Filter Section --}}
+        <div class="mb-6 space-y-4">
+            {{-- Quick Filter Buttons --}}
+            <div class="flex flex-wrap items-center gap-2">
+                <a href="{{ route('bookings.index', array_merge(request()->except(['page', 'is_paid']), ['is_paid' => 1])) }}"
+                    class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium {{ request('is_paid') === '1' ? 'bg-green-600 text-white shadow-sm' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50' }} transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    Đã thanh toán
+                </a>
+                <a href="{{ route('bookings.index', array_merge(request()->except(['page', 'is_paid']), ['is_paid' => 0])) }}"
+                    class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium {{ request('is_paid') === '0' ? 'bg-red-600 text-white shadow-sm' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50' }} transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    Chưa thanh toán
+                </a>
+                <a href="{{ route('bookings.index', array_merge(request()->except(['page', 'today']), ['today' => 1])) }}"
+                    class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium {{ request('today') ? 'bg-pink-600 text-white shadow-sm' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50' }} transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    Lịch hẹn hôm nay
+                </a>
+                @if(request()->anyFilled(['is_paid', 'today', 'customer', 'start_date', 'end_date', 'status']))
+                    <a href="{{ route('bookings.index') }}"
+                        class="text-xs text-red-500 hover:text-red-700 font-medium ml-2 underline">Xóa lọc</a>
+                @endif
+            </div>
+
+            {{-- Search Form --}}
+            <form action="{{ route('bookings.index') }}" method="GET"
+                class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label for="customer" class="block text-xs font-semibold text-gray-500 uppercase mb-1">Khách
+                            hàng</label>
+                        <input type="text" name="customer" id="customer" value="{{ request('customer') }}"
+                            placeholder="Tên hoặc số điện thoại..."
+                            class="block w-full rounded-lg border-gray-300 text-sm focus:ring-pink-500 focus:border-pink-500">
+                    </div>
+                    <div>
+                        <label for="start_date" class="block text-xs font-semibold text-gray-500 uppercase mb-1">Từ
+                            ngày</label>
+                        <input type="date" name="start_date" id="start_date" value="{{ request('start_date') }}"
+                            class="block w-full rounded-lg border-gray-300 text-sm focus:ring-pink-500 focus:border-pink-500">
+                    </div>
+                    <div>
+                        <label for="end_date" class="block text-xs font-semibold text-gray-500 uppercase mb-1">Đến
+                            ngày</label>
+                        <input type="date" name="end_date" id="end_date" value="{{ request('end_date') }}"
+                            class="block w-full rounded-lg border-gray-300 text-sm focus:ring-pink-500 focus:border-pink-500">
+                    </div>
+                    <div class="flex items-end gap-2">
+                        <div class="flex-1">
+                            <label for="status" class="block text-xs font-semibold text-gray-500 uppercase mb-1">Trạng
+                                thái</label>
+                            <select name="status" id="status"
+                                class="block w-full rounded-lg border-gray-300 text-sm focus:ring-pink-500 focus:border-pink-500">
+                                <option value="">Tất cả</option>
+                                <option value="pending" @selected(request('status') == 'pending')>Chờ xác nhận</option>
+                                <option value="confirmed" @selected(request('status') == 'confirmed')>Đã xác nhận</option>
+                                <option value="completed" @selected(request('status') == 'completed')>Hoàn thành</option>
+                                <option value="cancelled" @selected(request('status') == 'cancelled')>Đã hủy</option>
+                            </select>
+                        </div>
+                        <button type="submit"
+                            class="bg-pink-600 text-white px-4 py-2 rounded-lg hover:bg-pink-700 transition-colors shadow-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
         {{-- Table --}}
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div class="overflow-x-auto">
@@ -100,8 +184,20 @@
                                     <div class="text-xs text-gray-500 mt-0.5">{{ $booking->customer_phone }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">{{ $booking->booking_time }}</div>
-                                    <div class="text-xs text-gray-500">{{ $booking->booking_date->format('d/m/Y') }}</div>
+                                    <div class="flex items-center">
+                                        <div class="bg-pink-50 p-2 rounded-lg mr-3 border border-pink-100">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-pink-500" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <div class="text-sm font-bold text-gray-900">{{ $booking->booking_time }}</div>
+                                            <div class="text-[11px] font-medium text-pink-600">
+                                                {{ $booking->booking_date->format('d/m/Y') }}</div>
+                                        </div>
+                                    </div>
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="flex flex-wrap gap-1">
@@ -160,11 +256,11 @@
                                         @method('PATCH')
                                         <select name="status"
                                             onchange="document.getElementById('status-form-{{ $booking->id }}').submit()" class="text-xs font-semibold rounded-full px-2.5 py-1 focus:ring-pink-500 focus:border-pink-500 border-none
-                                                                                                    @if($booking->status == 'pending') bg-yellow-50 text-yellow-700 @endif
-                                                                                                    @if($booking->status == 'confirmed') bg-blue-50 text-blue-700 @endif
-                                                                                                    @if($booking->status == 'completed') bg-green-50 text-green-700 @endif
-                                                                                                    @if($booking->status == 'cancelled') bg-red-50 text-red-700 @endif
-                                                                                                    ">
+                                                                                                            @if($booking->status == 'pending') bg-yellow-50 text-yellow-700 @endif
+                                                                                                            @if($booking->status == 'confirmed') bg-blue-50 text-blue-700 @endif
+                                                                                                            @if($booking->status == 'completed') bg-green-50 text-green-700 @endif
+                                                                                                            @if($booking->status == 'cancelled') bg-red-50 text-red-700 @endif
+                                                                                                            ">
                                             <option value="pending" @selected($booking->status == 'pending')>Chờ xác nhận</option>
                                             <option value="confirmed" @selected($booking->status == 'confirmed')>Đã xác nhận
                                             </option>

@@ -18,10 +18,25 @@ class BookingController extends Controller
     /**
      * Display a listing of the bookings.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $bookings = $this->bookingService->getAllBookings();
-        return view('admin.bookings.index', compact('bookings'));
+        try {
+            $query = new \App\Queries\ListBookings\ListBookingQuery(
+                customer: $request->get('customer'),
+                startDate: $request->get('start_date'),
+                endDate: $request->get('end_date'),
+                status: $request->get('status'),
+                isPaid: $request->has('is_paid') ? (int) $request->get('is_paid') : null,
+                today: (bool) $request->get('today'),
+                page: (int) $request->get('page', 1),
+            );
+
+            $bookings = app(\App\Queries\ListBookings\ListBookingHandler::class)->execute($query);
+
+            return view('admin.bookings.index', compact('bookings'));
+        } catch (\Exception $e) {
+            return back()->with('error', 'Không thể lấy danh sách đặt lịch: ' . $e->getMessage());
+        }
     }
 
     /**

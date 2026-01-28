@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use App\Repositories\Admin\AdminRepository;
-use App\Repositories\Admin\AdminRepositoryCache;
 use App\Repositories\Admin\AdminRepositoryInterface;
 use App\Repositories\Banner\BannerRepository;
 use App\Repositories\Banner\BannerRepositoryInterface;
@@ -14,17 +13,21 @@ use App\Repositories\BookingTimeSlot\BookingTimeSlotRepositoryInterface;
 use App\Repositories\Category\CategoryRepository;
 use App\Repositories\Category\CategoryRepositoryInterface;
 use App\Repositories\Permission\PermissionRepository;
-use App\Repositories\Permission\PermissionRepositoryCache;
 use App\Repositories\Permission\PermissionRepositoryInterface;
 use App\Repositories\Nail\NailRepository;
-use App\Repositories\Nail\NailRepositoryCache;
 use App\Repositories\Nail\NailRepositoryInterface;
 use App\Repositories\NailCategory\NailCategoryRepository;
-use App\Repositories\NailCategory\NailCategoryRepositoryCache;
 use App\Repositories\NailCategory\NailCategoryRepositoryInterface;
 use App\Repositories\Product\ProductRepository;
-use App\Repositories\Product\ProductRepositoryCache;
 use App\Repositories\Product\ProductRepositoryInterface;
+use App\Repositories\Booking\BookingRepository;
+use App\Repositories\Booking\BookingRepositoryInterface;
+use App\Repositories\Booking\NailBookingRepository;
+use App\Repositories\Booking\NailBookingRepositoryInterface;
+use App\Repositories\Dashboard\DashboardRepository;
+use App\Repositories\Dashboard\DashboardRepositoryInterface;
+use App\Repositories\Setting\SettingRepository;
+use App\Repositories\Setting\SettingRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -58,6 +61,17 @@ class AppServiceProvider extends ServiceProvider
 
         # banners
         $this->app->bind(BannerRepositoryInterface::class, BannerRepository::class);
+
+        # bookings
+        $this->app->bind(BookingRepositoryInterface::class, BookingRepository::class);
+
+        $this->app->bind(NailBookingRepositoryInterface::class, NailBookingRepository::class);
+
+        # dashboard
+        $this->app->bind(DashboardRepositoryInterface::class, DashboardRepository::class);
+
+        # settings
+        $this->app->bind(SettingRepositoryInterface::class, SettingRepository::class);
     }
 
 

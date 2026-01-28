@@ -114,6 +114,11 @@ class ProductRepositoryCache implements ProductRepositoryInterface
         return $this->productRepository->bulkDelete($productIds);
     }
 
+    public function countAll(): int
+    {
+        return $this->productRepository->countAll();
+    }
+
     /**
      * Invalidate all related cache keys
      */

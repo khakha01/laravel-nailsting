@@ -19,10 +19,25 @@ class NailBookingController extends Controller
     /**
      * Display a listing of the nail bookings.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $bookings = $this->nailBookingService->getAllBookings();
-        return view('admin.nail-bookings.index', compact('bookings'));
+        try {
+            $query = new \App\Queries\ListNailBookings\ListNailBookingQuery(
+                customer: $request->get('customer'),
+                startDate: $request->get('start_date'),
+                endDate: $request->get('end_date'),
+                status: $request->get('status'),
+                paymentStatus: $request->get('payment_status'),
+                today: (bool) $request->get('today'),
+                page: (int) $request->get('page', 1),
+            );
+
+            $bookings = app(\App\Queries\ListNailBookings\ListNailBookingHandler::class)->execute($query);
+
+            return view('admin.nail-bookings.index', compact('bookings'));
+        } catch (\Exception $e) {
+            return back()->with('error', 'Không thể lấy danh sách đặt lịch nail: ' . $e->getMessage());
+        }
     }
 
     /**

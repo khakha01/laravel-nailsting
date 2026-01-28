@@ -7,6 +7,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Nail System')</title>
 
+    <link rel="icon" type="image/png" href="{{ asset('img/logo-icon.png') }}">
+
     {{-- Font Icon --}}
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.0/css/all.css" />
 

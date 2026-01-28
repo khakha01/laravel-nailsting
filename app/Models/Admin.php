@@ -16,7 +16,7 @@ class Admin extends Authenticatable implements JWTSubject
         'email',
         'password',
         'phone',
-        'avatar',
+        'media_id',
         'is_active',
     ];
 
@@ -30,12 +30,12 @@ class Admin extends Authenticatable implements JWTSubject
         'updated_at' => 'datetime',
     ];
 
-     public static function make(
+    public static function make(
         string $name,
         string $email,
         string $hashedPassword,
         ?string $phone,
-        ?string $avatar,
+        ?string $media_id,
         bool $isActive
     ): static {
         return new static([
@@ -43,7 +43,7 @@ class Admin extends Authenticatable implements JWTSubject
             'email' => $email,
             'password' => $hashedPassword,
             'phone' => $phone,
-            'avatar' => $avatar,
+            'media_id' => $media_id,
             'is_active' => $isActive,
         ]);
     }
