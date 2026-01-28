@@ -21,6 +21,19 @@
     {{-- Style Css --}}
     <link rel="stylesheet" href="{{ asset('css/style.min.css') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    @if(app()->environment('production') && config('services.ga_id'))
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id={{ config('services.ga_id') }}"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+            gtag('config', '{{ config('services.ga_id') }}');
+        </script>
+    @endif
+
+
 </head>
 
 <body>
