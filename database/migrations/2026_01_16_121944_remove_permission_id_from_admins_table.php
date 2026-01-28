@@ -4,18 +4,28 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
         Schema::table('admins', function (Blueprint $table) {
-            $table->dropForeign('admins_permission_id_foreign');
-            $table->dropColumn('permission_id');
+
+            if (Schema::hasColumn('admins', 'permission_id')) {
+
+                // drop FK nếu tồn tại
+                try {
+                    $table->dropForeign(['permission_id']);
+                } catch (\Exception $e) {
+                    // bỏ qua nếu không tồn tại
+                }
+
+                $table->dropColumn('permission_id');
+            }
         });
     }
+
 
     /**
      * Reverse the migrations.
