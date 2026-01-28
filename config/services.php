@@ -40,5 +40,5 @@ return [
         'chat_id' => env('TELEGRAM_CHAT_ID'),
     ],
 
-
+    'ga_id' => env('GA_MEASUREMENT_ID'),
 ];
