@@ -26,6 +26,8 @@ use App\Repositories\Booking\NailBookingRepository;
 use App\Repositories\Booking\NailBookingRepositoryInterface;
 use App\Repositories\Dashboard\DashboardRepository;
 use App\Repositories\Dashboard\DashboardRepositoryInterface;
+use App\Repositories\Setting\SettingRepository;
+use App\Repositories\Setting\SettingRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -67,6 +69,9 @@ class AppServiceProvider extends ServiceProvider
 
         # dashboard
         $this->app->bind(DashboardRepositoryInterface::class, DashboardRepository::class);
+
+        # settings
+        $this->app->bind(SettingRepositoryInterface::class, SettingRepository::class);
     }
 
 

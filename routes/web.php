@@ -12,6 +12,7 @@ use App\Http\Controllers\Permission\PermissionController;
 use App\Http\Controllers\User\AppointmentController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\Admin\SettingController;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -171,6 +172,12 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
         Route::put('/update/{id}', [\App\Http\Controllers\Admin\BannerController::class, 'update'])->name('update');
         Route::delete('/{id}', [\App\Http\Controllers\Admin\BannerController::class, 'destroy'])->name('destroy');
         Route::delete('/bulk-delete', [\App\Http\Controllers\Admin\BannerController::class, 'bulkDelete'])->name('bulk-delete');
+    });
+
+    // Settings
+    Route::group(['prefix' => 'settings', 'as' => 'settings.', 'middleware' => 'permission:setting-view'], function () {
+        Route::get('/', [SettingController::class, 'index'])->name('index');
+        Route::post('/update', [SettingController::class, 'update'])->name('update')->middleware('permission:setting-edit');
     });
 });
 

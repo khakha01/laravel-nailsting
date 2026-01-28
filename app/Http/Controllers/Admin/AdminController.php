@@ -20,7 +20,8 @@ class AdminController extends Controller
         protected AdminService $adminService,
         protected PermissionService $permissionService,
         protected ListAdminHandler $listAdminHandler,
-    ) {}
+    ) {
+    }
 
     /**
      * Display a listing of the resource.
@@ -61,7 +62,7 @@ class AdminController extends Controller
                 $request->get('email'),
                 $request->get('password'),
                 $request->get('phone'),
-                $request->get('avatar'),
+                $request->get('media_id'),
                 $request->boolean('is_active'),
             );
 
@@ -102,7 +103,17 @@ class AdminController extends Controller
     public function update(UpdateAdminRequest $request, Admin $admin)
     {
         try {
-            $this->adminService->updateService($admin->id, $request->validated());
+            $data = $request->validated();
+
+            // Xử lý is_active (vì checkbox không gửi dữ liệu nếu không tích)
+            $data['is_active'] = $request->has('is_active');
+
+            // Chỉ cập nhật mật khẩu nếu được nhập
+            if (empty($data['password'])) {
+                unset($data['password']);
+            }
+
+            $this->adminService->updateService($admin->id, $data);
 
             return redirect()
                 ->route('admins.index')

@@ -94,6 +94,12 @@ return [
         'media-delete' => 'Xóa ảnh',
     ],
 
+    // Quản lý Settings
+    'setting' => [
+        'setting-view' => 'Xem cài đặt hệ thống',
+        'setting-edit' => 'Cập nhật cài đặt hệ thống',
+    ],
+
     // Super Admin - Quyền tối cao
     'super-admin' => [
         'super-admin' => 'Super Admin - Quyền tối cao',

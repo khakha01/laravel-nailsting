@@ -99,8 +99,7 @@
                                         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
                             </div>
-                            <input type="text" name="search" value="{{ request('search') }}"
-                                placeholder="Tên hoặc Email..."
+                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Tên hoặc Email..."
                                 class="w-full pl-10 rounded-lg border-gray-200 bg-gray-50 text-gray-700 focus:bg-white focus:border-blue-500 focus:ring-blue-500 sm:text-sm h-10 transition-colors">
                         </div>
                     </div>
@@ -113,9 +112,9 @@
                                 class="w-full pl-3 pr-10 rounded-lg border-gray-200 bg-gray-50 text-gray-700 focus:bg-white focus:border-blue-500 focus:ring-blue-500 sm:text-sm h-10 transition-colors appearance-none">
                                 <option value="">-- Tất cả --</option>
                                 {{-- @foreach ($roles as $role)
-                                    <option value="{{ $role->id }}" {{ request('role_id') == $role->id ? 'selected' : '' }}>
-                                        {{ $role->name }}
-                                    </option>
+                                <option value="{{ $role->id }}" {{ request('role_id')==$role->id ? 'selected' : '' }}>
+                                    {{ $role->name }}
+                                </option>
                                 @endforeach --}}
                                 {{-- Hardcode ví dụ nếu chưa truyền biến $roles từ controller --}}
                                 <option value="1">Owner</option>
@@ -157,8 +156,7 @@
                     <div class="md:col-span-2 flex items-center gap-2">
                         <button type="submit"
                             class="inline-flex justify-center items-center gap-2 rounded-lg bg-[#000] px-4 h-10 text-sm font-medium text-white shadow-sm hover:bg-[#0c8fe1] focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all w-full md:w-auto">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20"
-                                fill="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd"
                                     d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
                                     clip-rule="evenodd" />
@@ -223,9 +221,9 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
                                         <div class="h-10 w-10 flex-shrink-0">
-                                            @if ($admin->avatar)
+                                            @if ($admin->media_id)
                                                 <img class="h-10 w-10 rounded-full object-cover ring-1 ring-gray-200"
-                                                    src="{{ asset($admin->avatar) }}" alt="{{ $admin->name }}">
+                                                    src="{{ get_media_url($admin->media_id) }}" alt="{{ $admin->name }}">
                                             @else
                                                 <div
                                                     class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-sm">
@@ -291,8 +289,7 @@
 
                                         {{-- Assign Permissions Button --}}
                                         <a href="{{ route('admins.assign-permissions', $admin->id) }}"
-                                            class="text-gray-400 hover:text-purple-600 transition-colors"
-                                            title="Gán quyền">
+                                            class="text-gray-400 hover:text-purple-600 transition-colors" title="Gán quyền">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                                 stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -316,11 +313,9 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"
-                                                class="text-gray-400 hover:text-red-600 transition-colors pt-1"
-                                                title="Xóa">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                    class="w-5 h-5">
+                                                class="text-gray-400 hover:text-red-600 transition-colors pt-1" title="Xóa">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                    stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                                     <path stroke-linecap="round" stroke-linejoin="round"
                                                         d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                                                 </svg>
@@ -368,7 +363,7 @@
 
     {{-- Script xử lý Checkbox --}}
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const selectAll = document.getElementById('select-all');
             const checkboxes = document.querySelectorAll('.admin-checkbox');
             const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
@@ -402,7 +397,7 @@
             }
 
             // Sự kiện chọn tất cả
-            selectAll.addEventListener('change', function() {
+            selectAll.addEventListener('change', function () {
                 checkboxes.forEach(cb => cb.checked = this.checked);
                 updateBulkActionState();
             });

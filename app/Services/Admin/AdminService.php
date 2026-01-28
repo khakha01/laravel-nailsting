@@ -14,7 +14,8 @@ class AdminService
     public function __construct(
         protected AdminRepositoryInterface $adminRepository,
         protected PermissionRepositoryInterface $permissionRepository,
-    ) {}
+    ) {
+    }
 
     /**
      * Lấy tất cả admin
@@ -37,35 +38,35 @@ class AdminService
      */
 
     public function createService(
-            array $permissionIds,
-    string $name,
-    string $email,
-    string $password,
-    ?string $phone,
-    ?string $avatar,
-    bool $isActive,
-): Admin {
+        array $permissionIds,
+        string $name,
+        string $email,
+        string $password,
+        ?string $phone,
+        ?string $mediaId,
+        bool $isActive,
+    ): Admin {
 
-    $hashedPassword = bcrypt($password);
+        $hashedPassword = bcrypt($password);
 
-    $admin = Admin::make(
-        $name,
-        $email,
-        $hashedPassword,
-        $phone,
-        $avatar,
-        $isActive
-    );
+        $admin = Admin::make(
+            $name,
+            $email,
+            $hashedPassword,
+            $phone,
+            $mediaId,
+            $isActive
+        );
 
-    return DB::transaction(function () use ($admin, $permissionIds) {
-        $admin = $this->adminRepository->save($admin);
-        if (!empty($permissionIds)) {
+        return DB::transaction(function () use ($admin, $permissionIds) {
+            $admin = $this->adminRepository->save($admin);
+            if (!empty($permissionIds)) {
                 $admin->permissions()->attach($permissionIds);
-        }
+            }
 
-        return $admin;
-    });
-}
+            return $admin;
+        });
+    }
 
 
     /**

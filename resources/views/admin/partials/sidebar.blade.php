@@ -1,7 +1,8 @@
 <!-- Overlay mobile -->
 <div id="sidebar-overlay" onclick="toggleSidebar()"
-    class="fixed inset-0 z-20 bg-black/30 hidden lg:hidden transition-opacity">
+    class="fixed inset-0 z-20 bg-black/40 backdrop-blur-sm hidden lg:hidden transition-all duration-300">
 </div>
+
 
 <!-- Sidebar -->
 <aside id="sidebar" class="fixed inset-y-0 left-0 z-30 w-66 bg-white text-gray-700
@@ -42,6 +43,9 @@
             <!-- Permission -->
             @include('admin.partials.sidebar.permissions')
 
+            <!-- Settings -->
+            @include('admin.partials.sidebar.settings')
+
         </ul>
     </nav>
 
@@ -49,4 +53,6 @@
     @include('admin.partials.sidebar.logout')
 
 </aside>
+
+
 @include('admin.partials.sidebar.script')

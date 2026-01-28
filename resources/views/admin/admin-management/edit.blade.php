@@ -112,6 +112,39 @@
                                     @enderror
                                 </div>
 
+                                {{-- Avatar --}}
+                                <div>
+                                    <label class="block text-sm font-bold text-slate-800 mb-2">Ảnh Đại Diện</label>
+                                    <div class="flex items-center gap-4">
+                                        <div id="avatar-preview-container"
+                                            class="h-20 w-20 rounded-full bg-slate-100 flex items-center justify-center border-2 border-dashed border-slate-300 overflow-hidden">
+                                            @if(old('media_id', $admin->media_id))
+                                                <img src="{{ get_media_url(old('media_id', $admin->media_id)) }}"
+                                                    class="h-full w-full object-cover">
+                                            @else
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-slate-400"
+                                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                </svg>
+                                            @endif
+                                        </div>
+                                        <input type="hidden" name="media_id" id="avatar-input"
+                                            value="{{ old('media_id', $admin->media_id) }}">
+                                        <button type="button" onclick="openMediaModal()"
+                                            class="px-4 py-2 text-sm font-bold text-blue-600 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-all">
+                                            Chọn ảnh
+                                        </button>
+                                        <button type="button" onclick="removeAvatar()" id="remove-avatar-btn"
+                                            class="px-4 py-2 text-sm font-bold text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 transition-all {{ old('media_id', $admin->media_id) ? '' : 'hidden' }}">
+                                            Xóa
+                                        </button>
+                                    </div>
+                                    @error('media_id')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
                                 {{-- Password Fields --}}
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div>
@@ -197,5 +230,68 @@
             </form>
         </div>
     </div>
+
+    {{-- Media Manager Modal --}}
+    @include('admin.components.media-manager-modal')
+
+    @push('scripts')
+        <script src="{{ asset('js/media-manager.js') }}"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // Initialize Media Manager
+                const mediaManager = new MediaManager({
+                    urls: {
+                        index: '{{ route('media.index') }}',
+                        store: '{{ route('media.store') }}',
+                        folderStore: '{{ route('media.folders.store') }}',
+                        folderDelete: '{{ route('media.folders.destroy', ['id' => '__ID__']) }}'.replace('__ID__', ''),
+                        mediaDelete: '{{ route('media.destroy', ['id' => '__ID__']) }}'.replace('__ID__', ''),
+                        mediaBulkDelete: '{{ route('media.bulk-delete') }}',
+                    },
+                    csrfToken: '{{ csrf_token() }}'
+                });
+
+                // Override confirmSelection for Avatar
+                mediaManager.confirmSelection = function () {
+                    const selected = this.state.selectedItemsMap;
+                    if (selected.size === 0) {
+                        this.closeMediaModal();
+                        return;
+                    }
+
+                    // For avatar, we only take the first selected item
+                    const item = selected.values().next().value;
+
+                    const previewContainer = document.getElementById('avatar-preview-container');
+                    const avatarInput = document.getElementById('avatar-input');
+                    const removeBtn = document.getElementById('remove-avatar-btn');
+
+                    // Hiển thị ảnh preview dùng item.url (full url)
+                    // Lưu vào input dùng item.id (Media ID) để đồng bộ với các module khác như Banner/Nail
+                    previewContainer.innerHTML = `<img src="${item.url}" class="h-full w-full object-cover">`;
+                    avatarInput.value = item.id;
+                    removeBtn.classList.remove('hidden');
+
+                    this.closeMediaModal();
+                    this.state.selectedItemsMap.clear();
+                    this.updateStatus();
+                }
+
+                window.removeAvatar = function () {
+                    const previewContainer = document.getElementById('avatar-preview-container');
+                    const avatarInput = document.getElementById('avatar-input');
+                    const removeBtn = document.getElementById('remove-avatar-btn');
+
+                    previewContainer.innerHTML = `
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                        </svg>
+                                                    `;
+                    avatarInput.value = '';
+                    removeBtn.classList.add('hidden');
+                }
+            });
+        </script>
+    @endpush
 
 @endsection
