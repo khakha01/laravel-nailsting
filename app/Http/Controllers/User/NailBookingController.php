@@ -35,7 +35,7 @@ class NailBookingController extends Controller
             // Handle payment proof upload
             $paymentProofPath = null;
             if ($request->hasFile('payment_proof')) {
-                $paymentProofPath = $request->file('payment_proof')->store('nail-bookings/payment-proofs', 'public');
+                $paymentProofPath = $request->file('payment_proof')->store('nail-bookings/payment-proofs', 'minio');
             }
 
             // Create nail booking
@@ -82,7 +82,7 @@ class NailBookingController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Có lỗi xảy ra, vui lòng thử lại sau!',
+                'message' => 'Có lỗi xảy ra: ' . $e->getMessage(),
             ], 500);
         }
     }

@@ -77,6 +77,8 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        //
+        view()->composer('*', function ($view) {
+            $view->with('settings', \App\Models\Setting::first());
+        });
     }
 }

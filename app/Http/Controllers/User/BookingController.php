@@ -57,9 +57,12 @@ class BookingController extends Controller
 
             // 1. Send Email Notification
             try {
-                Mail::to(config('mail.admin_address'))->send(new NewBookingAdminNotification($booking));
+                $adminEmail = \App\Models\Setting::first()->email ?? config('mail.admin_address');
+                if ($adminEmail) {
+                    Mail::to($adminEmail)->send(new NewBookingAdminNotification($booking));
+                }
             } catch (\Exception $e) {
-                Log::error('Failed to send email/telegram: ' . $e->getMessage());
+                Log::error('Failed to send email: ' . $e->getMessage());
             }
 
             // 2. Send Telegram Notification

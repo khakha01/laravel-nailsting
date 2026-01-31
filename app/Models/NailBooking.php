@@ -31,7 +31,6 @@ class NailBooking extends Model
 
     protected $casts = [
         'booking_date' => 'date',
-        'booking_time' => 'datetime',
         'nail_price' => 'decimal:2',
         'deposit_amount' => 'decimal:2',
         'total_amount' => 'decimal:2',
