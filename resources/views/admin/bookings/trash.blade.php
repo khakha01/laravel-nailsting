@@ -68,6 +68,11 @@
                     <thead class="bg-gray-50">
                         <tr>
                             <th scope="col"
+                                class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-12">
+                                <input type="checkbox" id="select-all"
+                                    class="h-4 w-4 text-[#0c8fe1] border-gray-300 rounded focus:ring-[#0c8fe1]">
+                            </th>
+                            <th scope="col"
                                 class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                                 Khách hàng</th>
                             <th scope="col"
@@ -76,12 +81,28 @@
                             <th scope="col"
                                 class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                                 Tổng tiền</th>
-                            <th scope="col" class="relative px-6 py-4"><span class="sr-only">Hành động</span></th>
+                            <th scope="col" class="relative px-6 py-4 text-right">
+                                <div class="flex justify-end gap-2" id="bulk-actions" style="display: none;">
+                                    <button onclick="handleBulkAction('restore')"
+                                        class="inline-flex items-center px-3 py-1.5 text-xs font-bold bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all shadow-sm">
+                                        <i class="fas fa-undo mr-1.5"></i> Khôi phục
+                                    </button>
+                                    <button onclick="handleBulkAction('force-delete')"
+                                        class="inline-flex items-center px-3 py-1.5 text-xs font-bold bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all shadow-sm">
+                                        <i class="fas fa-trash-alt mr-1.5"></i> Xóa vĩnh viễn
+                                    </button>
+                                </div>
+                            </th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @forelse($bookings as $booking)
                             <tr class="hover:bg-gray-50 transition-colors duration-150">
+                                <td class="px-6 py-4">
+                                    <input type="checkbox"
+                                        class="booking-checkbox h-4 w-4 text-[#0c8fe1] border-gray-300 rounded focus:ring-[#0c8fe1]"
+                                        value="{{ $booking->id }}">
+                                </td>
                                 <td class="px-6 py-4">
                                     <div class="text-sm font-bold text-gray-900">{{ $booking->customer_name }}</div>
                                     <div class="text-xs text-gray-500 mt-0.5">{{ $booking->customer_phone }}</div>
@@ -95,7 +116,6 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <div class="flex items-center justify-end gap-2">
-
                                         {{-- Restore Button --}}
                                         <form method="POST" action="{{ route('bookings.restore', $booking->id) }}"
                                             class="inline-block">
@@ -108,7 +128,6 @@
                                                     <path stroke-linecap="round" stroke-linejoin="round"
                                                         d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
                                                 </svg>
-                                                Khôi phục
                                             </button>
                                         </form>
 
@@ -126,7 +145,6 @@
                                                     <path stroke-linecap="round" stroke-linejoin="round"
                                                         d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                                                 </svg>
-                                                Xóa vĩnh viễn
                                             </button>
                                         </form>
                                     </div>
@@ -134,7 +152,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="px-6 py-12 text-center bg-gray-50">
+                                <td colspan="5" class="px-6 py-12 text-center bg-gray-50">
                                     <div class="flex flex-col items-center justify-center">
                                         <svg class="w-12 h-12 text-gray-300" fill="none" viewBox="0 0 24 24"
                                             stroke="currentColor">
@@ -155,4 +173,62 @@
         </div>
     </div>
 
+    {{-- Forms for bulk actions --}}
+    <form id="bulk-restore-form" action="{{ route('bookings.bulk-restore') }}" method="POST" class="hidden">
+        @csrf
+    </form>
+    <form id="bulk-force-delete-form" action="{{ route('bookings.bulk-force-delete') }}" method="POST" class="hidden">
+        @csrf
+        @method('DELETE')
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const selectAll = document.getElementById('select-all');
+            const checkboxes = document.querySelectorAll('.booking-checkbox');
+            const bulkActions = document.getElementById('bulk-actions');
+
+            function updateBulkActions() {
+                const checkedCount = document.querySelectorAll('.booking-checkbox:checked').length;
+                bulkActions.style.display = checkedCount > 0 ? 'flex' : 'none';
+            }
+
+            selectAll.addEventListener('change', function () {
+                checkboxes.forEach(cb => cb.checked = this.checked);
+                updateBulkActions();
+            });
+
+            checkboxes.forEach(cb => {
+                cb.addEventListener('change', updateBulkActions);
+            });
+        });
+
+        function handleBulkAction(type) {
+            const selectedIds = Array.from(document.querySelectorAll('.booking-checkbox:checked')).map(cb => cb.value);
+            if (selectedIds.length === 0) return;
+
+            let confirmMsg = type === 'restore'
+                ? 'Khôi phục ' + selectedIds.length + ' mục đã chọn?'
+                : 'CẢNH BÁO: Xóa vĩnh viễn ' + selectedIds.length + ' mục đã chọn? Dữ liệu KHÔNG THỂ khôi phục!';
+
+            if (!confirm(confirmMsg)) return;
+
+            const formId = type === 'restore' ? 'bulk-restore-form' : 'bulk-force-delete-form';
+            const form = document.getElementById(formId);
+
+            // Clear existing hidden inputs
+            form.querySelectorAll('input[name="booking_ids[]"]').forEach(i => i.remove());
+
+            // Add new hidden inputs
+            selectedIds.forEach(id => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'booking_ids[]';
+                input.value = id;
+                form.appendChild(input);
+            });
+
+            form.submit();
+        }
+    </script>
 @endsection

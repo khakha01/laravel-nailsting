@@ -28,6 +28,12 @@ use App\Repositories\Dashboard\DashboardRepository;
 use App\Repositories\Dashboard\DashboardRepositoryInterface;
 use App\Repositories\Setting\SettingRepository;
 use App\Repositories\Setting\SettingRepositoryInterface;
+use App\Repositories\Post\PostRepository;
+use App\Repositories\Post\PostRepositoryInterface;
+use App\Repositories\PostCategory\PostCategoryRepository;
+use App\Repositories\PostCategory\PostCategoryRepositoryInterface;
+use App\Repositories\PostTag\PostTagRepository;
+use App\Repositories\PostTag\PostTagRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -72,6 +78,15 @@ class AppServiceProvider extends ServiceProvider
 
         # settings
         $this->app->bind(SettingRepositoryInterface::class, SettingRepository::class);
+
+        # postCategories
+        $this->app->bind(PostCategoryRepositoryInterface::class, PostCategoryRepository::class);
+
+        # postTags
+        $this->app->bind(PostTagRepositoryInterface::class, PostTagRepository::class);
+
+        # posts
+        $this->app->bind(PostRepositoryInterface::class, PostRepository::class);
     }
 
 

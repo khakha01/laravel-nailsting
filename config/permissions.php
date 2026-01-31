@@ -100,6 +100,30 @@ return [
         'setting-edit' => 'Cập nhật cài đặt hệ thống',
     ],
 
+    // Quản lý Post
+    'post' => [
+        'post-view' => 'Xem danh sách bài viết',
+        'post-create' => 'Tạo bài viết mới',
+        'post-edit' => 'Chỉnh sửa bài viết',
+        'post-delete' => 'Xóa bài viết',
+    ],
+
+    // Quản lý Post Category
+    'post-category' => [
+        'post-category-view' => 'Xem danh sách danh mục bài viết',
+        'post-category-create' => 'Tạo danh mục bài viết mới',
+        'post-category-edit' => 'Chỉnh sửa danh mục bài viết',
+        'post-category-delete' => 'Xóa danh mục bài viết',
+    ],
+
+    // Quản lý Post Tag
+    'post-tag' => [
+        'post-tag-view' => 'Xem danh sách tag bài viết',
+        'post-tag-create' => 'Tạo tag bài viết mới',
+        'post-tag-edit' => 'Chỉnh sửa tag bài viết',
+        'post-tag-delete' => 'Xóa tag bài viết',
+    ],
+
     // Super Admin - Quyền tối cao
     'super-admin' => [
         'super-admin' => 'Super Admin - Quyền tối cao',

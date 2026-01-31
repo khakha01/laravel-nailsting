@@ -77,6 +77,28 @@ return [
         'all' => 'nail_bookings:all',
         'by_id' => 'nail_bookings:id:%s',
     ],
+    'post_categories' => [
+        'prefix' => 'post_categories',
+        'all' => 'post_categories:all',
+        'active' => 'post_categories:active',
+        'tree' => 'post_categories:tree',
+        'by_id' => 'post_categories:id:%s',
+        'by_slug' => 'post_categories:slug:%s',
+    ],
+    'post_tags' => [
+        'prefix' => 'post_tags',
+        'all' => 'post_tags:all',
+        'by_id' => 'post_tags:id:%s',
+    ],
+    'posts' => [
+        'prefix' => 'posts',
+        'all' => 'posts:all',
+        'published' => 'posts:published',
+        'featured' => 'posts:featured',
+        'by_id' => 'posts:id:%s',
+        'by_slug' => 'posts:slug:%s',
+        'by_category' => 'posts:category:%s',
+    ],
     'dashboard' => [
         'stats' => 'dashboard:stats',
         'recent' => 'dashboard:recent',

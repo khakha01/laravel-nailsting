@@ -98,4 +98,20 @@ class BookingService
         $booking = Booking::withTrashed()->findOrFail($id);
         return $booking->forceDelete();
     }
+
+    /**
+     * Bulk restore bookings
+     */
+    public function bulkRestoreBookings(array $ids)
+    {
+        return Booking::onlyTrashed()->whereIn('id', $ids)->restore();
+    }
+
+    /**
+     * Bulk force delete bookings
+     */
+    public function bulkForceDeleteBookings(array $ids)
+    {
+        return Booking::onlyTrashed()->whereIn('id', $ids)->forceDelete();
+    }
 }
