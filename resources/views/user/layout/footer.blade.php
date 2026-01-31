@@ -4,11 +4,22 @@
             <div class="flex items-center md:items-start flex-col">
                 <img src="{{ asset('img/logo.png') }}" alt="Nails-tingggg" class="h-14">
                 <p class="mt-2 text-sm text-slate-500">Nghệ thuật làm móng • Tinh tế • Cá nhân hoá</p>
+                @if($settings && $settings->address)
+                    <p class="mt-2 text-sm text-slate-500 flex items-start gap-2">
+                        <i class="fas fa-map-marker-alt mt-1 text-pink-400"></i>
+                        <span>{{ $settings->address }}</span>
+                    </p>
+                @endif
             </div>
             <div>
                 <h4 class="text-sm font-semibold uppercase tracking-wider text-slate-600 mb-4">Liên hệ</h4>
                 <p class="text-sm">
-                    <a href="tel:0900000000" class="hover:text-[#ff0052] transition">📞 0900 000 000</a>
+                    @if($settings && $settings->phone1)
+                        <a href="tel:{{ $settings->phone1 }}" class="hover:text-[#ff0052] transition">📞
+                            {{ $settings->phone1 }}</a>
+                    @else
+                        <a href="tel:0900000000" class="hover:text-[#ff0052] transition">📞 0900 000 000</a>
+                    @endif
                 </p>
             </div>
 
@@ -20,7 +31,8 @@
                             class="fab fa-instagram text-xl md:text-xl text-slate-600 group-hover:text-[#ff0052] transition-colors"></i>
                     </a>
 
-                    <a href="https://www.facebook.com/profile.php?id=100080113211628" class="group" aria-label="Facebook">
+                    <a href="https://www.facebook.com/profile.php?id=100080113211628" class="group"
+                        aria-label="Facebook">
                         <i
                             class="fab fa-facebook-f text-xl md:text-xl text-slate-600 group-hover:text-[#ff0052] transition-colors"></i>
                     </a>
@@ -31,15 +43,14 @@
                             class="fab fa-tiktok text-xl md:text-xl text-slate-600 group-hover:text-[#ff0052] transition-colors"></i>
                     </a>
                 </div>
-                <a href="#booking"
-                    class="inline-block rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white px-8 py-3 text-sm font-semibold
+                <a href="#booking" class="inline-block rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white px-8 py-3 text-sm font-semibold
                   hover:bg-[#ff0052] transition shadow-sm">
                     Đặt lịch ngay →
                 </a>
 
             </div>
             <div>
-                 <h4 class="text-sm font-semibold uppercase tracking-wider text-slate-600 mb-4">Tiktok</h4>
+                <h4 class="text-sm font-semibold uppercase tracking-wider text-slate-600 mb-4">Tiktok</h4>
                 <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@tinting_04" data-unique-id="tinting_04"
                     data-embed-type="creator" style="max-width: 780px; min-width: 288px;">
                     <section> <a target="_blank"
