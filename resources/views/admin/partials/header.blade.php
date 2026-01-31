@@ -56,7 +56,7 @@
                     class="hidden absolute right-0 mt-3 w-52 bg-white rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.1)] border border-gray-100 z-50 overflow-hidden transform origin-top-right transition-all duration-200">
 
                     <div class="py-2">
-                        <a href="#"
+                        <a href="{{ route('admin.profile') }}"
                             class="group flex items-center px-4 py-2.5 text-sm text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 transition-all">
                             <div
                                 class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center mr-3 group-hover:bg-indigo-100">

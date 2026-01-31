@@ -1,7 +1,7 @@
 <section id="nail-collection-section" class="py-16 bg-white relative overflow-hidden">
     {{-- Decorative element --}}
     <div class="absolute top-0 right-0 w-64 h-64 bg-pink-50/50 rounded-full blur-3xl -mr-32 -mt-32"></div>
-    <div class="max-w-7xl mx-auto">
+    <div class="max-w-7xl mx-auto px-4 md:px-0">
         <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
             <div>
                 <span class="text-pink-500 font-bold tracking-[0.2em] text-xs uppercase mb-2 block">Trend 2026</span>
