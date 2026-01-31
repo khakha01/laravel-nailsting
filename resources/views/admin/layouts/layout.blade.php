@@ -10,7 +10,8 @@
 
     {{-- Style Css --}}
     <link rel="stylesheet" href="{{ asset('css/admin.min.css') }}">
-    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.0/css/all.css" />
+
     {{-- Additional styles from child views --}}
     @stack('styles')
 
@@ -40,7 +41,7 @@
     <script>
         async function handleLogout() {
             if (!confirm('Bạn có chắc chắn muốn đăng xuất?')) return;
-            
+
             try {
                 await fetch('/api/admin/auth/logout', {
                     method: 'POST',
@@ -48,7 +49,7 @@
                         'Accept': 'application/json'
                     }
                 });
-            } catch (e) {}
+            } catch (e) { }
 
             document.cookie = "admin_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC; SameSite=Lax";
             window.location.href = '/admin/login';

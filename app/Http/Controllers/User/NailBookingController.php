@@ -3,62 +3,41 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Models\NailBooking;
-use App\Models\Nail;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\User\StoreNailBookingRequest;
+use App\Services\Booking\NailBookingService;
+use App\Services\Notification\TelegramService;
 use Illuminate\Support\Facades\Log;
 
 class NailBookingController extends Controller
 {
-    public function store(Request $request)
+    protected $nailBookingService;
+    protected $telegramService;
+
+    public function __construct(NailBookingService $nailBookingService, TelegramService $telegramService)
+    {
+        $this->nailBookingService = $nailBookingService;
+        $this->telegramService = $telegramService;
+    }
+
+    public function store(StoreNailBookingRequest $request)
     {
         try {
-            $validated = $request->validate([
-                'customer_name' => 'required|string|max:255',
-                'customer_phone' => 'required|string|max:20',
-                'customer_email' => 'nullable|email|max:255',
-                'nail_id' => 'required|exists:nails,id',
-                'nail_price' => 'required|numeric|min:0',
-                'booking_date' => 'required|date',
-                'booking_time' => 'required',
-                'notes' => 'nullable|string',
-                'terms_accepted' => 'required|boolean|accepted',
-                'payment_proof' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120', // 5MB max
-            ]);
-
-            // Calculate amounts
-            $depositAmount = 50000; // Fixed deposit
-            $totalAmount = $validated['nail_price'];
-            $remainingAmount = $totalAmount - $depositAmount;
+            $validated = $request->validated();
 
             // Handle payment proof upload
-            $paymentProofPath = null;
             if ($request->hasFile('payment_proof')) {
-                $paymentProofPath = $request->file('payment_proof')->store('nail-bookings/payment-proofs', 'minio');
+                $validated['payment_proof'] = $request->file('payment_proof')->store('nail-bookings/payment-proofs', 'minio');
             }
 
-            // Create nail booking
-            $nailBooking = NailBooking::create([
-                'customer_name' => $validated['customer_name'],
-                'customer_phone' => $validated['customer_phone'],
-                'customer_email' => $validated['customer_email'] ?? null,
-                'nail_id' => $validated['nail_id'],
-                'nail_price' => $validated['nail_price'],
-                'booking_date' => $validated['booking_date'],
-                'booking_time' => $validated['booking_time'],
-                'deposit_amount' => $depositAmount,
-                'total_amount' => $totalAmount,
-                'remaining_amount' => $remainingAmount,
-                'payment_proof' => $paymentProofPath,
-                'status' => 'pending',
-                'payment_status' => $paymentProofPath ? 'deposit_paid' : 'unpaid',
-                'notes' => $validated['notes'] ?? null,
-                'terms_accepted' => $validated['terms_accepted'],
-            ]);
+            // Create nail booking via service
+            $nailBooking = $this->nailBookingService->createBooking($validated);
 
-            // TODO: Send email notification
-            // TODO: Send Telegram notification
+            // Send Telegram notification
+            try {
+                $this->telegramService->sendNewNailBookingNotification($nailBooking);
+            } catch (\Exception $e) {
+                Log::error('Failed to send Telegram notification (Nail): ' . $e->getMessage());
+            }
 
             Log::info('Nail booking created successfully', ['booking_id' => $nailBooking->id]);
 
@@ -68,12 +47,6 @@ class NailBookingController extends Controller
                 'booking_id' => $nailBooking->id,
             ]);
 
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Vui lòng kiểm tra lại thông tin!',
-                'errors' => $e->errors(),
-            ], 422);
         } catch (\Exception $e) {
             Log::error('Error creating nail booking', [
                 'error' => $e->getMessage(),

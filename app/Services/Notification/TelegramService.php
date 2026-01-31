@@ -118,4 +118,42 @@ class TelegramService
             $this->sendMessage($message);
         }
     }
+
+    public function sendNewNailBookingNotification($booking)
+    {
+        $paidStatus = $booking->payment_status === 'deposit_paid'
+            ? "✅ <b>Đã cọc 50,000đ</b>"
+            : "⚠️ <b>Chưa thanh toán</b>";
+
+        // If proof exists but status might not be updated yet in some logic flows
+        if ($booking->payment_proof && $booking->payment_status === 'unpaid') {
+            $paidStatus = "⏳ <b>Đã gửi bill, chờ xác nhận</b>";
+        }
+
+        $message = "💅 <b>YÊU CẦU ĐẶT LỊCH NAIL MỚI</b> 💅\n"
+            . "<b>ID:</b> <code>#{$booking->id}</code>\n"
+            . "----------------------------------\n\n"
+
+            . "👤 <b>KHÁCH HÀNG</b>\n"
+            . "├ <b>Tên:</b> {$booking->customer_name}\n"
+            . "└ <b>SĐT:</b> {$booking->customer_phone}\n\n"
+
+            . "⏰ <b>LỊCH HẸN</b>\n"
+            . "└ <code>" . ($booking->booking_time instanceof \Carbon\Carbon ? $booking->booking_time->format('H:i') : $booking->booking_time) . "</code> | <code>" . ($booking->booking_date instanceof \Carbon\Carbon ? $booking->booking_date->format('d/m/Y') : $booking->booking_date) . "</code>\n\n"
+
+            . "🎨 <b>MẪU NAIL</b>\n"
+            . "└ <b>{$booking->nail->name}</b>\n\n"
+
+            . "💵 <b>TỔNG: " . number_format($booking->total_amount) . "đ</b>\n"
+            . "{$paidStatus}\n"
+            . ($booking->notes ? "\n📝 <b>GHI CHÚ:</b> <i>{$booking->notes}</i>\n" : "")
+
+            . "\n🚀 <a href='" . config('app.url') . "/admin/nail-bookings/{$booking->id}'>Xem chi tiết trên Admin</a>";
+
+        if ($booking->payment_proof) {
+            $this->sendPhoto($booking->payment_proof, $message);
+        } else {
+            $this->sendMessage($message);
+        }
+    }
 }

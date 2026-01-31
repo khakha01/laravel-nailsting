@@ -29,7 +29,7 @@ class BookingService
                 $booking->products()->attach($data['services']);
             }
 
-            return $booking;
+            return $booking->load('products');
         });
     }
 

@@ -13,23 +13,31 @@ class NailBookingService
     public function createBooking(array $data)
     {
         return DB::transaction(function () use ($data) {
-            return NailBooking::create([
+            $depositAmount = 50000;
+            $totalAmount = (float) $data['nail_price'];
+            $remainingAmount = $totalAmount - $depositAmount;
+
+            $paymentStatus = isset($data['payment_proof']) ? 'deposit_paid' : 'unpaid';
+
+            $nailBooking = NailBooking::create([
                 'customer_name' => $data['customer_name'],
                 'customer_phone' => $data['customer_phone'],
                 'customer_email' => $data['customer_email'] ?? null,
                 'nail_id' => $data['nail_id'],
-                'nail_price' => $data['nail_price'] ?? 0,
+                'nail_price' => $totalAmount,
                 'booking_date' => $data['booking_date'],
                 'booking_time' => $data['booking_time'],
-                'deposit_amount' => $data['deposit_amount'] ?? 50000,
-                'total_amount' => $data['total_amount'] ?? 0,
-                'remaining_amount' => $data['remaining_amount'] ?? 0,
+                'deposit_amount' => $depositAmount,
+                'total_amount' => $totalAmount,
+                'remaining_amount' => $remainingAmount,
                 'payment_proof' => $data['payment_proof'] ?? null,
                 'status' => 'pending',
-                'payment_status' => 'unpaid',
+                'payment_status' => $paymentStatus,
                 'notes' => $data['notes'] ?? null,
                 'terms_accepted' => $data['terms_accepted'] ?? false,
             ]);
+
+            return $nailBooking->load('nail');
         });
     }
 

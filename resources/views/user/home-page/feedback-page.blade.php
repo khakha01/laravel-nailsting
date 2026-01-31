@@ -100,9 +100,11 @@
                         {{-- Navigation Buttons --}}
                         <div
                             class="swiper-button-next !w-12 !h-12 !bg-white !rounded-full !shadow-lg after:!text-pink-500 after:!text-xl after:!font-bold hover:!bg-pink-50 transition-colors">
+                            <i class="fa-solid fa-chevron-right"></i>
                         </div>
                         <div
                             class="swiper-button-prev !w-12 !h-12 !bg-white !rounded-full !shadow-lg after:!text-pink-500 after:!text-xl after:!font-bold hover:!bg-pink-50 transition-colors">
+                            <i class="fa-solid fa-chevron-left"></i>
                         </div>
 
                         {{-- Pagination --}}
