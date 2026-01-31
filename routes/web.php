@@ -14,6 +14,9 @@ use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
+use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\Admin\PostCategoryController;
+use App\Http\Controllers\Admin\PostTagController;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -99,6 +102,8 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
         Route::get('/{id}', [\App\Http\Controllers\Admin\BookingController::class, 'show'])->whereNumber('id')->name('show');
         Route::patch('/update-status/{id}', [\App\Http\Controllers\Admin\BookingController::class, 'updateStatus'])->name('update-status')->middleware('permission:booking-edit');
         Route::delete('/bulk-delete', [\App\Http\Controllers\Admin\BookingController::class, 'bulkDelete'])->name('bulk-delete')->middleware('permission:booking-delete');
+        Route::post('/bulk-restore', [\App\Http\Controllers\Admin\BookingController::class, 'bulkRestore'])->name('bulk-restore')->middleware('permission:booking-edit');
+        Route::delete('/bulk-force-delete', [\App\Http\Controllers\Admin\BookingController::class, 'bulkForceDelete'])->name('bulk-force-delete')->middleware('permission:booking-delete');
         Route::delete('/{id}', [\App\Http\Controllers\Admin\BookingController::class, 'destroy'])->name('destroy')->middleware('permission:booking-delete');
     });
 
@@ -110,6 +115,8 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
         Route::get('/{id}', [\App\Http\Controllers\Admin\NailBookingController::class, 'show'])->whereNumber('id')->name('show');
         Route::patch('/update-status/{id}', [\App\Http\Controllers\Admin\NailBookingController::class, 'updateStatus'])->name('update-status')->middleware('permission:nail-booking-edit');
         Route::delete('/bulk-delete', [\App\Http\Controllers\Admin\NailBookingController::class, 'bulkDelete'])->name('bulk-delete')->middleware('permission:nail-booking-delete');
+        Route::post('/bulk-restore', [\App\Http\Controllers\Admin\NailBookingController::class, 'bulkRestore'])->name('bulk-restore')->middleware('permission:nail-booking-edit');
+        Route::delete('/bulk-force-delete', [\App\Http\Controllers\Admin\NailBookingController::class, 'bulkForceDelete'])->name('bulk-force-delete')->middleware('permission:nail-booking-delete');
         Route::delete('/{id}', [\App\Http\Controllers\Admin\NailBookingController::class, 'destroy'])->name('destroy')->middleware('permission:nail-booking-delete');
     });
 
@@ -155,6 +162,35 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
         Route::get('/{id}', [NailController::class, 'show'])->whereNumber('id')->name('show');
         Route::put('/update/{id}', [NailController::class, 'update'])->whereNumber('id')->name('update')->middleware('permission:nail-edit');
         Route::delete('/{id}', [NailController::class, 'destroy'])->whereNumber('id')->name('destroy')->middleware('permission:nail-delete');
+    });
+
+    // Post Management
+    Route::group(['prefix' => 'posts', 'as' => 'posts.', 'middleware' => 'permission:post-view'], function () {
+        Route::get('/list', [PostController::class, 'index'])->name('index');
+        Route::get('/create', [PostController::class, 'create'])->name('create')->middleware('permission:post-create');
+        Route::post('/store', [PostController::class, 'store'])->name('store')->middleware('permission:post-create');
+        Route::get('/{post}/edit', [PostController::class, 'edit'])->name('edit')->middleware('permission:post-edit');
+        Route::put('/{post}', [PostController::class, 'update'])->name('update')->middleware('permission:post-edit');
+        Route::delete('/bulk-delete', [PostController::class, 'bulkDelete'])->name('bulk-delete')->middleware('permission:post-delete');
+        Route::delete('/{post}', [PostController::class, 'destroy'])->name('destroy')->middleware('permission:post-delete');
+    });
+
+    // Post Category Management
+    Route::group(['prefix' => 'post-categories', 'as' => 'post-categories.', 'middleware' => 'permission:post-category-view'], function () {
+        Route::get('/list', [PostCategoryController::class, 'index'])->name('index');
+        Route::get('/create', [PostCategoryController::class, 'create'])->name('create')->middleware('permission:post-category-create');
+        Route::post('/store', [PostCategoryController::class, 'store'])->name('store')->middleware('permission:post-category-create');
+        Route::get('/{post_category}/edit', [PostCategoryController::class, 'edit'])->name('edit')->middleware('permission:post-category-edit');
+        Route::put('/{post_category}', [PostCategoryController::class, 'update'])->name('update')->middleware('permission:post-category-edit');
+        Route::delete('/{post_category}', [PostCategoryController::class, 'destroy'])->name('destroy')->middleware('permission:post-category-delete');
+    });
+
+    // Post Tag Management
+    Route::group(['prefix' => 'post-tags', 'as' => 'post-tags.', 'middleware' => 'permission:post-tag-view'], function () {
+        Route::get('/list', [PostTagController::class, 'index'])->name('index');
+        Route::post('/store', [PostTagController::class, 'store'])->name('store')->middleware('permission:post-tag-create');
+        Route::put('/{post_tag}', [PostTagController::class, 'update'])->name('update')->middleware('permission:post-tag-edit');
+        Route::delete('/{post_tag}', [PostTagController::class, 'destroy'])->name('destroy')->middleware('permission:post-tag-delete');
     });
     // Media Library (MinIO)
     Route::group(['prefix' => 'media', 'as' => 'media.', 'middleware' => 'permission:media-view'], function () {

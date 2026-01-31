@@ -141,4 +141,40 @@ class BookingController extends Controller
             return back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
         }
     }
+
+    /**
+     * Bulk restore bookings
+     */
+    public function bulkRestore(Request $request)
+    {
+        try {
+            $ids = $request->input('booking_ids', []);
+            if (empty($ids)) {
+                return back()->with('error', 'Vui lòng chọn ít nhất một mục để khôi phục.');
+            }
+
+            $count = $this->bookingService->bulkRestoreBookings($ids);
+            return back()->with('success', "Đã khôi phục {$count} mục thành công!");
+        } catch (\Exception $e) {
+            return back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Bulk force delete bookings
+     */
+    public function bulkForceDelete(Request $request)
+    {
+        try {
+            $ids = $request->input('booking_ids', []);
+            if (empty($ids)) {
+                return back()->with('error', 'Vui lòng chọn ít nhất một mục để xóa vĩnh viễn.');
+            }
+
+            $count = $this->bookingService->bulkForceDeleteBookings($ids);
+            return back()->with('success', "Đã xóa vĩnh viễn {$count} mục thành công!");
+        } catch (\Exception $e) {
+            return back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
+        }
+    }
 }

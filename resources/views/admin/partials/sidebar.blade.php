@@ -34,6 +34,9 @@
             <!-- Banners -->
             @include('admin.partials.sidebar.banners')
 
+            <!-- Blog -->
+            @include('admin.partials.sidebar.posts')
+
             <!-- Booking -->
             @include('admin.partials.sidebar.booking')
 

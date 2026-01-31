@@ -93,4 +93,20 @@ class NailBookingService
         $booking = NailBooking::withTrashed()->findOrFail($id);
         return $booking->forceDelete();
     }
+
+    /**
+     * Bulk restore bookings
+     */
+    public function bulkRestoreBookings(array $ids)
+    {
+        return NailBooking::onlyTrashed()->whereIn('id', $ids)->restore();
+    }
+
+    /**
+     * Bulk force delete bookings
+     */
+    public function bulkForceDeleteBookings(array $ids)
+    {
+        return NailBooking::onlyTrashed()->whereIn('id', $ids)->forceDelete();
+    }
 }
