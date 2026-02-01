@@ -7,6 +7,8 @@ use App\Services\BookingDate\BookingDateService;
 use App\Services\Category\CategoryService;
 use App\Services\Nail\NailService;
 use App\Services\Banner\BannerService;
+use App\Services\Post\PostService;
+use App\Services\PostCategory\PostCategoryService;
 
 class HomeController extends Controller
 {
@@ -14,7 +16,9 @@ class HomeController extends Controller
         protected BookingDateService $bookingDateService,
         protected CategoryService $categoryService,
         protected NailService $nailService,
-        protected BannerService $bannerService
+        protected BannerService $bannerService,
+        protected PostService $postService,
+        protected PostCategoryService $postCategoryService
     ) {
     }
 
@@ -32,6 +36,16 @@ class HomeController extends Controller
         $homeBannerId = config('banners.home_banner_id');
         $homeBanner = $homeBannerId ? $this->bannerService->findById($homeBannerId) : null;
 
-        return view('home', compact('availableDates', 'bookingServices', 'nails', 'feedbackBanner', 'homeBanner'));
+        // Get blog posts by configured category ID
+        $blogCategoryId = config('posts.home_blog_category_id');
+        $blogCategory = null;
+        $homeBlogs = collect();
+
+        if ($blogCategoryId) {
+            $blogCategory = $this->postCategoryService->findById($blogCategoryId);
+            $homeBlogs = $this->postService->getPostsByCategory($blogCategoryId);
+        }
+
+        return view('home', compact('availableDates', 'bookingServices', 'nails', 'feedbackBanner', 'homeBanner', 'homeBlogs', 'blogCategory'));
     }
 }

@@ -9,4 +9,6 @@
 
     @include('user.home-page.feedback-page')
 
+    @include('user.home-page.home-blog')
+
 @endsection
