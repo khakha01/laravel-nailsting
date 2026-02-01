@@ -88,4 +88,9 @@ class PostService
     {
         return $this->postRepository->bulkDelete($ids);
     }
+
+    public function getPostsByCategory(int $categoryId): Collection
+    {
+        return $this->postRepository->getPostsByCategory($categoryId);
+    }
 }
