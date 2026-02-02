@@ -62,7 +62,6 @@
             </div>
         </div>
 
-        <!-- Featured Image -->
         <div class="container mx-auto px-4 mb-20">
             <div class="max-w-5xl mx-auto">
                 <div
