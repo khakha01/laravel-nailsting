@@ -2,7 +2,7 @@
 @section('title', 'Tin tức - Nails Ting')
 @section('content')
     <section class="py-20 bg-[#FCF8F7] min-h-screen pt-32">
-        <div class="container mx-auto px-4">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="mb-12 text-center">
                 <h2 class="text-3xl md:text-5xl text-slate-900 leading-tight">
                     Tin tức & Xu hướng <br>

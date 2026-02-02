@@ -124,6 +124,12 @@ return [
         'post-tag-delete' => 'Xóa tag bài viết',
     ],
 
+    // Hệ thống
+    'system' => [
+        'system-log-view' => 'Xem log hệ thống',
+        'system-log-delete' => 'Xóa log hệ thống',
+    ],
+
     // Super Admin - Quyền tối cao
     'super-admin' => [
         'super-admin' => 'Super Admin - Quyền tối cao',
