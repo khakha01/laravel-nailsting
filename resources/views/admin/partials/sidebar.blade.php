@@ -46,8 +46,8 @@
             <!-- Permission -->
             @include('admin.partials.sidebar.permissions')
 
-            <!-- Settings -->
-            @include('admin.partials.sidebar.settings')
+            <!-- System -->
+            @include('admin.partials.sidebar.system')
 
         </ul>
     </nav>

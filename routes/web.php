@@ -223,6 +223,13 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
         Route::get('/', [SettingController::class, 'index'])->name('index');
         Route::post('/update', [SettingController::class, 'update'])->name('update')->middleware('permission:setting-edit');
     });
+
+    // System Logs
+    Route::group(['prefix' => 'logs', 'as' => 'logs.', 'middleware' => 'permission:system-log-view'], function () {
+        Route::get('/', [\App\Http\Controllers\Admin\LogController::class, 'index'])->name('index');
+        Route::get('/download', [\App\Http\Controllers\Admin\LogController::class, 'download'])->name('download');
+        Route::delete('/destroy', [\App\Http\Controllers\Admin\LogController::class, 'destroy'])->name('destroy')->middleware('permission:system-log-delete');
+    });
 });
 
 
