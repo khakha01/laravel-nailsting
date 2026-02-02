@@ -101,7 +101,7 @@
                     <div class="max-w-6xl mx-auto">
                         <div class="flex items-center justify-between mb-16">
                             <h2 class="text-3xl font-serif text-slate-900 capitalize">Bài viết liên quan</h2>
-                            <a href="{{ route('posts.detail', $post->category->slug) }}"
+                            <a href="{{ route('user.posts.detail', $post->category->slug) }}"
                                 class="text-[#ff0052] font-bold text-sm tracking-widest uppercase flex items-center gap-2 group">
                                 Xem tất cả
                                 <i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
@@ -120,7 +120,7 @@
                                     </p>
                                     <h3
                                         class="text-lg font-bold text-slate-800 group-hover:text-[#ff0052] transition-colors line-clamp-2 leading-snug">
-                                        <a href="{{ route('posts.detail', $rPost->slug) }}">{{ $rPost->title }}</a>
+                                        <a href="{{ route('user.posts.detail', $rPost->slug) }}">{{ $rPost->title }}</a>
                                     </h3>
                                 </div>
                             @endforeach
