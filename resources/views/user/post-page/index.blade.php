@@ -24,12 +24,12 @@
 
             <!-- Categories horizontal scroll/list -->
             <div class="flex flex-wrap justify-center gap-4 mb-16">
-                <a href="{{ route('posts.index') }}"
+                <a href="{{ route('user.posts.index') }}"
                     class="px-6 py-2 rounded-full border {{ !isset($currentCategory) ? 'bg-[#ff0052] border-[#ff0052] text-white shadow-lg shadow-[#ff0052]/20' : 'bg-white border-slate-200 text-slate-600 hover:border-[#ff0052] hover:text-[#ff0052]' }} transition-all duration-300 font-medium">
                     Tất cả
                 </a>
                 @foreach($categories as $category)
-                    <a href="{{ route('posts.detail', $category->slug) }}"
+                    <a href="{{ route('user.posts.detail', $category->slug) }}"
                         class="px-6 py-2 rounded-full border {{ isset($currentCategory) && $currentCategory->id == $category->id ? 'bg-[#ff0052] border-[#ff0052] text-white shadow-lg shadow-[#ff0052]/20' : 'bg-white border-slate-200 text-slate-600 hover:border-[#ff0052] hover:text-[#ff0052]' }} transition-all duration-300 font-medium">
                         {{ $category->name }}
                     </a>

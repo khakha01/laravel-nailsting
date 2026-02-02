@@ -35,7 +35,7 @@
 
                 <!-- News Dropdown -->
                 <div class="relative group">
-                    <a href="{{ route('posts.index') }}"
+                    <a href="{{ route('user.posts.index') }}"
                         class="hover:text-[#ff0052] transition flex items-center gap-1">
                         Tin tức
                         <i
@@ -46,7 +46,7 @@
                         class="absolute top-full left-1/2 -translate-x-1/2 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 min-w-[200px]">
                         <div class="bg-white rounded-2xl shadow-xl border border-neutral-100 p-2 overflow-hidden">
                             @foreach($headerPostCategories as $cat)
-                                <a href="{{ route('posts.detail', $cat->slug) }}"
+                                <a href="{{ route('user.posts.detail', $cat->slug) }}"
                                     class="block px-4 py-2.5 text-slate-600 hover:bg-pink-50 hover:text-[#ff0052] rounded-xl transition">
                                     {{ $cat->name }}
                                 </a>
@@ -95,10 +95,10 @@
             <a href="{{ route('collection') }}" class="hover:text-[#ff0052]">Bộ sưu tập</a>
             <a href="{{ route('pricing') }}" class="hover:text-[#ff0052]">Bảng giá</a>
             <div class="flex flex-col gap-3">
-                <a href="{{ route('posts.index') }}" class="hover:text-[#ff0052] font-bold">Tin tức</a>
+                <a href="{{ route('user.posts.index') }}" class="hover:text-[#ff0052] font-bold">Tin tức</a>
                 <div class="pl-4 flex flex-col gap-3 border-l border-neutral-100">
                     @foreach($headerPostCategories as $cat)
-                        <a href="{{ route('posts.detail', $cat->slug) }}"
+                        <a href="{{ route('user.posts.detail', $cat->slug) }}"
                             class="text-sm text-slate-500 hover:text-[#ff0052]">
                             {{ $cat->name }}
                         </a>
