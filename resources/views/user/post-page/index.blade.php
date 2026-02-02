@@ -4,7 +4,7 @@
     <section class="py-20 bg-[#FCF8F7] min-h-screen pt-32">
         <div class="container mx-auto px-4">
             <div class="mb-12 text-center">
-                <h2 class="text-3xl md:text-5xl font-serif text-slate-900 leading-tight">
+                <h2 class="text-3xl md:text-5xl text-slate-900 leading-tight">
                     Tin tức & Xu hướng <br>
                     <span class="relative inline-block mt-2">
                         <span class="relative z-10 italic font-light text-pink-500">
@@ -58,7 +58,7 @@
                             </div>
                             <h3
                                 class="text-xl font-bold text-slate-800 mb-4 line-clamp-2 group-hover:text-[#ff0052] transition-colors leading-snug">
-                                <a href="{{ route('posts.detail', $post->slug) }}">
+                                <a href="{{ route('user.posts.detail', $post->slug) }}">
                                     {{ $post->title }}
                                 </a>
                             </h3>
@@ -66,7 +66,7 @@
                                 {{ $post->excerpt ?: Str::limit(strip_tags($post->content), 120) }}
                             </p>
                             <div class="mt-auto">
-                                <a href="{{ route('posts.detail', $post->slug) }}"
+                                <a href="{{ route('user.posts.detail', $post->slug) }}"
                                     class="inline-flex items-center gap-2 text-[#ff0052] font-bold text-sm tracking-wide group/btn">
                                     <span
                                         class="border-b-2 border-transparent group-hover/btn:border-[#ff0052] transition-all">ĐỌC
@@ -89,11 +89,5 @@
         </div>
     </section>
 
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
-        .font-serif {
-            font-family: 'Playfair Display', serif;
-        }
-    </style>
 @endsection
