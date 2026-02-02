@@ -14,7 +14,7 @@ use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
-use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\Admin\PostController as AdminPostController;
 use App\Http\Controllers\Admin\PostCategoryController;
 use App\Http\Controllers\Admin\PostTagController;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +27,7 @@ use App\Http\Controllers\User\BookingController;
 use App\Http\Controllers\User\NailBookingController;
 use App\Http\Controllers\User\CollectionController;
 use App\Http\Controllers\User\PricingController;
+use App\Http\Controllers\User\PostController;
 
 /**
  * Router User
@@ -35,6 +36,10 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/appointment', [AppointmentController::class, 'index'])->name('appointment');
 Route::get('/collection', [CollectionController::class, 'index'])->name('collection');
 Route::get('/pricing', [PricingController::class, 'index'])->name('pricing');
+
+// Blog Routes
+Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+
 Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
 Route::post('/nail-booking', [NailBookingController::class, 'store'])->name('nail-booking.store');
 
@@ -166,13 +171,13 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
 
     // Post Management
     Route::group(['prefix' => 'posts', 'as' => 'posts.', 'middleware' => 'permission:post-view'], function () {
-        Route::get('/list', [PostController::class, 'index'])->name('index');
-        Route::get('/create', [PostController::class, 'create'])->name('create')->middleware('permission:post-create');
-        Route::post('/store', [PostController::class, 'store'])->name('store')->middleware('permission:post-create');
-        Route::get('/{post}/edit', [PostController::class, 'edit'])->name('edit')->middleware('permission:post-edit');
-        Route::put('/{post}', [PostController::class, 'update'])->name('update')->middleware('permission:post-edit');
-        Route::delete('/bulk-delete', [PostController::class, 'bulkDelete'])->name('bulk-delete')->middleware('permission:post-delete');
-        Route::delete('/{post}', [PostController::class, 'destroy'])->name('destroy')->middleware('permission:post-delete');
+        Route::get('/list', [AdminPostController::class, 'index'])->name('index');
+        Route::get('/create', [AdminPostController::class, 'create'])->name('create')->middleware('permission:post-create');
+        Route::post('/store', [AdminPostController::class, 'store'])->name('store')->middleware('permission:post-create');
+        Route::get('/{post}/edit', [AdminPostController::class, 'edit'])->name('edit')->middleware('permission:post-edit');
+        Route::put('/{post}', [AdminPostController::class, 'update'])->name('update')->middleware('permission:post-edit');
+        Route::delete('/bulk-delete', [AdminPostController::class, 'bulkDelete'])->name('bulk-delete')->middleware('permission:post-delete');
+        Route::delete('/{post}', [AdminPostController::class, 'destroy'])->name('destroy')->middleware('permission:post-delete');
     });
 
     // Post Category Management
@@ -219,6 +224,10 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
     });
 });
 
-
+/**
+ * Root level slugs for blog categories and posts
+ * Must be at the very end to avoid catching static routes
+ */
+Route::get('/{slug}', [PostController::class, 'detail'])->name('posts.detail');
 
 require __DIR__ . '/auth.php';

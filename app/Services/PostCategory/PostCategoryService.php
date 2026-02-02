@@ -33,6 +33,11 @@ class PostCategoryService
         return $category;
     }
 
+    public function findBySlug(string $slug): ?PostCategory
+    {
+        return $this->postCategoryRepository->findBySlug($slug);
+    }
+
     public function create(array $data): PostCategory
     {
         if (empty($data['slug'])) {

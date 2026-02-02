@@ -30,6 +30,16 @@ class PostService
         return $post;
     }
 
+    public function findBySlug(string $slug): ?Post
+    {
+        return $this->postRepository->findBySlug($slug);
+    }
+
+    public function getPublishedPosts(): Collection
+    {
+        return $this->postRepository->getPublishedPosts();
+    }
+
     public function create(array $data): Post
     {
         return DB::transaction(function () use ($data) {

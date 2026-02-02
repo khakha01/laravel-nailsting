@@ -94,6 +94,7 @@ class AppServiceProvider extends ServiceProvider
     {
         view()->composer('*', function ($view) {
             $view->with('settings', \App\Models\Setting::first());
+            $view->with('headerPostCategories', \App\Models\PostCategory::active()->ordered()->get());
         });
     }
 }
