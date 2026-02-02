@@ -72,6 +72,7 @@
             </div>
         </div>
     </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const swiper_home_blog = new Swiper(".swiper-home-blog", {

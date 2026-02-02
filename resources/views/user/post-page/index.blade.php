@@ -1,7 +1,5 @@
 @extends('user.layout.layout')
-
 @section('title', 'Tin tức - Nails Ting')
-
 @section('content')
     <section class="py-20 bg-[#FCF8F7] min-h-screen pt-32">
         <div class="container mx-auto px-4">

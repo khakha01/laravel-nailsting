@@ -226,5 +226,4 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
 });
 
 
-
 require __DIR__ . '/auth.php';
