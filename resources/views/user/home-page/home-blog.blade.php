@@ -38,13 +38,15 @@
                                     </p>
                                     <h3
                                         class="text-xl font-semibold text-gray-800 group-hover:text-pink-500 transition-colors duration-300 leading-tight mb-3">
-                                        {{ $blog->title }}
+                                        <a href="{{ route('posts.detail', $blog->slug) }}">
+                                            {{ $blog->title }}
+                                        </a>
                                     </h3>
                                     <p class="text-gray-600 text-sm line-clamp-3 mb-4">
-                                        {{ $blog->excerpt ?: Str::limit(strip_tags($blog->content), 120) }}
+                                        {{ $blog->excerpt ?: Str::limit(strip_tags($blog->content), 50) }}
                                     </p>
                                     <div class="mt-auto">
-                                        <a href="#"
+                                        <a href="{{ route('posts.detail', $blog->slug) }}"
                                             class="inline-flex items-center text-pink-500 font-medium hover:gap-2 transition-all">
                                             Đọc thêm <span class="ml-1">→</span>
                                         </a>
