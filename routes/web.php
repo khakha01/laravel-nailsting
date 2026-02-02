@@ -38,7 +38,8 @@ Route::get('/collection', [CollectionController::class, 'index'])->name('collect
 Route::get('/pricing', [PricingController::class, 'index'])->name('pricing');
 
 // Blog Routes
-Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+Route::get('/posts', [PostController::class, 'index'])->name('user.posts.index');
+Route::get('/{slug}', [PostController::class, 'detail'])->name('user.posts.detail');
 
 Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
 Route::post('/nail-booking', [NailBookingController::class, 'store'])->name('nail-booking.store');
@@ -224,10 +225,6 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
     });
 });
 
-/**
- * Root level slugs for blog categories and posts
- * Must be at the very end to avoid catching static routes
- */
-Route::get('/{slug}', [PostController::class, 'detail'])->name('posts.detail');
+
 
 require __DIR__ . '/auth.php';

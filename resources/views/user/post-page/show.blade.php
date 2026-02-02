@@ -13,12 +13,13 @@
                         <li class="flex items-center space-x-2 text-[10px]">
                             <i class="fa-solid fa-chevron-right"></i>
                         </li>
-                        <li><a href="{{ route('posts.index') }}" class="hover:text-[#ff0052] transition-colors">Tin tức</a>
+                        <li><a href="{{ route('user.posts.index') }}" class="hover:text-[#ff0052] transition-colors">Tin
+                                tức</a>
                         </li>
                         <li class="flex items-center space-x-2 text-[10px]">
                             <i class="fa-solid fa-chevron-right"></i>
                         </li>
-                        <li><a href="{{ route('posts.detail', $post->category->slug) }}"
+                        <li><a href="{{ route('user.posts.detail', $post->category->slug) }}"
                                 class="hover:text-[#ff0052] transition-colors">{{ $post->category->name }}</a></li>
                     </ol>
                 </nav>
