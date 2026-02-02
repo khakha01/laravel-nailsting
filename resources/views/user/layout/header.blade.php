@@ -1,5 +1,4 @@
 <div class="bg-slate-50 text-slate-800 overflow-x-hidden relative">
-
     <!-- Background blobs -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none -z-10">
         <div

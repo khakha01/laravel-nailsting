@@ -1,7 +1,5 @@
 @extends('user.layout.layout')
-
 @section('title', $post->title . ' - Nails Ting')
-
 @section('content')
     <article class="bg-[#FCF8F7] min-h-screen pt-32">
         <!-- Hero Header -->
