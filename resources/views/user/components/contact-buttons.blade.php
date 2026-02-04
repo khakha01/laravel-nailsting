@@ -37,7 +37,7 @@
                 title="Instagram">
                 <div class="ripple bg-[#ee2a7b]"></div>
                 <div class="ripple bg-[#ee2a7b] delay-1000"></div>
-                <i class="fa-brands fa-instagram text-xl md:text-2xl z-10"></i>
+                <i class="fab fa-instagram text-xl md:text-2xl z-10"></i>
                 <span
                     class="absolute right-full mr-3 px-3 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none transition-opacity z-20">
                     Instagram
@@ -52,7 +52,7 @@
                 title="Facebook">
                 <div class="ripple bg-blue-600"></div>
                 <div class="ripple bg-blue-600 delay-1000"></div>
-                <i class="fa-brands fa-facebook-f text-xl md:text-2xl z-10"></i>
+                <i class="fab fa-facebook-f text-xl md:text-2xl z-10"></i>
                 <span
                     class="absolute right-full mr-3 px-3 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none transition-opacity z-20">
                     Facebook
@@ -67,7 +67,7 @@
                 title="TikTok">
                 <div class="ripple bg-gray-600"></div>
                 <div class="ripple bg-gray-600 delay-1000"></div>
-                <i class="fa-brands fa-tiktok text-xl md:text-2xl z-10"></i>
+                <i class="fab fa-tiktok text-xl md:text-2xl z-10"></i>
                 <span
                     class="absolute right-full mr-3 px-3 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none transition-opacity z-20">
                     TikTok
