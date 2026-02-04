@@ -7,11 +7,13 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('post_tag', function (Blueprint $table) {
-            $table->foreignId('post_id')->constrained()->onDelete('cascade');
-            $table->foreignId('tag_id')->constrained('post_tags')->onDelete('cascade');
-            $table->primary(['post_id', 'tag_id']);
-        });
+        if (!Schema::hasTable('post_tag')) {
+            Schema::create('post_tag', function (Blueprint $table) {
+                $table->foreignId('post_id')->constrained()->onDelete('cascade');
+                $table->foreignId('tag_id')->constrained('post_tags')->onDelete('cascade');
+                $table->primary(['post_id', 'tag_id']);
+            });
+        }
     }
 
     /**

@@ -2,7 +2,12 @@
     <div class="max-w-6xl mx-auto px-6 pt-14">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-10 text-center md:text-left">
             <div class="flex items-center md:items-start flex-col">
-                <img src="{{ asset('img/logo.png') }}" alt="Nails-tingggg" class="h-14">
+                @if($settings && $settings->logo_id)
+                    <img src="{{ get_media_url($settings->logo_id) }}"
+                        alt="{{ $settings->website_name ?? 'Nails-tingggg' }}" class="h-14">
+                @else
+                    <img src="{{ asset('img/logo.png') }}" alt="Nails-tingggg" class="h-14">
+                @endif
                 <p class="mt-2 text-sm text-slate-500">Nghệ thuật làm móng • Tinh tế • Cá nhân hoá</p>
                 @if($settings && $settings->address)
                     <p class="mt-2 text-sm text-slate-500 flex items-start gap-2">
@@ -26,22 +31,33 @@
             <div>
                 <h4 class="text-sm font-semibold uppercase tracking-wider text-slate-600 mb-4">Theo dõi</h4>
                 <div class="flex justify-center md:justify-start gap-6 md:gap-10 mb-6">
-                    <a href="https://www.instagram.com/tingggg.nails_/" class="group" aria-label="Instagram">
-                        <i
-                            class="fab fa-instagram text-xl md:text-xl text-slate-600 group-hover:text-[#ff0052] transition-colors"></i>
-                    </a>
+                    @if($settings && $settings->link_instagram)
+                        <a href="{{ $settings->link_instagram }}" class="group" aria-label="Instagram" target="_blank">
+                            <i
+                                class="fab fa-instagram text-xl md:text-xl text-slate-600 group-hover:text-[#ff0052] transition-colors"></i>
+                        </a>
+                    @endif
 
-                    <a href="https://www.facebook.com/profile.php?id=100080113211628" class="group"
-                        aria-label="Facebook">
-                        <i
-                            class="fab fa-facebook-f text-xl md:text-xl text-slate-600 group-hover:text-[#ff0052] transition-colors"></i>
-                    </a>
+                    @if($settings && $settings->link_fb)
+                        <a href="{{ $settings->link_fb }}" class="group" aria-label="Facebook" target="_blank">
+                            <i
+                                class="fab fa-facebook-f text-xl md:text-xl text-slate-600 group-hover:text-[#ff0052] transition-colors"></i>
+                        </a>
+                    @endif
 
-                    <a href="https://www.tiktok.com/@tinting_04?is_from_webapp=1&sender_device=pc" class="group"
-                        aria-label="TikTok">
-                        <i
-                            class="fab fa-tiktok text-xl md:text-xl text-slate-600 group-hover:text-[#ff0052] transition-colors"></i>
-                    </a>
+                    @if($settings && $settings->link_tiktok)
+                        <a href="{{ $settings->link_tiktok }}" class="group" aria-label="TikTok" target="_blank">
+                            <i
+                                class="fab fa-tiktok text-xl md:text-xl text-slate-600 group-hover:text-[#ff0052] transition-colors"></i>
+                        </a>
+                    @endif
+
+                    @if($settings && $settings->link_zalo)
+                        <a href="{{ $settings->link_zalo }}" class="group" aria-label="Zalo" target="_blank">
+                            <i
+                                class="fa-solid fa-comment-dots text-xl md:text-xl text-slate-600 group-hover:text-[#ff0052] transition-colors"></i>
+                        </a>
+                    @endif
                 </div>
                 <a href="#booking" class="inline-block rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white px-8 py-3 text-sm font-semibold
                   hover:bg-[#ff0052] transition shadow-sm">

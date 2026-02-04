@@ -18,6 +18,7 @@ class Setting extends Model
         'link_tiktok',
         'link_fb',
         'link_zalo',
+        'link_instagram',
         'logo_id',
         'favicon_id',
         'website_name',

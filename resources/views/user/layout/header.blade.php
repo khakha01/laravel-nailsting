@@ -21,7 +21,12 @@
             <!-- Logo -->
             <div class="flex items-center gap-2">
                 <a href="/">
-                    <img src="{{asset('img/logo.png')}}" alt="Nails-tingggg" class="h-14">
+                    @if($settings && $settings->logo_id)
+                        <img src="{{ get_media_url($settings->logo_id) }}"
+                            alt="{{ $settings->website_name ?? 'Nails-tingggg' }}" class="h-14">
+                    @else
+                        <img src="{{asset('img/logo.png')}}" alt="Nails-tingggg" class="h-14">
+                    @endif
                 </a>
             </div>
 
@@ -85,7 +90,11 @@
                flex flex-col p-6" id="drawerContent">
 
         <div class="mb-8">
-            <img src="{{asset('img/logo.png')}}" class="h-10">
+            @if($settings && $settings->logo_id)
+                <img src="{{ get_media_url($settings->logo_id) }}" class="h-10">
+            @else
+                <img src="{{asset('img/logo.png')}}" class="h-10">
+            @endif
         </div>
 
         <!-- Menu -->

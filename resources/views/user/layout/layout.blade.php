@@ -5,9 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Nail System')</title>
+    <title>@yield('title', ($settings->website_name ?? 'Nail System'))</title>
 
-    <link rel="icon" type="image/png" href="{{ asset('img/logo-icon.png') }}">
+    @if($settings && $settings->favicon_id)
+        <link rel="icon" type="image/png" href="{{ get_media_url($settings->favicon_id) }}">
+    @else
+        <link rel="icon" type="image/png" href="{{ asset('img/logo-icon.png') }}">
+    @endif
 
     {{-- Font Icon --}}
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.0/css/all.css" />
@@ -108,6 +112,9 @@
             });
         </script>
     @endif
+
+    {{-- Contact Buttons --}}
+    @include('user.components.contact-buttons')
 
     {{-- Nhúng tiktok --}}
     <script async src="https://www.tiktok.com/embed.js"></script>
