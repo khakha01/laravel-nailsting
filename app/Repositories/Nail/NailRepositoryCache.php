@@ -75,8 +75,9 @@ class NailRepositoryCache implements NailRepositoryInterface
 
     public function save(Nail $nail): Nail
     {
-        $this->invalidateCache($nail->id ?? 0);
-        return $this->nailRepository->save($nail);
+        $result = $this->nailRepository->save($nail);
+        $this->invalidateCache($result->id);
+        return $result;
     }
 
     public function delete(Nail $nail): bool
@@ -106,8 +107,13 @@ class NailRepositoryCache implements NailRepositoryInterface
     /**
      * Invalidate all related cache keys
      */
-    protected function invalidateCache(int $nailId): void
+    protected function invalidateCache(?int $nailId): void
     {
+        if (!$nailId) {
+            $this->cache->forget($this->keys['all']);
+            $this->cache->forget($this->keys['active']);
+            return;
+        }
         $nail = Nail::find($nailId);
 
         $this->cache->forget($this->cacheKey($nailId));

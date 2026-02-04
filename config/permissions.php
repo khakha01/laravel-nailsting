@@ -128,6 +128,8 @@ return [
     'system' => [
         'system-log-view' => 'Xem log hệ thống',
         'system-log-delete' => 'Xóa log hệ thống',
+        'redis-view' => 'Xem thống kê Redis',
+        'redis-delete' => 'Xóa cache Redis',
     ],
 
     // Super Admin - Quyền tối cao

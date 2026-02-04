@@ -126,7 +126,7 @@
 
 
             try {
-                const response = await fetch('/api/admin/auth/login', {
+                const response = await fetch('/api/{{ config('app.admin_prefix') }}/auth/login', {
                     method: 'POST',
                     credentials: 'include',
                     headers: {
@@ -139,7 +139,7 @@
                 const result = await response.json();
 
                 if (response.ok) {
-                    window.location.href = '/admin/dashboard';
+                    window.location.href = '/{{ config('app.admin_prefix') }}/dashboard';
                 } else {
                     errorMessage.textContent = result.message || 'Đăng nhập thất bại';
                     errorMessage.classList.remove('hidden');

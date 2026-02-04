@@ -44,6 +44,19 @@
                     </a>
                 </li>
             @endif
+
+            @if(Auth::guard('admin')->user()->hasPermission('redis-view'))
+                <li>
+                    <a href="{{ route('redis.index') }}"
+                        class="block pl-8 pr-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-blue-600 flex gap-2 items-center transition-colors {{ request()->routeIs('redis.*') ? 'text-blue-600 bg-blue-50' : '' }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+                        </svg>
+                        Thống kê Redis
+                    </a>
+                </li>
+            @endif
         </ul>
     </li>
 @endif

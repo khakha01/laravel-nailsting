@@ -5,9 +5,11 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\BookingDateController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\LogController;
 use App\Http\Controllers\Admin\NailCategoryController;
 use App\Http\Controllers\Admin\NailController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\RedisController;
 use App\Http\Controllers\Permission\PermissionController;
 use App\Http\Controllers\User\AppointmentController;
 use App\Http\Controllers\User\ProfileController;
@@ -39,7 +41,6 @@ Route::get('/pricing', [PricingController::class, 'index'])->name('pricing');
 
 // Blog Routes
 Route::get('/posts', [PostController::class, 'index'])->name('user.posts.index');
-Route::get('/{slug}', [PostController::class, 'detail'])->name('user.posts.detail');
 
 Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
 Route::post('/nail-booking', [NailBookingController::class, 'store'])->name('nail-booking.store');
@@ -58,9 +59,9 @@ Route::middleware('auth')->group(function () {
 /**
  * Router Admin
  */
-Route::get('admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
+Route::get(config('app.admin_prefix'), [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
 
-Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
+Route::prefix(config('app.admin_prefix'))->middleware(['auth:admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
     Route::get('/profile', [AdminProfileController::class, 'index'])->name('admin.profile');
 
@@ -226,11 +227,20 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
 
     // System Logs
     Route::group(['prefix' => 'logs', 'as' => 'logs.', 'middleware' => 'permission:system-log-view'], function () {
-        Route::get('/', [\App\Http\Controllers\Admin\LogController::class, 'index'])->name('index');
-        Route::get('/download', [\App\Http\Controllers\Admin\LogController::class, 'download'])->name('download');
-        Route::delete('/destroy', [\App\Http\Controllers\Admin\LogController::class, 'destroy'])->name('destroy')->middleware('permission:system-log-delete');
+        Route::get('/', [LogController::class, 'index'])->name('index');
+        Route::get('/download', [LogController::class, 'download'])->name('download');
+        Route::delete('/destroy', [LogController::class, 'destroy'])->name('destroy')->middleware('permission:system-log-delete');
+    });
+
+    // Redis Management
+    Route::group(['prefix' => 'redis', 'as' => 'redis.', 'middleware' => 'permission:redis-view'], function () {
+        Route::get('/', [RedisController::class, 'index'])->name('index');
+        Route::post('/flush', [RedisController::class, 'flush'])->name('flush')->middleware('permission:redis-delete');
+        Route::post('/delete-pattern', [RedisController::class, 'deletePattern'])->name('delete-pattern')->middleware('permission:redis-delete');
     });
 });
+
+Route::get('/{slug}', [PostController::class, 'detail'])->name('user.posts.detail');
 
 
 require __DIR__ . '/auth.php';

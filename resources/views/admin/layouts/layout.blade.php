@@ -43,7 +43,7 @@
             if (!confirm('Bạn có chắc chắn muốn đăng xuất?')) return;
 
             try {
-                await fetch('/api/admin/auth/logout', {
+                await fetch('/api/{{ config('app.admin_prefix') }}/auth/logout', {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json'
@@ -52,7 +52,7 @@
             } catch (e) { }
 
             document.cookie = "admin_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC; SameSite=Lax";
-            window.location.href = '/admin/login';
+            window.location.href = '/{{ config('app.admin_prefix') }}';
         }
     </script>
 </body>
