@@ -1,6 +1,6 @@
 <li>
     <a href="{{ route('admin.dashboard') }}" class="flex items-center px-6 py-3 border-l-4 transition-colors
-                   {{ request()->is('admin/dashboard')
+                   {{ request()->is(config('app.admin_prefix') . '/dashboard')
     ? 'border-blue-500 bg-blue-50 text-blue-600'
     : 'border-transparent text-gray-700 hover:bg-gray-100' }}">
         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">

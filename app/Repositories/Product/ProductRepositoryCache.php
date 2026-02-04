@@ -96,8 +96,9 @@ class ProductRepositoryCache implements ProductRepositoryInterface
 
     public function save(Product $product): Product
     {
-        $this->invalidateCache($product->id);
-        return $this->productRepository->save($product);
+        $result = $this->productRepository->save($product);
+        $this->invalidateCache($result->id);
+        return $result;
     }
 
     public function delete(Product $product): bool
@@ -122,8 +123,13 @@ class ProductRepositoryCache implements ProductRepositoryInterface
     /**
      * Invalidate all related cache keys
      */
-    protected function invalidateCache(int $productId): void
+    protected function invalidateCache(?int $productId): void
     {
+        if (!$productId) {
+            $this->cache->forget($this->keys['all']);
+            $this->cache->forget($this->keys['active']);
+            return;
+        }
         $product = Product::find($productId);
 
         $this->cache->forget($this->cacheKey($productId));

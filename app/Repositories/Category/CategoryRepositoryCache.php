@@ -102,8 +102,9 @@ class CategoryRepositoryCache implements CategoryRepositoryInterface
 
     public function save(Category $category): Category
     {
-        $this->invalidateCache($category->id);
-        return $this->categoryRepository->save($category);
+        $result = $this->categoryRepository->save($category);
+        $this->invalidateCache($result->id);
+        return $result;
     }
 
     public function delete(Category $category): bool
@@ -128,8 +129,16 @@ class CategoryRepositoryCache implements CategoryRepositoryInterface
     /**
      * Invalidate all related cache keys
      */
-    protected function invalidateCache(int $categoryId): void
+    protected function invalidateCache(?int $categoryId): void
     {
+        if (!$categoryId) {
+            $this->cache->forget($this->keys['all']);
+            $this->cache->forget($this->keys['root']);
+            $this->cache->forget($this->keys['active']);
+            $this->cache->forget($this->keys['with_products']);
+            $this->cache->forget($this->keys['tree']);
+            return;
+        }
         $this->cache->forget($this->cacheKey($categoryId));
         $this->cache->forget($this->keys['all']);
         $this->cache->forget($this->keys['root']);

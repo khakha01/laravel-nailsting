@@ -110,7 +110,7 @@ class TelegramService
             . "{$paidStatus}\n"
             . ($booking->notes ? "\n📝 <b>GHI CHÚ:</b> <i>{$booking->notes}</i>\n" : "")
 
-            . "\n🚀 <a href='" . config('app.url') . "/admin/bookings/{$booking->id}'>Xem chi tiết trên Admin</a>";
+            . "\n🚀 <a href='" . config('app.url') . "/" . config('app.admin_prefix') . "/bookings/{$booking->id}'>Xem chi tiết trên Admin</a>";
 
         if ($booking->payment_proof) {
             $this->sendPhoto($booking->payment_proof, $message);
@@ -148,7 +148,7 @@ class TelegramService
             . "{$paidStatus}\n"
             . ($booking->notes ? "\n📝 <b>GHI CHÚ:</b> <i>{$booking->notes}</i>\n" : "")
 
-            . "\n🚀 <a href='" . config('app.url') . "/admin/nail-bookings/{$booking->id}'>Xem chi tiết trên Admin</a>";
+            . "\n🚀 <a href='" . config('app.url') . "/" . config('app.admin_prefix') . "/nail-bookings/{$booking->id}'>Xem chi tiết trên Admin</a>";
 
         if ($booking->payment_proof) {
             $this->sendPhoto($booking->payment_proof, $message);

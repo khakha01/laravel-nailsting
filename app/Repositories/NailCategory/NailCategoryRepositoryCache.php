@@ -75,8 +75,9 @@ class NailCategoryRepositoryCache implements NailCategoryRepositoryInterface
 
     public function save(NailCategory $nailCategory): NailCategory
     {
-        $this->invalidateCache($nailCategory->id ?? 0);
-        return $this->nailCategoryRepository->save($nailCategory);
+        $result = $this->nailCategoryRepository->save($nailCategory);
+        $this->invalidateCache($result->id);
+        return $result;
     }
 
     public function delete(NailCategory $nailCategory): bool
@@ -101,8 +102,13 @@ class NailCategoryRepositoryCache implements NailCategoryRepositoryInterface
     /**
      * Invalidate all related cache keys
      */
-    protected function invalidateCache(int $nailCategoryId): void
+    protected function invalidateCache(?int $nailCategoryId): void
     {
+        if (!$nailCategoryId) {
+            $this->cache->forget($this->keys['all']);
+            $this->cache->forget($this->keys['root']);
+            return;
+        }
         $this->cache->forget($this->cacheKey($nailCategoryId));
         $this->cache->forget($this->keys['all']);
         $this->cache->forget($this->keys['root']);

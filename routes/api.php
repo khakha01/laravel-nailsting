@@ -4,7 +4,7 @@ use App\Http\Controllers\Admin\Auth\AdminAuthController;
 use Illuminate\Support\Facades\Route;
 
 
-Route::prefix('admin/auth')->group(function () {
+Route::prefix(config('app.admin_prefix') . '/auth')->group(function () {
     Route::post('login', [AdminAuthController::class, 'login']);
 
     Route::middleware('auth:admin')->group(function () {

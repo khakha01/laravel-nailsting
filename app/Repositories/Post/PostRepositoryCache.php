@@ -108,8 +108,14 @@ class PostRepositoryCache implements PostRepositoryInterface
         return $this->postRepository->bulkDelete($postIds);
     }
 
-    protected function invalidateCache(int $postId): void
+    protected function invalidateCache(?int $postId): void
     {
+        if (!$postId) {
+            $this->cache->forget($this->keys['all']);
+            $this->cache->forget($this->keys['published']);
+            $this->cache->forget($this->keys['featured']);
+            return;
+        }
         $post = Post::find($postId);
         $this->cache->forget($this->cacheKey($postId));
         if ($post) {
