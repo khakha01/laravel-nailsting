@@ -47,4 +47,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Safe method for production if guard resolution fails
+     */
+    public function hasPermission(string $code): bool
+    {
+        return false;
+    }
 }
