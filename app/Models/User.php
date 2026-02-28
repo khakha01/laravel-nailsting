@@ -48,27 +48,27 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * Safe method for production if guard resolution fails
-     */
-    public function hasPermission(string $code): bool
-    {
-        return false;
-    }
+    // /**
+    //  * Safe method for production if guard resolution fails
+    //  */
+    // public function hasPermission(string $code): bool
+    // {
+    //     return false;
+    // }
 
-    /**
-     * Safe method for hasAnyPermission
-     */
-    public function hasAnyPermission(array $codes): bool
-    {
-        return false;
-    }
+    // /**
+    //  * Safe method for hasAnyPermission
+    //  */
+    // public function hasAnyPermission(array $codes): bool
+    // {
+    //     return false;
+    // }
 
-    /**
-     * Safe method for hasAllPermissions
-     */
-    public function hasAllPermissions(array $codes): bool
-    {
-        return false;
-    }
+    // /**
+    //  * Safe method for hasAllPermissions
+    //  */
+    // public function hasAllPermissions(array $codes): bool
+    // {
+    //     return false;
+    // }
 }
