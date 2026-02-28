@@ -48,5 +48,16 @@ class User extends Authenticatable
         ];
     }
 
-
+    public function hasPermission(string $code): bool
+    {
+        return false;
+    }
+    public function hasAnyPermission(array $codes): bool
+    {
+        return false;
+    }
+    public function hasAllPermissions(array $codes): bool
+    {
+        return false;
+    }
 }

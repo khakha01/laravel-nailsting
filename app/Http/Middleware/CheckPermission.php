@@ -20,7 +20,7 @@ class CheckPermission
     {
         $admin = auth('admin')->user();
 
-        if (!$admin || !$admin->hasPermission($permission)) {
+        if (!$admin || !method_exists($admin, 'hasPermission') || !$admin->hasPermission($permission)) {
             if ($request->expectsJson()) {
                 return response()->json(['message' => 'Bạn không có quyền thực hiện hành động này.'], 403);
             }
