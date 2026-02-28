@@ -2,11 +2,11 @@
     $isPostActive = request()->routeIs('posts.*') || request()->routeIs('post-categories.*') || request()->routeIs('post-tags.*');
 @endphp
 
-@if(Auth::guard('admin')->user()->hasPermission('post-view'))
+@if(Auth::guard('admin')->user()?->hasPermission('post-view'))
     <li>
         <button onclick="toggleSubmenu('submenu-posts', 'arrow-posts')"
             class="w-full flex items-center justify-between px-6 py-3
-                                                               text-gray-700 hover:bg-gray-100 transition-colors focus:outline-none">
+                                                                   text-gray-700 hover:bg-gray-100 transition-colors focus:outline-none">
             <span class="flex items-center">
                 <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                     stroke-width="1.5" stroke="currentColor">
@@ -27,7 +27,7 @@
             <li>
                 <a href="{{ route('posts.index') }}"
                     class="block pl-8 pr-4 py-2 text-sm
-                                                                      text-gray-600 hover:bg-gray-100 hover:text-blue-600 flex gap-2 items-center {{ request()->routeIs('posts.index') ? 'text-blue-600' : '' }}">
+                                                                          text-gray-600 hover:bg-gray-100 hover:text-blue-600 flex gap-2 items-center {{ request()->routeIs('posts.index') ? 'text-blue-600' : '' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-5">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -36,11 +36,11 @@
                     Bài viết
                 </a>
             </li>
-            @if(Auth::guard('admin')->user()->hasPermission('post-category-view'))
+            @if(Auth::guard('admin')->user()?->hasPermission('post-category-view'))
                 <li>
                     <a href="{{ route('post-categories.index') }}"
                         class="block pl-8 pr-4 py-2 text-sm
-                                                                                                          text-gray-600 hover:bg-gray-100 hover:text-blue-600 flex gap-2 items-center {{ request()->routeIs('post-categories.*') ? 'text-blue-600' : '' }}">
+                                                                                                                  text-gray-600 hover:bg-gray-100 hover:text-blue-600 flex gap-2 items-center {{ request()->routeIs('post-categories.*') ? 'text-blue-600' : '' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="size-5">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -50,11 +50,11 @@
                     </a>
                 </li>
             @endif
-            @if(Auth::guard('admin')->user()->hasPermission('post-tag-view'))
+            @if(Auth::guard('admin')->user()?->hasPermission('post-tag-view'))
                 <li>
                     <a href="{{ route('post-tags.index') }}"
                         class="block pl-8 pr-4 py-2 text-sm
-                                                                                                          text-gray-600 hover:bg-gray-100 hover:text-blue-600 flex gap-2 items-center {{ request()->routeIs('post-tags.*') ? 'text-blue-600' : '' }}">
+                                                                                                                  text-gray-600 hover:bg-gray-100 hover:text-blue-600 flex gap-2 items-center {{ request()->routeIs('post-tags.*') ? 'text-blue-600' : '' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="size-5">
                             <path stroke-linecap="round" stroke-linejoin="round"

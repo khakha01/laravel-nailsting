@@ -1,14 +1,14 @@
-@if(Auth::guard('admin')->user()->hasPermission('booking-view'))
+@if(Auth::guard('admin')->user()?->hasPermission('booking-view'))
     <li>
         <button onclick="toggleSubmenu('submenu-booking', 'arrow-booking')"
             class="w-full flex items-center justify-between px-6 py-3
-                                                                   text-gray-700 hover:bg-gray-100 transition-colors focus:outline-none">
+                                                                       text-gray-700 hover:bg-gray-100 transition-colors focus:outline-none">
             <span class="flex items-center">
                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M8 7V3m8 4V3m-9 8h10
-                                                                             M5 21h14a2 2 0 002-2V7
-                                                                             a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                                                 M5 21h14a2 2 0 002-2V7
+                                                                                 a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
                 Quản lý lịch hẹn
             </span>
@@ -35,7 +35,7 @@
                 </a>
             </li>
 
-            @if(Auth::guard('admin')->user()->hasPermission('nail-booking-view'))
+            @if(Auth::guard('admin')->user()?->hasPermission('nail-booking-view'))
                 <li>
                     <a href="{{ route('nail-bookings.index') }}"
                         class="block pl-8 pr-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-pink-600 flex gap-2 items-center transition-colors">
@@ -54,7 +54,7 @@
             <li>
                 <a href="{{ route('booking-dates.index') }}"
                     class="block pl-8 pr-4 py-2 text-sm
-                                                                          text-gray-600 hover:bg-gray-100 hover:text-blue-600 flex gap-2 items-center">
+                                                                              text-gray-600 hover:bg-gray-100 hover:text-blue-600 flex gap-2 items-center">
 
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-6">
@@ -65,11 +65,11 @@
                     Danh sách lịch làm việc
                 </a>
             </li>
-            @if(Auth::guard('admin')->user()->hasPermission('booking-edit'))
+            @if(Auth::guard('admin')->user()?->hasPermission('booking-edit'))
                 <li>
                     <a href="{{ route('booking-dates.create') }}"
                         class="block pl-8 pr-4 py-2 text-sm
-                                                                                                          text-gray-600 hover:bg-gray-100 hover:text-blue-600 flex gap-2 items-center">
+                                                                                                                  text-gray-600 hover:bg-gray-100 hover:text-blue-600 flex gap-2 items-center">
 
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="size-6">

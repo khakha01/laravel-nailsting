@@ -21,7 +21,7 @@
                     </svg>
                     Tải về
                 </a>
-                @if(auth()->guard('admin')->user()->hasPermission('system-log-delete'))
+                @if(auth()->guard('admin')->user()?->hasPermission('system-log-delete'))
                     <form action="{{ route('logs.destroy') }}" method="POST"
                         onsubmit="return confirm('Bạn có chắc chắn muốn xóa sạch file log này?')">
                         @csrf
@@ -130,11 +130,11 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="px-2 py-1 rounded-full text-[10px] font-bold uppercase
-                                                            @if(in_array($log['level'], ['ERROR', 'CRITICAL', 'ALERT', 'EMERGENCY'])) bg-red-100 text-red-700
-                                                            @elseif($log['level'] == 'WARNING') bg-yellow-100 text-yellow-700
-                                                            @elseif($log['level'] == 'INFO') bg-blue-100 text-blue-700
-                                                            @elseif($log['level'] == 'DEBUG') bg-gray-100 text-gray-700
-                                                            @else bg-green-100 text-green-700 @endif">
+                                                                    @if(in_array($log['level'], ['ERROR', 'CRITICAL', 'ALERT', 'EMERGENCY'])) bg-red-100 text-red-700
+                                                                    @elseif($log['level'] == 'WARNING') bg-yellow-100 text-yellow-700
+                                                                    @elseif($log['level'] == 'INFO') bg-blue-100 text-blue-700
+                                                                    @elseif($log['level'] == 'DEBUG') bg-gray-100 text-gray-700
+                                                                    @else bg-green-100 text-green-700 @endif">
                                         {{ $log['level'] }}
                                     </span>
                                 </td>

@@ -1,4 +1,4 @@
-@if(Auth::guard('admin')->user()->hasAnyPermission(['setting-view', 'system-log-view']))
+@if(Auth::guard('admin')->user()?->hasAnyPermission(['setting-view', 'system-log-view']))
     <li>
         <button onclick="toggleSubmenu('submenu-system', 'arrow-system')"
             class="w-full flex items-center justify-between px-6 py-3 text-gray-700 hover:bg-gray-100 transition-colors focus:outline-none">
@@ -19,7 +19,7 @@
 
         <!-- Submenu -->
         <ul id="submenu-system" class="hidden bg-gray-50">
-            @if(Auth::guard('admin')->user()->hasPermission('setting-view'))
+            @if(Auth::guard('admin')->user()?->hasPermission('setting-view'))
                 <li>
                     <a href="{{ route('settings.index') }}"
                         class="block pl-8 pr-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-blue-600 flex gap-2 items-center transition-colors {{ request()->routeIs('settings.*') ? 'text-blue-600 bg-blue-50' : '' }}">
@@ -32,7 +32,7 @@
                 </li>
             @endif
 
-            @if(Auth::guard('admin')->user()->hasPermission('system-log-view'))
+            @if(Auth::guard('admin')->user()?->hasPermission('system-log-view'))
                 <li>
                     <a href="{{ route('logs.index') }}"
                         class="block pl-8 pr-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-blue-600 flex gap-2 items-center transition-colors {{ request()->routeIs('logs.*') ? 'text-blue-600 bg-blue-50' : '' }}">
@@ -45,7 +45,7 @@
                 </li>
             @endif
 
-            @if(Auth::guard('admin')->user()->hasPermission('redis-view'))
+            @if(Auth::guard('admin')->user()?->hasPermission('redis-view'))
                 <li>
                     <a href="{{ route('redis.index') }}"
                         class="block pl-8 pr-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-blue-600 flex gap-2 items-center transition-colors {{ request()->routeIs('redis.*') ? 'text-blue-600 bg-blue-50' : '' }}">

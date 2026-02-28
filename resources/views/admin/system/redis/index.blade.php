@@ -13,7 +13,7 @@
                 <p class="mt-1 text-sm text-gray-500">Monitor cache usage and Redis server performance.</p>
             </div>
             <div class="flex items-center gap-3">
-                @if(auth()->guard('admin')->user()->hasPermission('redis-delete'))
+                @if(auth()->guard('admin')->user()?->hasPermission('redis-delete'))
                     <form action="{{ route('redis.flush') }}" method="POST"
                         onsubmit="return confirm('Bạn có chắc chắn muốn xóa toàn bộ cache? Hành động này có thể làm chậm hệ thống trong chốc lát.')">
                         @csrf
@@ -265,7 +265,7 @@
                                                 </p>
                                             </div>
                                         </div>
-                                        @if(auth()->guard('admin')->user()->hasPermission('redis-delete'))
+                                        @if(auth()->guard('admin')->user()?->hasPermission('redis-delete'))
                                             <form action="{{ route('redis.delete-pattern') }}" method="POST"
                                                 onsubmit="return confirm('Xóa bộ nhớ đệm thuộc nhóm {{ $data['display_title'] }}?')">
                                                 @csrf

@@ -34,7 +34,7 @@
 
                     <div class="relative">
                         <img class="w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm"
-                            src="{{ get_media_url(Auth::guard('admin')->user()->media_id, 'https://ui-avatars.com/api/?name=' . (Auth::guard('admin')->user()->name ?? 'Admin') . '&background=6366f1&color=fff') }}"
+                            src="{{ get_media_url(Auth::guard('admin')->user()?->media_id, 'https://ui-avatars.com/api/?name=' . (Auth::guard('admin')->user()?->name ?? 'Admin') . '&background=6366f1&color=fff') }}"
                             alt="User avatar">
                         <span
                             class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full"></span>
@@ -42,7 +42,7 @@
 
                     <div class="ml-2.5 hidden md:block text-left">
                         <p class="text-xs font-bold text-gray-800 leading-none tracking-tight">
-                            {{ Auth::guard('admin')->user()->name ?? 'Administrator' }}
+                            {{ Auth::guard('admin')->user()?->name ?? 'Administrator' }}
                         </p>
                         <p class="text-[10px] text-gray-400 font-semibold uppercase mt-0.5 tracking-wider">Quản trị</p>
                     </div>
@@ -68,7 +68,7 @@
                             <span class="font-medium">Hồ sơ</span>
                         </a>
 
-                        @if(Auth::guard('admin')->user()->hasPermission('setting-view'))
+                        @if(Auth::guard('admin')->user()?->hasPermission('setting-view'))
                             <a href="{{ route('settings.index') }}"
                                 class="group flex items-center px-4 py-2.5 text-sm text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 transition-all">
                                 <div
