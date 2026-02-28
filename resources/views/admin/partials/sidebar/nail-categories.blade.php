@@ -1,8 +1,8 @@
-@if(Auth::guard('admin')->user()->hasPermission('nail-category-view'))
+@if(Auth::guard('admin')->user()?->hasPermission('nail-category-view'))
     <li>
         <button onclick="toggleSubmenu('submenu-nail-categories', 'arrow-nail-categories')"
             class="w-full flex items-center justify-between px-6 py-3
-                                                       text-gray-700 hover:bg-gray-100 transition-colors focus:outline-none">
+                                                           text-gray-700 hover:bg-gray-100 transition-colors focus:outline-none">
             <span class="flex items-center">
                 <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                     stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -23,7 +23,7 @@
             <li>
                 <a href="{{ route('nail-categories.index') }}"
                     class="block pl-8 pr-4 py-2 text-sm
-                                                              text-gray-600 hover:bg-gray-100 hover:text-blue-600 flex gap-2 items-center">
+                                                                  text-gray-600 hover:bg-gray-100 hover:text-blue-600 flex gap-2 items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -32,11 +32,11 @@
                     Danh sách danh mục nail
                 </a>
             </li>
-            @if(Auth::guard('admin')->user()->hasPermission('nail-category-create'))
+            @if(Auth::guard('admin')->user()?->hasPermission('nail-category-create'))
                 <li>
                     <a href="{{ route('nail-categories.create') }}"
                         class="block pl-8 pr-4 py-2 text-sm
-                                                                                          text-gray-600 hover:bg-gray-100 hover:text-blue-600 flex gap-2 items-center">
+                                                                                                  text-gray-600 hover:bg-gray-100 hover:text-blue-600 flex gap-2 items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round"

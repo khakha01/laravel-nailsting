@@ -1,8 +1,8 @@
-@if(Auth::guard('admin')->user()->hasPermission('category-view'))
+@if(Auth::guard('admin')->user()?->hasPermission('category-view'))
     <li>
         <button onclick="toggleSubmenu('submenu-categories', 'arrow-categories')"
             class="w-full flex items-center justify-between px-6 py-3
-                                                           text-gray-700 hover:bg-gray-100 transition-colors focus:outline-none">
+                                                               text-gray-700 hover:bg-gray-100 transition-colors focus:outline-none">
             <span class="flex items-center">
 
                 <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -25,7 +25,7 @@
             <li>
                 <a href="{{ route('categories.index') }}"
                     class="block pl-8 pr-4 py-2 text-sm
-                                                                  text-gray-600 hover:bg-gray-100 hover:text-blue-600 flex gap-2 items-center">
+                                                                      text-gray-600 hover:bg-gray-100 hover:text-blue-600 flex gap-2 items-center">
 
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-6">
@@ -36,11 +36,11 @@
                     Danh sách danh mục
                 </a>
             </li>
-            @if(Auth::guard('admin')->user()->hasPermission('category-create'))
+            @if(Auth::guard('admin')->user()?->hasPermission('category-create'))
                 <li>
                     <a href="{{ route('categories.create') }}"
                         class="block pl-8 pr-4 py-2 text-sm
-                                                                                                  text-gray-600 hover:bg-gray-100 hover:text-blue-600 flex gap-2 items-center">
+                                                                                                          text-gray-600 hover:bg-gray-100 hover:text-blue-600 flex gap-2 items-center">
 
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="size-6">
