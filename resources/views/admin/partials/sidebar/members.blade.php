@@ -1,8 +1,8 @@
-@if(Auth::guard('admin')->user()->hasPermission('member-view'))
+@if(Auth::guard('admin')->user()?->hasPermission('member-view'))
     <li>
         <button onclick="toggleSubmenu('submenu-member', 'arrow-member')"
             class="w-full flex items-center justify-between px-6 py-3
-                                                           text-gray-700 hover:bg-gray-100 transition-colors focus:outline-none">
+                                                               text-gray-700 hover:bg-gray-100 transition-colors focus:outline-none">
             <span class="flex items-center">
                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
