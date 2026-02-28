@@ -55,4 +55,20 @@ class User extends Authenticatable
     {
         return false;
     }
+
+    /**
+     * Safe method for hasAnyPermission
+     */
+    public function hasAnyPermission(array $codes): bool
+    {
+        return false;
+    }
+
+    /**
+     * Safe method for hasAllPermissions
+     */
+    public function hasAllPermissions(array $codes): bool
+    {
+        return false;
+    }
 }
