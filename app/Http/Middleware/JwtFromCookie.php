@@ -19,11 +19,10 @@ class JwtFromCookie
 
         if ($token) {
             $request->headers->set('Authorization', 'Bearer ' . $token);
-            
+
             try {
-                // Force JWTAuth to parse and authenticate the token
-                if ($user = \PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth::setToken($token)->authenticate()) {
-                    \Auth::guard('admin')->setUser($user);
+                // Explicitly use the admin guard to authenticate the token from the cookie
+                if ($user = \Auth::guard('admin')->user()) {
                     \Auth::shouldUse('admin');
                 }
             } catch (\Exception $e) {
