@@ -222,7 +222,15 @@ Route::prefix(config('app.admin_prefix'))->middleware(['auth:admin'])->group(fun
     // Settings
     Route::group(['prefix' => 'settings', 'as' => 'settings.', 'middleware' => 'permission:setting-view'], function () {
         Route::get('/', [SettingController::class, 'index'])->name('index');
+        Route::get('/export', [SettingController::class, 'export'])->name('export')->middleware('permission:setting-export');
         Route::post('/update', [SettingController::class, 'update'])->name('update')->middleware('permission:setting-edit');
+    });
+
+    // Member Management
+    Route::group(['prefix' => 'members', 'as' => 'members.', 'middleware' => 'permission:member-view'], function () {
+        Route::get('/list', [\App\Http\Controllers\Admin\MemberController::class, 'index'])->name('index');
+        Route::get('/{member}', [\App\Http\Controllers\Admin\MemberController::class, 'show'])->name('show');
+        Route::delete('/{member}', [\App\Http\Controllers\Admin\MemberController::class, 'destroy'])->name('destroy')->middleware('permission:member-delete');
     });
 
     // System Logs
@@ -239,6 +247,10 @@ Route::prefix(config('app.admin_prefix'))->middleware(['auth:admin'])->group(fun
         Route::post('/delete-pattern', [RedisController::class, 'deletePattern'])->name('delete-pattern')->middleware('permission:redis-delete');
     });
 });
+
+// Google OAuth
+Route::get('/auth/google/redirect', [\App\Http\Controllers\Auth\GoogleController::class, 'redirect'])->name('google.redirect');
+Route::get('/auth/google/callback', [\App\Http\Controllers\Auth\GoogleController::class, 'callback'])->name('google.callback');
 
 Route::get('/{slug}', [PostController::class, 'detail'])->name('user.posts.detail');
 

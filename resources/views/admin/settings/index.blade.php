@@ -30,6 +30,9 @@
                             class="px-6 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-md shadow-blue-200 transition-all">
                             Lưu cấu hình
                         </button>
+                        <a href="{{ route('settings.export') }}"
+                            class="px-6 py-2 text-sm font-semibold text-white bg-green-600 rounded-lg hover:bg-green-700 shadow-md shadow-green-200 transition-all">Export
+                            DB</a>
                     </div>
                 </div>
             </div>
