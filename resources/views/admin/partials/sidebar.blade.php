@@ -43,6 +43,9 @@
             <!-- Admin -->
             @include('admin.partials.sidebar.admins')
 
+            <!-- Members -->
+            @include('admin.partials.sidebar.members')
+
             <!-- Permission -->
             @include('admin.partials.sidebar.permissions')
 

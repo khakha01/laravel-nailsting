@@ -126,6 +126,8 @@ class AppServiceProvider extends ServiceProvider
 
         # settings
         $this->app->bind(SettingRepositoryInterface::class, SettingRepository::class);
+        $this->app->bind(\App\Contracts\DatabaseExportServiceInterface::class, \App\Services\DatabaseExportService::class);
+        $this->app->bind(\App\Contracts\GoogleAuthServiceInterface::class, \App\Services\GoogleAuthService::class);
 
         # postCategories
         $this->app->bind(PostCategoryRepositoryInterface::class, function ($app) {
